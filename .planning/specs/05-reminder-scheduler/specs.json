@@ -1,0 +1,37 @@
+{
+  "session": "05-reminder-scheduler",
+  "goal": "Fire posture alerts, water, and walk reminders adaptively",
+  "depends_on": ["03-session-manager", "04-healthkit"],
+  "leaves": [
+    {
+      "id": "3.1",
+      "title": "Posture Alert",
+      "file": "Sources/Reminders/ReminderScheduler.swift",
+      "completed": false,
+      "checks": [
+        "Hold head down 30s → notification fires",
+        "5min cooldown prevents spam"
+      ]
+    },
+    {
+      "id": "3.2",
+      "title": "Adaptive Water Reminder",
+      "file": "Sources/Reminders/ReminderScheduler.swift",
+      "completed": false,
+      "checks": [
+        "Set base to 1min for test → fires",
+        "Poor posture session fires sooner than good posture session"
+      ]
+    },
+    {
+      "id": "3.3",
+      "title": "Adaptive Walk Reminder",
+      "file": "Sources/Reminders/ReminderScheduler.swift",
+      "completed": false,
+      "checks": [
+        "HealthKit step read affects interval",
+        "High step count relaxes walk reminder"
+      ]
+    }
+  ]
+}

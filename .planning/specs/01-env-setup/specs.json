@@ -1,0 +1,54 @@
+{
+  "session": "01-env-setup",
+  "goal": "Mac + Xcode + real device configured to build and sideload an iOS 17 app",
+  "depends_on": [],
+  "leaves": [
+    {
+      "id": "0.1",
+      "title": "Xcode Install",
+      "completed": false,
+      "checks": [
+        "xcodebuild -version returns Xcode 16.x",
+        "xcode-select -p returns path"
+      ]
+    },
+    {
+      "id": "0.2",
+      "title": "Apple ID + Free Dev Cert",
+      "completed": false,
+      "checks": [
+        "Apple ID added in Xcode Settings > Accounts",
+        "Team shows in project signing"
+      ]
+    },
+    {
+      "id": "0.3",
+      "title": "iPhone Device Setup",
+      "completed": false,
+      "checks": [
+        "Developer Mode enabled on iPhone",
+        "iPhone appears in Xcode Devices and Simulators"
+      ]
+    },
+    {
+      "id": "0.4",
+      "title": "AirPods Pro Verification",
+      "completed": false,
+      "checks": [
+        "AirPods Pro 2nd gen paired to iPhone",
+        "Connected and in-ear detection works in Settings"
+      ]
+    },
+    {
+      "id": "0.5",
+      "title": "Project Scaffold",
+      "completed": false,
+      "checks": [
+        "Xcode project builds without errors",
+        "App runs on physical device",
+        "HealthKit capability added",
+        "Info.plist has health usage descriptions"
+      ]
+    }
+  ]
+}

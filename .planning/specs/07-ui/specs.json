@@ -1,0 +1,39 @@
+{
+  "session": "07-ui",
+  "goal": "Minimal SwiftUI views for active session, history, settings",
+  "depends_on": ["02-posture-engine", "03-session-manager", "04-healthkit", "05-reminder-scheduler", "06-notifications"],
+  "leaves": [
+    {
+      "id": "6.1",
+      "title": "Session Active View",
+      "file": "Sources/Views/SessionActiveView.swift",
+      "completed": false,
+      "checks": [
+        "Posture state shows green/orange/red",
+        "Session clock counts up",
+        "End Session button ends session"
+      ]
+    },
+    {
+      "id": "6.2",
+      "title": "History View",
+      "file": "Sources/Views/HistoryView.swift",
+      "completed": false,
+      "checks": [
+        "Sessions listed most recent first",
+        "Tap row shows pitch graph (Swift Charts)",
+        "Score badge visible"
+      ]
+    },
+    {
+      "id": "6.3",
+      "title": "Settings View",
+      "file": "Sources/Views/SettingsView.swift",
+      "completed": false,
+      "checks": [
+        "Threshold sliders persist via UserSettings",
+        "Reset to defaults works"
+      ]
+    }
+  ]
+}

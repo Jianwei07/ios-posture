@@ -1,0 +1,40 @@
+{
+  "session": "03-session-manager",
+  "goal": "Track AirPods connection, manage session clock, persist to SwiftData",
+  "depends_on": ["02-posture-engine"],
+  "leaves": [
+    {
+      "id": "2.1",
+      "title": "State Machine",
+      "file": "Sources/Session/SessionManager.swift",
+      "completed": false,
+      "checks": [
+        "idle → calibrating on AirPods connect",
+        "active → paused on AirPods remove",
+        "State transitions logged"
+      ]
+    },
+    {
+      "id": "2.2",
+      "title": "Session Clock",
+      "file": "Sources/Session/SessionManager.swift",
+      "completed": false,
+      "checks": [
+        "Clock pauses when AirPods removed",
+        "Clock resumes when AirPods re-inserted",
+        "Wall clock != session clock after pause"
+      ]
+    },
+    {
+      "id": "2.3",
+      "title": "SwiftData Models",
+      "file": "Sources/Models/",
+      "completed": false,
+      "checks": [
+        "PostureSession persists across restarts",
+        "PostureReading saves per sample",
+        "UserSettings has default values"
+      ]
+    }
+  ]
+}

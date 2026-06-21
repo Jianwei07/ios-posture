@@ -1,0 +1,48 @@
+{
+  "session": "02-posture-engine",
+  "goal": "Read AirPods IMU, filter noise, classify posture against calibrated neutral",
+  "depends_on": ["01-env-setup"],
+  "leaves": [
+    {
+      "id": "1.1",
+      "title": "CMHeadphoneMotionManager Wrapper",
+      "file": "Sources/PostureEngine/PostureEngine.swift",
+      "completed": false,
+      "checks": [
+        "Pitch/roll/yaw values appear in console when AirPods in",
+        "Motion stops when AirPods removed"
+      ]
+    },
+    {
+      "id": "1.2",
+      "title": "Low-Pass Motion Filter",
+      "file": "Sources/PostureEngine/MotionFilter.swift",
+      "completed": false,
+      "checks": [
+        "Values stabilize within 1-2s of putting AirPods in",
+        "No jitter visible in UI readings"
+      ]
+    },
+    {
+      "id": "1.3",
+      "title": "Calibration (neutral baseline)",
+      "file": "Sources/PostureEngine/CalibrationStore.swift",
+      "completed": false,
+      "checks": [
+        "Calibration value captured after 3s",
+        "Subsequent readings show delta from neutral"
+      ]
+    },
+    {
+      "id": "1.4",
+      "title": "PostureClassifier",
+      "file": "Sources/PostureEngine/PostureClassifier.swift",
+      "completed": false,
+      "checks": [
+        "Head down triggers poor classification",
+        "Neutral position returns good",
+        "Thresholds match UserSettings values"
+      ]
+    }
+  ]
+}

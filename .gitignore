@@ -1,0 +1,15 @@
+# Xcode — track Posture.xcodeproj (managed in Xcode after one-time xcodegen scaffold),
+# but ignore per-user state inside it
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+DerivedData/
+build/
+.build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# macOS
+.DS_Store

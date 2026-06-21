@@ -1,0 +1,17 @@
+{
+  "root": {
+    "id": "root",
+    "title": "iOS Posture App",
+    "goal": "Use AirPods Pro IMU to detect bad head posture and adaptively remind users to fix posture, drink water, and walk. Fully local, open source, no backend.",
+    "completed": false
+  },
+  "sessions": [
+    "01-env-setup",
+    "02-posture-engine",
+    "03-session-manager",
+    "04-healthkit",
+    "05-reminder-scheduler",
+    "06-notifications",
+    "07-ui"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "session": "04-healthkit",
+  "goal": "Read step count from HealthKit; write posture sessions",
+  "depends_on": ["01-env-setup"],
+  "leaves": [
+    {
+      "id": "4.1",
+      "title": "Permission Request",
+      "file": "Sources/HealthKit/HealthKitAdapter.swift",
+      "completed": false,
+      "checks": [
+        "Permission sheet appears on first launch",
+        "App appears in Health app Sources"
+      ]
+    },
+    {
+      "id": "4.2",
+      "title": "Read Step Count",
+      "file": "Sources/HealthKit/HealthKitAdapter.swift",
+      "completed": false,
+      "checks": [
+        "stepsLastHour() returns value matching Health app"
+      ]
+    },
+    {
+      "id": "4.3",
+      "title": "Write Posture Session",
+      "file": "Sources/HealthKit/HealthKitAdapter.swift",
+      "completed": false,
+      "checks": [
+        "Session appears in Health > Mindfulness after ending session"
+      ]
+    }
+  ]
+}

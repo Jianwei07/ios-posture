@@ -1,0 +1,27 @@
+{
+  "session": "06-notifications",
+  "goal": "Schedule local notifications and trigger in-app overlay",
+  "depends_on": ["01-env-setup"],
+  "leaves": [
+    {
+      "id": "5.1",
+      "title": "Permission + Scheduling",
+      "file": "Sources/Notifications/NotificationModule.swift",
+      "completed": false,
+      "checks": [
+        "Notification permission requested on launch",
+        "Notifications appear on lock screen"
+      ]
+    },
+    {
+      "id": "5.2",
+      "title": "In-App Overlay",
+      "file": "Sources/Notifications/NotificationModule.swift",
+      "completed": false,
+      "checks": [
+        "Overlay appears when app foregrounded during reminder",
+        "Auto-dismisses after 4s"
+      ]
+    }
+  ]
+}

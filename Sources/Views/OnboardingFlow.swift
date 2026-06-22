@@ -18,7 +18,7 @@ struct OnboardingFlow: View {
             case 1: PermissionsStep(onNext: { step = 2 })
             default:
                 CalibrateView(engine: app.engine, mode: .onboarding) { baseline in
-                    settings.baselinePitch = baseline
+                    if let b = baseline { settings.baselinePitch = b }
                     onFinish()
                 }
             }

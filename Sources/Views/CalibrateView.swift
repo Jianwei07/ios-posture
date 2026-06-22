@@ -10,7 +10,8 @@ struct CalibrateView: View {
     var onDone: (Double?) -> Void
 
     @State private var capturing = false
-    @State private var timeoutFired = false
+    @State private var failed = false
+    @State private var failReason: String?
     @State private var timeoutTimer: Timer?
 
     private var progress: Double { engine.calibrationProgress }
@@ -33,22 +34,39 @@ struct CalibrateView: View {
 
                 Spacer()
 
-                Button { capturing ? () : start() } label: {
-                    Text(capturing ? "Hold still…" : "Set baseline")
-                        .font(Theme.Font.body(15).weight(.semibold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity).padding(.vertical, 14)
-                        .background(Theme.Palette.accent, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
+                if failed {
+                    Text(failReason ?? "Couldn't get a steady baseline.")
+                        .font(Theme.Font.body(14))
+                        .foregroundStyle(Theme.Palette.slouch)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 30)
+                    Button { tryAgain() } label: {
+                        Text("Try again")
+                            .font(Theme.Font.body(15).weight(.semibold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 14)
+                            .background(Theme.Palette.accent, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
+                    }
+                    .pressable()
+                    .padding(.horizontal, 24).padding(.top, 12)
+                    Button { cancel() } label: {
+                        Text(mode == .onboarding ? "Skip — I'll set this later" : "Cancel")
+                            .font(Theme.Font.body(13).weight(.semibold))
+                            .foregroundStyle(Theme.Palette.inkFaint)
+                    }
+                    .padding(.top, 10).padding(.bottom, 24)
+                } else {
+                    Button { capturing ? () : start() } label: {
+                        Text(capturing ? "Hold still…" : "Set baseline")
+                            .font(Theme.Font.body(15).weight(.semibold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity).padding(.vertical, 14)
+                            .background(Theme.Palette.accent, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
+                    }
+                    .pressable().disabled(capturing)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
                 }
-                .pressable().disabled(capturing)
-                .padding(.horizontal, 24)
-
-                Button { skip() } label: {
-                    Text("Skip for now")
-                        .font(Theme.Font.body(13).weight(.semibold))
-                        .foregroundStyle(Theme.Palette.inkFaint)
-                }
-                .padding(.top, 12).padding(.bottom, 24)
             }
         }
         .onChange(of: progress) { _, p in
@@ -79,12 +97,12 @@ struct CalibrateView: View {
         engine.recalibrate()
         engine.start()
         capturing = true
-        timeoutFired = false
+        failed = false
+        failReason = nil
         timeoutTimer?.invalidate()
         timeoutTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
             DispatchQueue.main.async {
-                guard capturing, !timeoutFired else { return }
-                timeoutFired = true
+                guard capturing else { return }
                 finish()
             }
         }
@@ -93,14 +111,26 @@ struct CalibrateView: View {
     private func finish() {
         cleanup()
         capturing = false
-        let baseline = engine.neutralPitch ?? engine.currentPitch
-        onDone(baseline)
+        if let baseline = engine.neutralPitch {
+            onDone(baseline)
+        } else {
+            failed = true
+            failReason = engine.calibrationSpread > 4
+                ? "Too much movement. Sit upright, keep your head still, and try again."
+                : "Couldn't get a steady baseline. Check your AirPods are in and try again."
+        }
     }
 
-    private func skip() {
+    private func tryAgain() {
+        failed = false
+        failReason = nil
+        start()
+    }
+
+    private func cancel() {
         cleanup()
         capturing = false
-        onDone(engine.currentPitch == 0 ? 0 : engine.currentPitch)
+        onDone(nil)
     }
 
     private func cleanup() {

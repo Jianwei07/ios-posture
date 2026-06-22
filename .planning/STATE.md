@@ -1,17 +1,17 @@
 # State
 
-## Current: PHASE 1.9 PLANT MASCOT — DONE
+## Current: PHASE 1.10 BASELINE ACCURACY — DONE
 
-## Status: Build green, 8/8 tests pass, simulator verified (upright + wilt). Ready for real-device pass next session.
+## Status: Build green, 13/13 tests pass. No fake/inferred baselines; calibration explicit + stability-gated. Monstera redrawn.
 
 ## Verified
 - [x] BUILD SUCCEEDED (sim)
-- [x] 8/8 unit tests green
-- [x] Plant renders: terracotta pot + rim + soil, tapered green stem, 3 leaves
-- [x] Upright (pitch 0) = tall green sprout; wilt (pitch -32) = stem droops forward + foliage warms sage→clay (verified via temp sim pitch, reverted)
-- [x] Filled tapered Paths (not strokes) — fixes the "wireframe" cheapness of prior attempts
-- [x] Gentle sway (±1.6° at pot base, 4.5s loop), Reduced-Motion aware
-- [x] StickmanView/StickmanPose/StickmanMapping names + filename kept — TodayView + .xcodeproj untouched, no xcodegen rerun
+- [x] 13/13 unit tests green (4 new calibration tests)
+- [x] Engine: no auto-calibrate on start(); only after recalibrate()
+- [x] Engine: 4° spread gate rejects unstable holds
+- [x] CalibrateView: no ?? currentPitch fallback; failure → Try Again
+- [x] NowView: "Set your baseline" CTA when no baseline (not "Getting your baseline…")
+- [x] Monstera: terracotta pot + rim + outline, 2 stems, 6 split leaves with notches + veins
 
 ## Phases done
 - [x] 1.5 — Design system + Today hub (Theme, Stickman procedural, TodayView, HabitCard, WaterLog)

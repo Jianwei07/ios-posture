@@ -23,6 +23,7 @@
 		637B28C8ADB826A125857493 /* PostureReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C175572A062064D96E4747 /* PostureReading.swift */; };
 		64531A6A05F6EA7281A6C9A5 /* WaterLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE114FE2B5ACFFF0589D292 /* WaterLog.swift */; };
 		6969CBDCA33498FAAE779C47 /* SolarCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB8A0252B3194AA8926440E /* SolarCalculator.swift */; };
+		6AC6069A418476449C9F94D1 /* PostureEngineCalibrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0146062510D6296BEAD5EC07 /* PostureEngineCalibrationTests.swift */; };
 		6D36027EA5669685B5C8BD46 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */; };
 		6E866D607E7200667AFEC576 /* CalibrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE69DA461C091185EFE251E /* CalibrateView.swift */; };
 		6F53A347C58B35C88444200A /* PlantMascot.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA77A4EEDEE0DC4C3A0CBC7 /* PlantMascot.swift */; };
@@ -56,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0146062510D6296BEAD5EC07 /* PostureEngineCalibrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureEngineCalibrationTests.swift; sourceTree = "<group>"; };
 		04A6041CD6092FFA063455AA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		08D22EEE52F811688AEBBC7A /* SimulatorOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorOverlay.swift; sourceTree = "<group>"; };
 		0974D445CBC729D74A799425 /* MotionFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionFilterTests.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 			isa = PBXGroup;
 			children = (
 				B28C3204DC6B6631DE317362 /* PostureClassifierTests.swift */,
+				0146062510D6296BEAD5EC07 /* PostureEngineCalibrationTests.swift */,
 			);
 			path = PostureEngineTests;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 			files = (
 				79FB3DFB13EE5E4C41007C03 /* MotionFilterTests.swift in Sources */,
 				727CB4C45F691161D9996439 /* PostureClassifierTests.swift in Sources */,
+				6AC6069A418476449C9F94D1 /* PostureEngineCalibrationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

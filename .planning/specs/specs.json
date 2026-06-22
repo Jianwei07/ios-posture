@@ -12,6 +12,7 @@
     "04-healthkit",
     "05-reminder-scheduler",
     "06-notifications",
-    "07-ui"
+    "07-ui",
+    "11-baseline-accuracy"
   ]
 }

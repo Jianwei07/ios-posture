@@ -56,7 +56,11 @@ struct NowView: View {
             .padding(.bottom, 12)
         }
         .overlay(alignment: .top) { if showOverlay, let m = overlayMessage { nudgeBanner(m) } }
-        .sheet(isPresented: $showCalibrate) {
+        .sheet(isPresented: $showCalibrate, onDismiss: {
+            if app.engine.neutralPitch == nil, settings.baselinePitch != nil {
+                app.engine.seedBaseline(settings.baselinePitch)
+            }
+        }) {
             CalibrateView(engine: app.engine, mode: .recalibrate) { baseline in
                 if let b = baseline { settings.baselinePitch = b; save() }
                 else { app.engine.seedBaseline(settings.baselinePitch) }

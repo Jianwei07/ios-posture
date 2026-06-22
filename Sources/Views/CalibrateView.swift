@@ -114,6 +114,7 @@ struct CalibrateView: View {
         if let baseline = engine.neutralPitch {
             onDone(baseline)
         } else {
+            engine.cancelCalibration()
             failed = true
             failReason = engine.calibrationSpread > 4
                 ? "Too much movement. Sit upright, keep your head still, and try again."

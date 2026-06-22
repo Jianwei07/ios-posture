@@ -55,4 +55,16 @@ struct PostureEngineCalibrationTests {
         #expect(engine.neutralPitch == -12.0)
         engine.stop()
     }
+
+    @Test func cancelCalibrationStopsLateSamples() {
+        let source = FakeMotionSource()
+        let engine = PostureEngine(source: source)
+        engine.recalibrate()
+        engine.start()
+        for _ in 0..<50 { source.emit(-10.0) }
+        engine.cancelCalibration()
+        for _ in 0..<100 { source.emit(-10.0) }
+        #expect(engine.neutralPitch == nil)
+        engine.stop()
+    }
 }

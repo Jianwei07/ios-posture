@@ -100,6 +100,15 @@ final class PostureEngine {
         isCalibrating = true
     }
 
+    // Cancel an in-flight calibration — stops source, rejects late samples.
+    func cancelCalibration() {
+        isCalibrating = false
+        calibrationSamples = []
+        calibrationProgress = 0
+        calibrationSpread = 0
+        stop()
+    }
+
     func start() {
         guard source.isAvailable else { return }
         pitchFilter.reset()

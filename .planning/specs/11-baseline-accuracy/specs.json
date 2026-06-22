@@ -1,0 +1,48 @@
+{
+  "session": "11-baseline-accuracy",
+  "phase": "1.10",
+  "status": "done",
+  "goal": "Remove fake/inferred baselines; calibration is explicit and accuracy-gated. Redraw Monstera to look recognizably like the reference.",
+  "leaves": [
+    {
+      "id": "11a-engine-explicit-calibration",
+      "title": "PostureEngine: explicit calibration only + stability check",
+      "goal": "Engine only calibrates after recalibrate(); 4-degree spread gate rejects unstable holds; no silent auto-calibration on start().",
+      "files": ["Sources/PostureEngine/PostureEngine.swift"],
+      "checks": ["PostureEngineCalibrationTests green", "xcodebuild build succeeds"],
+      "completed": true
+    },
+    {
+      "id": "11b-calibrate-view-retry",
+      "title": "CalibrateView: no fake baseline, retry on failure, skip=nil",
+      "goal": "Timeout/unstable → failure state with Try Again. No ?? currentPitch fallback. Skip passes nil (no fake baseline).",
+      "files": ["Sources/Views/CalibrateView.swift", "Sources/Views/OnboardingFlow.swift", "Sources/Views/SettingsView.swift"],
+      "checks": ["xcodebuild build succeeds"],
+      "completed": true
+    },
+    {
+      "id": "11c-now-view-baseline-cta",
+      "title": "NowView: 'Set baseline' CTA when no baseline",
+      "goal": "When settings.baselinePitch == nil, show 'Set your baseline' + CTA opening CalibrateView sheet, not 'Getting your baseline…'.",
+      "files": ["Sources/Views/NowView.swift"],
+      "checks": ["xcodebuild build succeeds"],
+      "completed": true
+    },
+    {
+      "id": "11d-monstera-redraw",
+      "title": "Monstera: fuller pot, split leaves, veins, dark outlines",
+      "goal": "Rewrite Monstera Canvas to match reference: terracotta pot with rim+outline, 2 stems, 5-6 split leaves with notched edges + central veins.",
+      "files": ["Sources/DesignSystem/Plants/Monstera.swift"],
+      "checks": ["xcodebuild build succeeds"],
+      "completed": true
+    },
+    {
+      "id": "11e-calibration-tests",
+      "title": "Tests: explicit calibration, stable accept, unstable reject, no auto-cal",
+      "goal": "3-4 Swift Testing cases with FakeMotionSource covering the new engine behavior.",
+      "files": ["Tests/PostureEngineTests/PostureEngineCalibrationTests.swift"],
+      "checks": ["xcodebuild test green"],
+      "completed": true
+    }
+  ]
+}

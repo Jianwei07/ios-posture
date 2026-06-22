@@ -64,9 +64,14 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .sheet(isPresented: $showCalibrate) {
+        .sheet(isPresented: $showCalibrate, onDismiss: {
+            if app.engine.neutralPitch == nil, settings.baselinePitch != nil {
+                app.engine.seedBaseline(settings.baselinePitch)
+            }
+        }) {
             CalibrateView(engine: app.engine, mode: .recalibrate) { baseline in
-                settings.baselinePitch = baseline; save()
+                if let b = baseline { settings.baselinePitch = b; save() }
+                else { app.engine.seedBaseline(settings.baselinePitch) }
                 showCalibrate = false
             }
         }
@@ -156,7 +161,6 @@ struct SettingsView: View {
     }
 
     private func recalibrate() {
-        app.engine.recalibrate()
         showCalibrate = true
     }
 

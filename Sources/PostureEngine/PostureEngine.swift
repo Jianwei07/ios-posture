@@ -59,6 +59,7 @@ final class PostureEngine {
     private(set) var calibrationProgress: Double = 0
     private(set) var neutralPitch: Double?
     private(set) var lastSampleAt: Date?
+    private(set) var calibrationSpread: Double = 0
 
     var classifier: PostureClassifier
     var isHeadphoneMotionAvailable: Bool { source.isAvailable }
@@ -66,9 +67,11 @@ final class PostureEngine {
     let source: MotionSource
     private var pitchFilter = MotionFilter()
 
-    // Inlined calibration: average the first N samples into a neutral baseline.
+    // Calibration only runs after recalibrate() — never silently on start().
     private var calibrationSamples: [Double] = []
     private let calibrationTarget = 100   // ~5s @ 20Hz
+    private let maxCalibrationSpread: Double = 4.0  // degrees; reject if head moved too much
+    private var isCalibrating = false
 
     init(classifier: PostureClassifier = PostureClassifier(), source: MotionSource) {
         self.classifier = classifier
@@ -85,6 +88,7 @@ final class PostureEngine {
     func seedBaseline(_ pitch: Double?) {
         neutralPitch = pitch
         calibrationProgress = pitch == nil ? 0 : 1
+        isCalibrating = false
     }
 
     // Force a fresh 5-second baseline capture (Recalibrate / onboarding).
@@ -92,17 +96,23 @@ final class PostureEngine {
         calibrationSamples = []
         neutralPitch = nil
         calibrationProgress = 0
+        calibrationSpread = 0
+        isCalibrating = true
+    }
+
+    // Cancel an in-flight calibration — stops source, rejects late samples.
+    func cancelCalibration() {
+        isCalibrating = false
+        calibrationSamples = []
+        calibrationProgress = 0
+        calibrationSpread = 0
+        stop()
     }
 
     func start() {
         guard source.isAvailable else { return }
         pitchFilter.reset()
         lastSampleAt = nil
-        // Keep a seeded baseline; only auto-calibrate when we have none.
-        if neutralPitch == nil {
-            calibrationSamples = []
-            calibrationProgress = 0
-        }
         source.start { [weak self] pitch in self?.process(pitch: pitch) }
     }
 
@@ -119,10 +129,15 @@ final class PostureEngine {
     private func process(pitch rawPitch: Double) {
         let smoothPitch = pitchFilter.filter(rawPitch)
 
-        if neutralPitch == nil {
+        if isCalibrating, neutralPitch == nil {
             calibrationSamples.append(smoothPitch)
             if calibrationSamples.count >= calibrationTarget {
-                neutralPitch = calibrationSamples.reduce(0, +) / Double(calibrationSamples.count)
+                let spread = (calibrationSamples.max() ?? 0) - (calibrationSamples.min() ?? 0)
+                calibrationSpread = spread
+                if spread <= maxCalibrationSpread {
+                    neutralPitch = calibrationSamples.reduce(0, +) / Double(calibrationSamples.count)
+                }
+                isCalibrating = false
             }
         }
 

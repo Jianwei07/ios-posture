@@ -11,11 +11,13 @@ struct NowView: View {
 
     @State private var overlayMessage: String?
     @State private var showOverlay = false
+    @State private var showCalibrate = false
 
     private var settings: UserSettings { settingsArray.first ?? UserSettings() }
     private var engine: PostureEngine { app.engine }
     private var isActive: Bool { app.session.state == .active }
-    private var calibrating: Bool { isActive && engine.calibrationProgress < 1 }
+    private var calibrating: Bool { isActive && engine.calibrationProgress < 1 && engine.calibrationProgress > 0 }
+    private var needsBaseline: Bool { settings.baselinePitch == nil }
     private var state: PostureState { engine.postureState }
 
     private var todayWaterMl: Double {
@@ -54,6 +56,17 @@ struct NowView: View {
             .padding(.bottom, 12)
         }
         .overlay(alignment: .top) { if showOverlay, let m = overlayMessage { nudgeBanner(m) } }
+        .sheet(isPresented: $showCalibrate, onDismiss: {
+            if app.engine.neutralPitch == nil, settings.baselinePitch != nil {
+                app.engine.seedBaseline(settings.baselinePitch)
+            }
+        }) {
+            CalibrateView(engine: app.engine, mode: .recalibrate) { baseline in
+                if let b = baseline { settings.baselinePitch = b; save() }
+                else { app.engine.seedBaseline(settings.baselinePitch) }
+                showCalibrate = false
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: NotificationModule.overlayNotification)) { note in
             if let type = note.object as? ReminderType { flash(type.title + " — " + type.body) }
         }
@@ -76,14 +89,26 @@ struct NowView: View {
 
     private var stateBlock: some View {
         VStack(spacing: 4) {
-            Text(calibrating ? "Getting your baseline…" : (isActive ? state.word : "Pop your AirPods in"))
+            Text(needsBaseline
+                ? "Set your baseline"
+                : (calibrating ? "Getting your baseline…" : (isActive ? state.word : "Pop your AirPods in")))
                 .font(Theme.Font.hero(30))
-                .foregroundStyle(isActive && !calibrating ? state.color : Theme.Palette.inkSoft)
+                .foregroundStyle(isActive && !calibrating && !needsBaseline ? state.color : Theme.Palette.inkSoft)
                 .animation(Theme.Motion.fade, value: state)
             Text(subline)
                 .font(Theme.Font.body(14))
                 .foregroundStyle(Theme.Palette.inkSoft)
-            if isActive && !calibrating {
+            if needsBaseline {
+                Button { showCalibrate = true } label: {
+                    Text("Set baseline")
+                        .font(Theme.Font.body(15).weight(.semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 28).padding(.vertical, 12)
+                        .background(Theme.Palette.accent, in: Capsule())
+                }
+                .pressable()
+                .padding(.top, 10)
+            } else if isActive && !calibrating {
                 Text("\(uprightMinutes) min upright")
                     .font(Theme.Font.caption(13).weight(.bold))
                     .foregroundStyle(Theme.Palette.inkFaint)
@@ -94,6 +119,7 @@ struct NowView: View {
     }
 
     private var subline: String {
+        if needsBaseline { return "calibrate to start tracking" }
         guard isActive, !calibrating else { return "to begin" }
         switch state {
         case .aligned: return state.subcopy
@@ -154,6 +180,8 @@ struct NowView: View {
         modelContext.insert(WaterEntry())
         try? modelContext.save()
     }
+
+    private func save() { try? modelContext.save() }
 
     private func flash(_ message: String) {
         overlayMessage = message

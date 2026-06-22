@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body { margin: 0; -webkit-font-smoothing: antialiased; }
+</style>
+</helmet>
+
+<div style="min-width:100%;min-height:100vh;width:max-content;box-sizing:border-box;padding:48px 56px 80px;background:#e6e2d8;font-family:system-ui,-apple-system,sans-serif;">
+
+  <!-- TITLE + LOCKED SYSTEM -->
+  <div style="max-width:860px;">
+    <div style="font:700 12px system-ui;letter-spacing:.18em;text-transform:uppercase;color:#9a948a;">v1 direction · applied</div>
+    <div style="font:700 40px/1.05 system-ui;color:#2A2A26;margin-top:8px;letter-spacing:-.02em;">Posture — Sage</div>
+    <div style="font:400 17px/1.5 system-ui;color:#6f6a60;margin-top:12px;">The approved system applied to the screens you liked. Use the <b>state</b> tweak to flip the home between posture states.</div>
+    <div style="display:flex;align-items:center;gap:22px;margin-top:20px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:7px;">
+        <span style="width:22px;height:22px;border-radius:6px;background:#F4F2EC;border:1px solid #d8d4c8;"></span>
+        <span style="width:22px;height:22px;border-radius:6px;background:#2A2A26;"></span>
+        <span style="width:22px;height:22px;border-radius:6px;background:#5F9A78;"></span>
+        <span style="width:22px;height:22px;border-radius:6px;background:#CC8A5A;"></span>
+        <span style="width:22px;height:22px;border-radius:6px;background:#4F8A7B;"></span>
+        <span style="font:500 12px ui-monospace,monospace;color:#9a948a;margin-left:4px;">Sage</span>
+      </div>
+      <div style="width:1px;height:24px;background:#d2cdc1;"></div>
+      <div style="font:600 14px system-ui;color:#2A2A26;">SF Pro <span style="color:#9a948a;font-weight:400;">/ system</span></div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:46px;align-items:flex-start;margin-top:44px;">
+
+    <!-- ============ HOME (stateful) ============ -->
+    <div data-screen-label="Home" style="display:flex;flex-direction:column;align-items:flex-start;gap:14px;flex:none;width:300px;">
+      <div style="font:600 13px system-ui;color:#2A2A26;">Home · live status</div>
+      <div style="width:300px;height:612px;background:#F4F2EC;border:2.5px solid #2A2A26;border-radius:46px;position:relative;overflow:hidden;box-shadow:0 18px 38px rgba(60,50,30,.18);color:#2A2A26;">
+        <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:98px;height:28px;background:#1b1b18;border-radius:15px;z-index:6;"></div>
+        <div style="position:absolute;top:17px;left:26px;font:700 14px system-ui;">9:41</div>
+        <div style="position:absolute;top:17px;right:24px;font:700 12px system-ui;">5G ▮</div>
+
+        <div style="position:absolute;left:20px;right:20px;top:58px;bottom:74px;display:flex;flex-direction:column;align-items:center;">
+          <div style="margin-top:6px;display:flex;align-items:center;gap:7px;border:1.5px solid #cfe0d9;background:#eef4f1;border-radius:20px;padding:6px 14px;font:600 12.5px system-ui;color:#4F8A7B;"><span style="width:7px;height:7px;border-radius:50%;background:#4F8A7B;display:inline-block;"></span>AirPods connected</div>
+
+          <!-- ALIGNED -->
+          <sc-if value="{{ isAligned }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div style="margin-top:48px;"><svg width="106" height="140" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#5F9A78" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#5F9A78" stroke-width="7"/></svg></div>
+              <div style="font:700 33px system-ui;color:#5F9A78;margin-top:18px;letter-spacing:-.01em;">Aligned</div>
+              <div style="font:400 15px system-ui;color:#8a857a;margin-top:2px;">head &amp; neck look good</div>
+              <div style="font:600 14px system-ui;color:#b3ada1;margin-top:10px;">42 min upright</div>
+            </div>
+          </sc-if>
+          <!-- DRIFTING -->
+          <sc-if value="{{ isDrifting }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div style="margin-top:48px;"><svg width="106" height="140" viewBox="0 0 100 132" fill="none"><path d="M50 124 C50 100 51 90 58 82" stroke="#CC8A5A" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="64" cy="62" r="19" stroke="#CC8A5A" stroke-width="7"/></svg></div>
+              <div style="font:700 31px system-ui;color:#CC8A5A;margin-top:18px;letter-spacing:-.01em;">Easing forward</div>
+              <div style="font:400 15px system-ui;color:#8a857a;margin-top:2px;">gently sit tall</div>
+              <div style="font:600 14px system-ui;color:#b3ada1;margin-top:10px;">−11° · 2 min</div>
+            </div>
+          </sc-if>
+          <!-- SLOUCH -->
+          <sc-if value="{{ isSlouch }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div style="margin-top:48px;"><svg width="106" height="140" viewBox="0 0 100 132" fill="none"><path d="M48 124 C48 98 52 80 64 70" stroke="#B05A38" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="74" cy="52" r="19" stroke="#B05A38" stroke-width="7"/></svg></div>
+              <div style="font:700 33px system-ui;color:#B05A38;margin-top:18px;letter-spacing:-.01em;">Slouching</div>
+              <div style="font:400 15px system-ui;color:#8a857a;margin-top:2px;">time to reset</div>
+              <div style="font:600 14px system-ui;color:#b3ada1;margin-top:10px;">−19° · 6 min</div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;gap:13px;margin-top:auto;width:100%;">
+            <div style="flex:1;background:#FBFAF6;border:1px solid #e8e5dc;border-radius:16px;padding:13px 12px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font:600 13px system-ui;color:#6f6a60;">Water</div><div style="font:700 14px system-ui;">4/8</div></div>
+              <div style="height:6px;background:#ece8de;border-radius:4px;margin-top:9px;"><div style="width:50%;height:6px;background:#4F8A7B;border-radius:4px;"></div></div>
+            </div>
+            <div style="flex:1;background:#FBFAF6;border:1px solid #e8e5dc;border-radius:16px;padding:13px 12px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font:600 13px system-ui;color:#6f6a60;">Walk</div><div style="font:700 14px system-ui;">2.1k</div></div>
+              <div style="height:6px;background:#ece8de;border-radius:4px;margin-top:9px;"><div style="width:53%;height:6px;background:#CC8A5A;border-radius:4px;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:absolute;left:0;right:0;bottom:0;height:74px;border-top:1px solid #e3dfd4;background:#fbfaf6;display:flex;align-items:center;padding-bottom:8px;">
+          <div style="flex:1;text-align:center;color:#4F8A7B;"><div style="width:19px;height:19px;border:2.5px solid #4F8A7B;border-radius:50%;margin:0 auto 4px;"></div><div style="font:600 11px system-ui;">Now</div></div>
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:19px;height:19px;border:2px solid #b3ada1;margin:0 auto 4px;"></div><div style="font:400 11px system-ui;">Trends</div></div>
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:19px;height:19px;border:2px solid #b3ada1;border-radius:5px;margin:0 auto 4px;"></div><div style="font:400 11px system-ui;">Settings</div></div>
+        </div>
+      </div>
+      <div style="font:italic 12.5px/1.45 system-ui;color:#857f73;width:300px;">A1 hero in Sage. Flip the <b>state</b> tweak — icon, word and colour shift together (green → clay → terracotta).</div>
+    </div>
+
+    <!-- ============ CALIBRATE ============ -->
+    <div data-screen-label="Calibrate" style="display:flex;flex-direction:column;align-items:flex-start;gap:14px;flex:none;width:300px;">
+      <div style="font:600 13px system-ui;color:#2A2A26;">Calibrate baseline</div>
+      <div style="width:300px;height:612px;background:#F4F2EC;border:2.5px solid #2A2A26;border-radius:46px;position:relative;overflow:hidden;box-shadow:0 18px 38px rgba(60,50,30,.18);color:#2A2A26;">
+        <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:98px;height:28px;background:#1b1b18;border-radius:15px;z-index:6;"></div>
+        <div style="position:absolute;top:17px;left:26px;font:700 14px system-ui;">9:41</div>
+        <div style="position:absolute;inset:66px 26px 32px;display:flex;flex-direction:column;align-items:center;">
+          <div style="font:700 24px/1.2 system-ui;text-align:center;letter-spacing:-.01em;margin-top:14px;">Sit how you want<br>to hold yourself</div>
+          <div style="font:400 14.5px/1.45 system-ui;color:#8a857a;margin-top:12px;text-align:center;">Hold still for 5 seconds — your upright becomes the baseline.</div>
+          <div style="position:relative;margin-top:42px;width:188px;height:188px;display:flex;align-items:center;justify-content:center;">
+            <svg width="188" height="188" viewBox="0 0 188 188"><circle cx="94" cy="94" r="84" stroke="#e6e2d6" stroke-width="10" fill="none"/><circle cx="94" cy="94" r="84" stroke="#5F9A78" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="350 528" transform="rotate(-90 94 94)"/></svg>
+            <div style="position:absolute;display:flex;flex-direction:column;align-items:center;"><svg width="56" height="74" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#5F9A78" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#5F9A78" stroke-width="8"/></svg><div style="font:700 26px system-ui;color:#5F9A78;margin-top:8px;">3</div></div>
+          </div>
+          <div style="margin-top:auto;width:100%;background:#4F8A7B;border-radius:15px;padding:15px;text-align:center;font:600 15px system-ui;color:#fff;">Set baseline</div>
+          <div style="margin-top:14px;font:500 13px system-ui;color:#9a948a;">Adjust sensitivity later</div>
+        </div>
+      </div>
+      <div style="font:italic 12.5px/1.45 system-ui;color:#857f73;width:300px;">CAL-1 quick hold. The sensitivity dial lives in Settings for ongoing fine-tuning.</div>
+    </div>
+
+    <!-- ============ QUIET NUDGE ============ -->
+    <div data-screen-label="Nudge" style="display:flex;flex-direction:column;align-items:flex-start;gap:14px;flex:none;width:300px;">
+      <div style="font:600 13px system-ui;color:#2A2A26;">Quiet nudge</div>
+      <div style="width:300px;height:612px;background:#F4F2EC;border:2.5px solid #2A2A26;border-radius:46px;position:relative;overflow:hidden;box-shadow:0 18px 38px rgba(60,50,30,.18);color:#2A2A26;">
+        <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:#1b1b18;border-radius:17px;padding:7px 15px;z-index:6;">
+          <svg width="13" height="17" viewBox="0 0 100 132" fill="none"><path d="M48 124 C48 98 52 80 64 70" stroke="#E0A86B" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="74" cy="52" r="19" stroke="#E0A86B" stroke-width="13"/></svg>
+          <span style="font:700 13px system-ui;color:#E8B57C;">−18° · ease up</span>
+        </div>
+        <div style="position:absolute;top:17px;left:26px;font:700 14px system-ui;">9:41</div>
+
+        <div style="position:absolute;left:20px;right:20px;top:90px;display:flex;flex-direction:column;align-items:center;opacity:.4;filter:saturate(.85);">
+          <svg width="92" height="120" viewBox="0 0 100 132" fill="none"><path d="M50 124 C50 100 51 90 58 82" stroke="#CC8A5A" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="64" cy="62" r="19" stroke="#CC8A5A" stroke-width="7"/></svg>
+          <div style="font:700 28px system-ui;color:#CC8A5A;margin-top:14px;">Easing forward</div>
+        </div>
+        <div style="position:absolute;left:26px;right:26px;bottom:120px;text-align:center;">
+          <div style="display:inline-flex;align-items:center;gap:8px;background:#fbfaf6;border:1px solid #e8e5dc;border-radius:14px;padding:11px 15px;font:500 13px system-ui;color:#6f6a60;"><span style="width:8px;height:8px;border-radius:50%;background:#CC8A5A;"></span>soft AirPods chime</div>
+        </div>
+        <div style="position:absolute;left:26px;right:26px;bottom:48px;text-align:center;font:400 13px/1.5 system-ui;color:#9a948a;">No banner, no buzz to clear — the island just turns clay and a gentle tone plays in your ears.</div>
+      </div>
+      <div style="font:italic 12.5px/1.45 system-ui;color:#857f73;width:300px;">C1 default — lives in the Dynamic Island while you work elsewhere. Escalates to a banner only on long slouches.</div>
+    </div>
+
+    <!-- ============ NOT CONNECTED ============ -->
+    <div data-screen-label="Disconnected" style="display:flex;flex-direction:column;align-items:flex-start;gap:14px;flex:none;width:300px;">
+      <div style="font:600 13px system-ui;color:#2A2A26;">Not connected</div>
+      <div style="width:300px;height:612px;background:#F6EEE6;border:2.5px solid #2A2A26;border-radius:46px;position:relative;overflow:hidden;box-shadow:0 18px 38px rgba(60,50,30,.18);color:#2A2A26;">
+        <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:98px;height:28px;background:#1b1b18;border-radius:15px;z-index:6;"></div>
+        <div style="position:absolute;top:17px;left:26px;font:700 14px system-ui;">9:41</div>
+        <div style="position:absolute;inset:66px 28px 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <svg width="96" height="88" viewBox="0 0 96 88"><polygon points="48,8 92,80 4,80" fill="none" stroke="#CC8A5A" stroke-width="5" stroke-linejoin="round"/><line x1="48" y1="36" x2="48" y2="58" stroke="#CC8A5A" stroke-width="5" stroke-linecap="round"/><circle cx="48" cy="69" r="2.8" fill="#CC8A5A"/></svg>
+          <div style="font:700 24px system-ui;color:#B0703F;margin-top:26px;text-align:center;letter-spacing:-.01em;">AirPods not connected</div>
+          <div style="font:400 14.5px/1.45 system-ui;color:#a8896f;margin-top:12px;text-align:center;">Turn on Bluetooth and pop in your AirPods Pro to start tracking posture.</div>
+          <div style="margin-top:30px;width:100%;background:#2A2A26;border-radius:15px;padding:15px;text-align:center;font:600 15px system-ui;color:#fff;">Open Bluetooth settings</div>
+          <div style="margin-top:18px;display:flex;align-items:center;gap:9px;font:500 13px system-ui;color:#b89a86;"><span style="width:9px;height:9px;border-radius:50%;background:#cdb6a6;"></span>waiting for AirPods…</div>
+        </div>
+      </div>
+      <div style="font:italic 12.5px/1.45 system-ui;color:#857f73;width:300px;">E2 — the app drops here anytime AirPods disconnect or Bluetooth is off. No stale data shown.</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;state&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;aligned&quot;,&quot;drifting&quot;,&quot;slouch&quot;],&quot;default&quot;:&quot;aligned&quot;,&quot;tsType&quot;:&quot;'aligned'|'drifting'|'slouch'&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const state = this.props.state ?? 'aligned';
+    return {
+      isAligned: state === 'aligned',
+      isDrifting: state === 'drifting',
+      isSlouch: state === 'slouch',
+    };
+  }
+}
+</script>
+</body>
+</html>

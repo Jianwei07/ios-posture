@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Bricolage+Grotesque:wght@400;600;700&family=Manrope:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; -webkit-font-smoothing: antialiased; }
+</style>
+</helmet>
+
+<div style="min-width:100%;min-height:100vh;width:max-content;box-sizing:border-box;padding:48px 56px 80px;background:#ebebed;font-family:system-ui,-apple-system,sans-serif;">
+
+  <!-- TITLE -->
+  <div style="max-width:820px;margin-bottom:8px;">
+    <div style="font:700 12px system-ui;letter-spacing:.18em;text-transform:uppercase;color:#9a9aa2;">Visual Direction · pick &amp; mix</div>
+    <div style="font:700 40px/1.05 system-ui;color:#18181b;margin-top:8px;letter-spacing:-.02em;">Posture App — look &amp; feel</div>
+    <div style="font:400 17px/1.5 system-ui;color:#6a6a72;margin-top:12px;">The redesigned posture icon (a spine that bends), calibration ideas, and a few palette + font directions shown in context. Tell me one palette + one font and I'll lock the system.</div>
+  </div>
+
+  <!-- ================= POSTURE ICON ================= -->
+  <div style="margin:48px 0 20px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#7b8f86;">Icon</div>
+    <div style="font:700 27px system-ui;color:#18181b;margin-top:4px;letter-spacing:-.01em;">The spine bends as posture worsens</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}"><div style="font:400 14.5px/1.6 system-ui;color:#6a6a72;margin-top:8px;">Same head + spine metaphor, but now it <b>deforms</b> instead of just tilting — the spine curves forward and the head drops. It reads as a smooth gradient from aligned → drifting → slouch, and the colour reinforces it.</div></sc-if>
+  </div>
+
+  <div style="background:#fff;border:1px solid #e0e0e3;border-radius:20px;box-shadow:0 10px 26px rgba(0,0,0,.06);padding:34px 30px;display:flex;gap:18px;align-items:flex-end;max-width:560px;">
+    <div style="flex:1;text-align:center;">
+      <svg width="86" height="116" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#34A06B" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#34A06B" stroke-width="7"/><line x1="24" y1="124" x2="76" y2="124" stroke="#dcdce0" stroke-width="3" stroke-linecap="round"/></svg>
+      <div style="font:700 15px system-ui;color:#34A06B;margin-top:12px;">Aligned</div>
+      <div style="font:400 12px system-ui;color:#a0a0a8;margin-top:2px;">0–8°</div>
+    </div>
+    <div style="flex:1;text-align:center;">
+      <svg width="86" height="116" viewBox="0 0 100 132" fill="none"><path d="M50 124 C50 100 51 90 58 82" stroke="#D99A3B" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="64" cy="62" r="19" stroke="#D99A3B" stroke-width="7"/><line x1="24" y1="124" x2="76" y2="124" stroke="#dcdce0" stroke-width="3" stroke-linecap="round"/></svg>
+      <div style="font:700 15px system-ui;color:#D99A3B;margin-top:12px;">Drifting</div>
+      <div style="font:400 12px system-ui;color:#a0a0a8;margin-top:2px;">8–15°</div>
+    </div>
+    <div style="flex:1;text-align:center;">
+      <svg width="86" height="116" viewBox="0 0 100 132" fill="none"><path d="M48 124 C48 98 52 80 64 70" stroke="#D9663B" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="74" cy="52" r="19" stroke="#D9663B" stroke-width="7"/><line x1="24" y1="124" x2="76" y2="124" stroke="#dcdce0" stroke-width="3" stroke-linecap="round"/></svg>
+      <div style="font:700 15px system-ui;color:#D9663B;margin-top:12px;">Slouch</div>
+      <div style="font:400 12px system-ui;color:#a0a0a8;margin-top:2px;">15°+</div>
+    </div>
+  </div>
+
+  <!-- ================= CALIBRATION ================= -->
+  <div style="margin:60px 0 20px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#7b8f86;">Feature focus</div>
+    <div style="font:700 27px system-ui;color:#18181b;margin-top:4px;letter-spacing:-.01em;">Calibrate baseline</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}"><div style="font:400 14.5px/1.6 system-ui;color:#6a6a72;margin-top:8px;">Three ways to teach the app <i>your</i> good posture, from fastest to most precise. CAL-3 folds in the sensitivity dial so you can fine-tune the slouch threshold over time. (Shown in a neutral style — palette comes next.)</div></sc-if>
+  </div>
+
+  <div style="display:flex;gap:44px;align-items:flex-start;">
+
+    <!-- CAL-1 quick hold -->
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:none;width:280px;">
+      <div style="font:600 13px system-ui;color:#18181b;">CAL-1 · Quick 5-second hold</div>
+      <div style="width:280px;height:560px;background:#fff;border:1px solid #d8d8dc;border-radius:40px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.12);font-family:system-ui;color:#18181b;">
+        <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:92px;height:26px;background:#111;border-radius:14px;z-index:6;"></div>
+        <div style="position:absolute;inset:64px 26px 30px;display:flex;flex-direction:column;align-items:center;">
+          <div style="font:700 22px system-ui;margin-top:8px;text-align:center;line-height:1.2;letter-spacing:-.01em;">Sit how you want<br>to hold yourself</div>
+          <div style="font:400 14px system-ui;color:#7a7a82;margin-top:10px;text-align:center;line-height:1.45;">Hold still for 5 seconds — your upright becomes the baseline.</div>
+          <div style="position:relative;margin-top:36px;width:172px;height:172px;display:flex;align-items:center;justify-content:center;">
+            <svg width="172" height="172" viewBox="0 0 172 172"><circle cx="86" cy="86" r="77" stroke="#eef0ee" stroke-width="9" fill="none"/><circle cx="86" cy="86" r="77" stroke="#34A06B" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="320 484" transform="rotate(-90 86 86)"/></svg>
+            <div style="position:absolute;display:flex;flex-direction:column;align-items:center;"><svg width="50" height="66" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#34A06B" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#34A06B" stroke-width="8"/></svg><div style="font:700 22px system-ui;color:#34A06B;margin-top:6px;">3</div></div>
+          </div>
+          <div style="margin-top:auto;width:100%;background:#18181b;border-radius:14px;padding:14px;text-align:center;font:600 15px system-ui;color:#fff;">Set baseline</div>
+        </div>
+      </div>
+      <div style="font:italic 12.5px/1.45 system-ui;color:#85858d;width:280px;">Fastest path. One pose, 5 seconds, done. Best as the default; re-runnable from Settings.</div>
+    </div>
+
+    <!-- CAL-2 two-pose -->
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:none;width:280px;">
+      <div style="font:600 13px system-ui;color:#18181b;">CAL-2 · Two-pose capture</div>
+      <div style="width:280px;height:560px;background:#fff;border:1px solid #d8d8dc;border-radius:40px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.12);font-family:system-ui;color:#18181b;">
+        <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:92px;height:26px;background:#111;border-radius:14px;z-index:6;"></div>
+        <div style="position:absolute;inset:64px 26px 30px;display:flex;flex-direction:column;align-items:center;">
+          <div style="display:flex;gap:8px;margin-top:8px;"><div style="width:30px;height:5px;border-radius:3px;background:#34A06B;"></div><div style="width:30px;height:5px;border-radius:3px;background:#e2e2e6;"></div></div>
+          <div style="font:600 12px system-ui;color:#34A06B;margin-top:14px;letter-spacing:.04em;">STEP 1 OF 2</div>
+          <div style="font:700 22px system-ui;margin-top:6px;text-align:center;letter-spacing:-.01em;">Sit up tall</div>
+          <div style="font:400 14px system-ui;color:#7a7a82;margin-top:8px;text-align:center;line-height:1.45;">We capture your upright now, then your relaxed slouch — so we know the gap.</div>
+          <div style="margin-top:30px;width:150px;height:150px;border-radius:50%;background:#f1f7f3;display:flex;align-items:center;justify-content:center;border:1.5px solid #cfe6da;"><svg width="58" height="76" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#34A06B" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#34A06B" stroke-width="8"/></svg></div>
+          <div style="display:flex;align-items:center;gap:9px;margin-top:20px;opacity:.55;"><svg width="22" height="28" viewBox="0 0 100 132" fill="none"><path d="M48 124 C48 98 52 80 64 70" stroke="#D9663B" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="74" cy="52" r="19" stroke="#D9663B" stroke-width="10"/></svg><div style="font:400 13px system-ui;color:#9a9aa2;">next: relax forward</div></div>
+          <div style="margin-top:auto;width:100%;background:#18181b;border-radius:14px;padding:14px;text-align:center;font:600 15px system-ui;color:#fff;">Capture upright</div>
+        </div>
+      </div>
+      <div style="font:italic 12.5px/1.45 system-ui;color:#85858d;width:280px;">Most accurate — the app learns both ends of your range, so the threshold fits you. Slightly more effort up front.</div>
+    </div>
+
+    <!-- CAL-3 passive + sensitivity -->
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:none;width:280px;">
+      <div style="font:600 13px system-ui;color:#18181b;">CAL-3 · Auto-learn + sensitivity</div>
+      <div style="width:280px;height:560px;background:#fff;border:1px solid #d8d8dc;border-radius:40px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.12);font-family:system-ui;color:#18181b;">
+        <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:92px;height:26px;background:#111;border-radius:14px;z-index:6;"></div>
+        <div style="position:absolute;inset:64px 26px 30px;display:flex;flex-direction:column;align-items:stretch;">
+          <div style="font:700 22px system-ui;margin-top:8px;text-align:center;letter-spacing:-.01em;">We'll learn it as you go</div>
+          <div style="font:400 14px system-ui;color:#7a7a82;margin-top:8px;text-align:center;line-height:1.45;">No pose needed — just wear your AirPods. We find your neutral over the first minute.</div>
+          <div style="margin:26px 4px 4px;font:400 12px system-ui;color:#9a9aa2;">Learning your neutral… 40%</div>
+          <div style="height:8px;background:#eef0ee;border-radius:5px;margin:0 4px;"><div style="width:40%;height:8px;background:#34A06B;border-radius:5px;"></div></div>
+          <div style="margin-top:34px;border-top:1px solid #ececef;padding-top:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font:600 14px system-ui;">Slouch sensitivity</div><div style="font:600 14px system-ui;color:#34A06B;">15°</div></div>
+            <div style="position:relative;height:30px;margin-top:14px;display:flex;align-items:center;">
+              <div style="height:5px;width:100%;background:#e2e2e6;border-radius:3px;"></div>
+              <div style="position:absolute;left:0;height:5px;width:52%;background:#18181b;border-radius:3px;"></div>
+              <div style="position:absolute;left:52%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid #18181b;box-shadow:0 2px 6px rgba(0,0,0,.18);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font:400 12px system-ui;color:#a0a0a8;"><span>Relaxed</span><span>Strict</span></div>
+          </div>
+          <div style="margin-top:auto;width:100%;background:#18181b;border-radius:14px;padding:14px;text-align:center;font:600 15px system-ui;color:#fff;">Done</div>
+        </div>
+      </div>
+      <div style="font:italic 12.5px/1.45 system-ui;color:#85858d;width:280px;">Zero effort to start, and the dial lets you fine-tune the threshold as you iterate — exactly what you described wanting.</div>
+    </div>
+
+  </div>
+
+  <!-- ================= PALETTES ================= -->
+  <div style="margin:60px 0 22px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#7b8f86;">Palettes</div>
+    <div style="font:700 27px system-ui;color:#18181b;margin-top:4px;letter-spacing:-.01em;">Four colour directions</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}"><div style="font:400 14.5px/1.6 system-ui;color:#6a6a72;margin-top:8px;">Each shows its swatches plus a live posture card so you can judge it in context. Green/amber/red stay reserved for posture states everywhere — the <b>accent</b> is the only brand colour that changes per palette.</div></sc-if>
+  </div>
+
+  <div style="display:flex;gap:30px;align-items:flex-start;">
+
+    <!-- P1 Clinical -->
+    <div style="flex:none;width:248px;display:flex;flex-direction:column;gap:14px;">
+      <div><div style="font:600 14px system-ui;color:#18181b;">Clinical</div><div style="font:400 12.5px system-ui;color:#8a8a92;">native iOS / Apple Health — calm, trustworthy</div></div>
+      <div style="display:flex;gap:6px;">
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#FBFBFD;border:1px solid #e4e4e8;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">FBFBFD</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#1C1C1E;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">1C1C1E</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#34C759;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">34C759</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#FF9F0A;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">FF9F0A</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#0A84FF;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">0A84FF</div></div>
+      </div>
+      <div style="background:#FBFBFD;border:1px solid #e4e4e8;border-radius:20px;padding:20px 18px;box-shadow:0 8px 22px rgba(0,0,0,.07);">
+        <div style="font:600 12px system-ui;color:#0A84FF;display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:#0A84FF;"></span>AirPods connected</div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px;"><svg width="58" height="76" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#34C759" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#34C759" stroke-width="8"/></svg><div style="font:700 22px system-ui;color:#1C1C1E;margin-top:10px;">Aligned</div><div style="font:400 13px system-ui;color:#8A8A8E;">42 min upright</div></div>
+        <div style="margin-top:14px;background:rgba(255,159,10,.14);color:#C57F00;border-radius:9px;padding:8px 10px;font:600 12px system-ui;text-align:center;">earlier: −18° slouch · 6 min</div>
+        <div style="margin-top:10px;background:#0A84FF;color:#fff;border-radius:11px;padding:11px;text-align:center;font:600 13px system-ui;">View today</div>
+      </div>
+    </div>
+
+    <!-- P2 Focus Dark -->
+    <div style="flex:none;width:248px;display:flex;flex-direction:column;gap:14px;">
+      <div><div style="font:600 14px system-ui;color:#18181b;">Focus Dark</div><div style="font:400 12.5px system-ui;color:#8a8a92;">techy, for engineers — easy on the eyes</div></div>
+      <div style="display:flex;gap:6px;">
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#0F1216;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">0F1216</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#ECEEF1;border:1px solid #e4e4e8;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">ECEEF1</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#5FD39A;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">5FD39A</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#F2B45C;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">F2B45C</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#6EA8FE;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">6EA8FE</div></div>
+      </div>
+      <div style="background:#0F1216;border:1px solid #232830;border-radius:20px;padding:20px 18px;box-shadow:0 8px 22px rgba(0,0,0,.18);">
+        <div style="font:600 12px system-ui;color:#6EA8FE;display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:#6EA8FE;"></span>AirPods connected</div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px;"><svg width="58" height="76" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#5FD39A" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#5FD39A" stroke-width="8"/></svg><div style="font:700 22px system-ui;color:#ECEEF1;margin-top:10px;">Aligned</div><div style="font:400 13px system-ui;color:#9AA0AA;">42 min upright</div></div>
+        <div style="margin-top:14px;background:rgba(242,180,92,.16);color:#F2B45C;border-radius:9px;padding:8px 10px;font:600 12px system-ui;text-align:center;">earlier: −18° slouch · 6 min</div>
+        <div style="margin-top:10px;background:#6EA8FE;color:#0F1216;border-radius:11px;padding:11px;text-align:center;font:700 13px system-ui;">View today</div>
+      </div>
+    </div>
+
+    <!-- P3 Sage Wellness -->
+    <div style="flex:none;width:248px;display:flex;flex-direction:column;gap:14px;">
+      <div><div style="font:600 14px system-ui;color:#18181b;">Sage</div><div style="font:400 12.5px system-ui;color:#8a8a92;">soft wellness — warm, human, unhurried</div></div>
+      <div style="display:flex;gap:6px;">
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#F4F2EC;border:1px solid #e4e2da;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">F4F2EC</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#2A2A26;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">2A2A26</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#5F9A78;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">5F9A78</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#CC8A5A;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">CC8A5A</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#4F8A7B;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">4F8A7B</div></div>
+      </div>
+      <div style="background:#FBFAF6;border:1px solid #e8e5dc;border-radius:20px;padding:20px 18px;box-shadow:0 8px 22px rgba(60,50,30,.07);">
+        <div style="font:600 12px system-ui;color:#4F8A7B;display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:#4F8A7B;"></span>AirPods connected</div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px;"><svg width="58" height="76" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#5F9A78" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#5F9A78" stroke-width="8"/></svg><div style="font:700 22px system-ui;color:#2A2A26;margin-top:10px;">Aligned</div><div style="font:400 13px system-ui;color:#97938A;">42 min upright</div></div>
+        <div style="margin-top:14px;background:rgba(204,138,90,.16);color:#B0703F;border-radius:9px;padding:8px 10px;font:600 12px system-ui;text-align:center;">earlier: −18° slouch · 6 min</div>
+        <div style="margin-top:10px;background:#4F8A7B;color:#fff;border-radius:11px;padding:11px;text-align:center;font:600 13px system-ui;">View today</div>
+      </div>
+    </div>
+
+    <!-- P4 Ink & Signal -->
+    <div style="flex:none;width:248px;display:flex;flex-direction:column;gap:14px;">
+      <div><div style="font:600 14px system-ui;color:#18181b;">Ink &amp; Signal</div><div style="font:400 12.5px system-ui;color:#8a8a92;">bold, high-contrast, confident minimal</div></div>
+      <div style="display:flex;gap:6px;">
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#FFFFFF;border:1px solid #e4e4e8;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">FFFFFF</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#0E0E0E;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">0E0E0E</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#00B589;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">00B589</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#FF5A4D;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">FF5A4D</div></div>
+        <div style="flex:1;"><div style="height:42px;border-radius:8px;background:#0E0E0E;"></div><div style="font:500 9px ui-monospace,monospace;color:#a0a0a8;margin-top:4px;text-align:center;">0E0E0E</div></div>
+      </div>
+      <div style="background:#FFFFFF;border:1.5px solid #0E0E0E;border-radius:20px;padding:20px 18px;box-shadow:0 8px 22px rgba(0,0,0,.08);">
+        <div style="font:600 12px system-ui;color:#0E0E0E;display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:#00B589;"></span>AirPods connected</div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px;"><svg width="58" height="76" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#00B589" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#00B589" stroke-width="8"/></svg><div style="font:800 22px system-ui;color:#0E0E0E;margin-top:10px;letter-spacing:-.01em;">Aligned</div><div style="font:400 13px system-ui;color:#8A8A8A;">42 min upright</div></div>
+        <div style="margin-top:14px;background:rgba(255,90,77,.12);color:#E0392B;border-radius:9px;padding:8px 10px;font:600 12px system-ui;text-align:center;">earlier: −18° slouch · 6 min</div>
+        <div style="margin-top:10px;background:#0E0E0E;color:#fff;border-radius:11px;padding:11px;text-align:center;font:600 13px system-ui;">View today</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= FONTS ================= -->
+  <div style="margin:60px 0 22px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#7b8f86;">Type</div>
+    <div style="font:700 27px system-ui;color:#18181b;margin-top:4px;letter-spacing:-.01em;">Four font directions</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}"><div style="font:400 14.5px/1.6 system-ui;color:#6a6a72;margin-top:8px;">Each pairing shows a headline, the numbers you'll show a lot (angles, %, steps), and a line of body copy. Numbers matter here — look at how the figures feel.</div></sc-if>
+  </div>
+
+  <div style="display:flex;gap:30px;align-items:flex-start;">
+
+    <!-- F1 System -->
+    <div style="flex:none;width:248px;background:#fff;border:1px solid #e0e0e3;border-radius:20px;box-shadow:0 8px 22px rgba(0,0,0,.06);padding:22px;">
+      <div style="font:600 13px system-ui;color:#18181b;">SF Pro / System</div>
+      <div style="font:400 12px system-ui;color:#8a8a92;margin-bottom:18px;">native, invisible, pure iOS</div>
+      <div style="font-family:system-ui;font-weight:700;font-size:34px;color:#34A06B;letter-spacing:-.02em;">Aligned</div>
+      <div style="font-family:system-ui;font-weight:600;font-size:18px;color:#18181b;margin-top:6px;">Calibrate baseline</div>
+      <div style="font-family:system-ui;font-weight:600;font-size:22px;color:#18181b;margin-top:14px;font-variant-numeric:tabular-nums;">78%&nbsp; ·&nbsp; −4°&nbsp; ·&nbsp; 2,140</div>
+      <div style="font-family:system-ui;font-size:13px;line-height:1.5;color:#6a6a72;margin-top:14px;">You've been upright for 42 minutes. Nice work — keep your AirPods in to keep tracking.</div>
+    </div>
+
+    <!-- F2 Space Grotesk -->
+    <div style="flex:none;width:248px;background:#fff;border:1px solid #e0e0e3;border-radius:20px;box-shadow:0 8px 22px rgba(0,0,0,.06);padding:22px;">
+      <div style="font:600 13px system-ui;color:#18181b;">Space Grotesk + Plex Sans</div>
+      <div style="font:400 12px system-ui;color:#8a8a92;margin-bottom:18px;">technical, precise, engineer-coded</div>
+      <div style="font-family:'Space Grotesk';font-weight:700;font-size:34px;color:#34A06B;letter-spacing:-.01em;">Aligned</div>
+      <div style="font-family:'Space Grotesk';font-weight:500;font-size:18px;color:#18181b;margin-top:6px;">Calibrate baseline</div>
+      <div style="font-family:'Space Grotesk';font-weight:700;font-size:22px;color:#18181b;margin-top:14px;font-variant-numeric:tabular-nums;">78%&nbsp; ·&nbsp; −4°&nbsp; ·&nbsp; 2,140</div>
+      <div style="font-family:'IBM Plex Sans';font-size:13px;line-height:1.5;color:#6a6a72;margin-top:14px;">You've been upright for 42 minutes. Nice work — keep your AirPods in to keep tracking.</div>
+    </div>
+
+    <!-- F3 Bricolage -->
+    <div style="flex:none;width:248px;background:#fff;border:1px solid #e0e0e3;border-radius:20px;box-shadow:0 8px 22px rgba(0,0,0,.06);padding:22px;">
+      <div style="font:600 13px system-ui;color:#18181b;">Bricolage Grotesque + System</div>
+      <div style="font:400 12px system-ui;color:#8a8a92;margin-bottom:18px;">editorial, characterful, modern</div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:34px;color:#34A06B;letter-spacing:-.01em;">Aligned</div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:600;font-size:18px;color:#18181b;margin-top:6px;">Calibrate baseline</div>
+      <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:22px;color:#18181b;margin-top:14px;font-variant-numeric:tabular-nums;">78%&nbsp; ·&nbsp; −4°&nbsp; ·&nbsp; 2,140</div>
+      <div style="font-family:system-ui;font-size:13px;line-height:1.5;color:#6a6a72;margin-top:14px;">You've been upright for 42 minutes. Nice work — keep your AirPods in to keep tracking.</div>
+    </div>
+
+    <!-- F4 Manrope -->
+    <div style="flex:none;width:248px;background:#fff;border:1px solid #e0e0e3;border-radius:20px;box-shadow:0 8px 22px rgba(0,0,0,.06);padding:22px;">
+      <div style="font:600 13px system-ui;color:#18181b;">Manrope</div>
+      <div style="font:400 12px system-ui;color:#8a8a92;margin-bottom:18px;">friendly, geometric, rounded-soft</div>
+      <div style="font-family:'Manrope';font-weight:800;font-size:34px;color:#34A06B;letter-spacing:-.02em;">Aligned</div>
+      <div style="font-family:'Manrope';font-weight:700;font-size:18px;color:#18181b;margin-top:6px;">Calibrate baseline</div>
+      <div style="font-family:'Manrope';font-weight:700;font-size:22px;color:#18181b;margin-top:14px;font-variant-numeric:tabular-nums;">78%&nbsp; ·&nbsp; −4°&nbsp; ·&nbsp; 2,140</div>
+      <div style="font-family:'Manrope';font-weight:400;font-size:13px;line-height:1.5;color:#6a6a72;margin-top:14px;">You've been upright for 42 minutes. Nice work — keep your AirPods in to keep tracking.</div>
+    </div>
+
+  </div>
+
+  <!-- CLOSING -->
+  <div style="max-width:780px;margin:58px 0 0;background:#f6f6f4;border:1px solid #e2e2e0;border-radius:14px;padding:20px 22px;">
+    <div style="font:700 14px system-ui;color:#5a8f6f;margin-bottom:10px;">How to decide</div>
+    <div style="font:400 14px/1.7 system-ui;color:#6a6a72;">My lean for "calm, made for engineers": <b>Focus Dark</b> or <b>Clinical</b> palette + <b>Space Grotesk</b> type — quietly technical without feeling like a medical device. If you'd rather it feel warm and gentle, <b>Sage</b> + <b>Manrope</b>. Pick one palette + one font (mix freely) and I'll apply it across the calibration screens and the home you liked.</div>
+  </div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showNotes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return { showNotes: this.props.showNotes ?? true };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,117 +1,166 @@
-# Posture App — Design System
+# Synthesis — Design System ("Sage")
 
-> Living document. Built to evolve from posture → water → movement → lifestyle.
-> Last updated 2026-06-21.
+> Living document. Source of truth: Claude Design project **"Posture IOS"**
+> (`Posture - Walkthrough.dc.html`, `Posture - Hi-Fi`, `Posture - Direction`).
+> Last updated 2026-06-22 — pivoted to Synthesis: app for office workers to live well.
 
 ## Identity
 
-A hand-drawn stickman that mirrors your posture. Warm, minimal, human — a wellness
-companion, not a dashboard. The stickman IS you: sit tall, it sits tall; slouch,
-it slouches. You straighten up so you don't leave it hunched.
+A calm desk companion. AirPods Pro IMU reads tiny head movements; the app reflects your
+alignment as one of three live states via a plant mascot that mirrors your posture. Nudges
+gently — quietly by default, loudly only when you ignore it. Plus water (litres), walk (steps),
+and sunlight (daylight-aware). Fully on-device. No account, no backend.
 
-## Principles (Emil Kowalski–derived)
+Tone: warm, sage, unalarming. Invite, don't scold. The loud moment is rare.
 
-- Unseen details compound; aim for invisible correctness.
-- Motion matches mood: cozy = soft springs, not snappy.
-- Never animate from nothing (`scale 0.96 → 1` + fade, never `scale 0`).
-- Don't animate what's seen constantly (the live pitch number stays calm).
-- Status without alarm: pose + warm tint, never a jarring red flash.
-- Reduced Motion: keep fades/color, drop movement + boil.
+## Principles
 
-## The Stickman (core asset)
+- Calm by default. Quiet Dynamic Island + AirPods chime is the primary nudge; the banner is
+  the only loud moment and must stay rare.
+- Status without alarm: state word + matching colour change together (plant, word, tint).
+  Never a full-screen red flash.
+- Never show stale data. If the IMU stream drops, replace the screen with Disconnected.
+- One plant mascot, three poses. Posture is data: the plant bends with the live angle.
+- Motion matches mood: soft springs on pose/state changes, calm numbers.
 
-Procedural SwiftUI `Canvas` — zero image assets. A skeleton of normalized joint
-points (head, neck, shoulders, elbows, hands, spine base, hips, knees, feet);
-joint angles drive every pose.
-
-- **Hand-drawn look:** each bone stroked with a *seeded* wobble (small deterministic
-  offset on path midpoints), rounded caps, slightly variable width, charcoal ink.
-  Seed is stable per pose so it doesn't jitter every frame unless we want it to.
-- **"Boil":** cycle 2–3 wobble seeds at ~5 fps to mimic hand-drawn animation life.
-  Subtle. Off under Reduced Motion.
-- **Pose = data.** Live filtered pitch → head-forward + spine-curve:
-  - `good`: spine straight, head stacked
-  - `warning`: slight forward head, gentle thoracic curve
-  - `poor`: hunched, head down/forward, shoulders rolled
-  - named event poses: `sip` (arm + mug), `walk` (stride), `sleep` (lying + "z"),
-    `stretch` (later)
-- **Pose interpolation:** spring between joint angles (response 0.5, bounce 0.2).
-- **Live mirror:** during an active session, head/spine continuously track the
-  smoothed pitch — the stickman is a real-time reflection.
-
-## Color (warm minimal — light)
+## Color (Sage — light)
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `bg.canvas` | `#F4EEE2` | app background (warm cream) |
-| `bg.surface` | `#FBF7EF` | cards / raised surfaces |
-| `ink` | `#2E2A25` | primary text + stickman stroke (charcoal) |
-| `ink.soft` | `#6B6457` | secondary text |
-| `accent.honey` | `#E0A33E` | the one accent |
-| `status.good` | `#7C9A6B` | warm sage |
-| `status.warn` | `#D8973C` | ochre |
-| `status.poor` | `#C96F53` | clay |
+| `bg` | `#F4F2EC` | app background |
+| `surface` | `#FBFAF6` | cards / raised surfaces |
+| `ink` | `#2A2A26` | primary text + icon stroke |
+| `ink.soft` | `#6F685E` | secondary text |
+| `ink.faint` | `#9A9183` | tertiary / captions |
+| `accent` | `#4F8A7B` | the one accent (teal) — selection, CTAs, water |
+| `state.aligned` | `#5F9A78` | sage green — good posture |
+| `state.drift` | `#CC8A5A` | clay/ochre — past threshold |
+| `state.slouch` | `#B05A38` | terracotta — sustained slouch |
 
-Status colors appear as subtle tints (12–20% over bg); full saturation only on
-tiny indicators. No full-screen alarm. **Max one accent** (honey). Dark mode
-(warm brown-black) — later.
+State colours appear as the plant stroke + state word, with soft tints on surfaces.
+Max one accent (teal). Dark warm mode — later.
 
 ## Typography
 
-SF Pro **Rounded** (system `.rounded`) — warm, friendly, native.
+SF Pro / system (`system-ui`). The wireframe uses Kalam (hand-sketch) only as a wireframe
+convention — ship with SF Pro.
 
-- Hero / numbers: rounded semibold, tracking slightly tight, **monospaced digits**.
-- Body / labels: rounded regular, `ink.soft`.
-- Scale: caption 12 · body 15 · title 20 · large 28 · hero 40.
+- Hero / numbers: semibold, slightly tight tracking, monospaced digits.
+- Body / labels: regular, `ink.soft`.
+- Scale: caption 12 · body 15 · title 20 · large 27 · hero 40.
+
+## The plant mascot (core asset)
+
+Procedural SwiftUI Canvas — zero image assets. Each plant maps `bend` (0=aligned, 1=slouch)
+to its own visual: stem tilts, leaves/petals droop, color warms sage→clay→terracotta.
+
+Three plants (user-selectable in Settings → Plant mascot):
+
+- **Sunflower** 🌻 — stem + round head + petals. Head bows forward as you slouch.
+- **Cactus** 🌵 — rounded body + arms. Body leans, arms sag with bend.
+- **Monstera** 🪴 — stem + split leaves. Leaves droop forward as bend grows.
+
+Each plant: `bend=0` = tall/happy (sage), `bend=1` = drooped/warm (terracotta).
+Spring between poses (response 0.5, bounce 0.2). Reduced Motion drops the animation.
 
 ## Motion
 
 | Token | Value | Use |
 | --- | --- | --- |
 | `ui.spring` | response 0.35, bounce 0.15 | cards, controls |
-| `mascot.spring` | response 0.5, bounce 0.2 | pose changes |
+| `pose.spring` | response 0.5, bounce 0.2 | state/pose changes |
 | press | `scale 0.97`, 140ms ease-out | any pressable |
-| fade / tint | 200–250ms ease-out | crossfades, status tint |
-| reveal | stagger 40–60ms | lists, tab content |
-| breathing | `scale 1.0 ↔ 1.015` + tiny bob, ~4s ease-in-out loop | stickman alive |
+| fade / tint | 200–250ms ease-out | crossfades, state tint |
+| calibrate ring | 5s linear sweep | baseline countdown |
 
-Pose changes spring the joint angles (never `scale 0`). Reduced Motion drops
-breathing / boil / bob / movement; keeps fades + color.
+State changes spring the plant + crossfade the colour. Reduced Motion keeps fades + colour,
+drops the plant animation.
 
-## Screens
+## Posture model
 
-### Today (home / hero)
+Sensing: **AirPods Pro IMU** via `CMHeadphoneMotionManager`, angle vs a calibrated baseline.
+On-device only.
 
-Warm greeting + date (left-aligned). Stickman hero with asymmetric whitespace,
-mirroring live posture; naps when AirPods are out. Kind status copy
-("Sitting tall" / "Ease your neck") — no shouting numbers. Habit row of soft
-cards/rings: Posture (today's score + time), Water (count + ring), Walk
-(coming / locked). Gentle start/end control. Empty state: stickman naps,
-"Pop your AirPods in to begin."
+Three live states, driven by the engine off the smoothed forward angle:
 
-### History
+| State | Condition | Colour | Copy example |
+| --- | --- | --- | --- |
+| `aligned` | within threshold | `state.aligned` | "Aligned · head & neck look good" |
+| `drift` | past sensitivity threshold | `state.drift` | "Easing forward · −11° · 2 min" |
+| `slouch` | deep + sustained | `state.slouch` | "Slouching · −19° · 6 min" |
 
-Warm session cards with a warm-tinted score badge. Detail: pitch-over-time chart
-drawn in the same hand-drawn ink stroke — honey under good zones, clay over poor.
+**Sensitivity** (Settings, segmented): Relaxed 22° · Balanced 15° · Strict 8°.
+**Calibration**: 5-second still hold captures the baseline; re-runnable from Settings.
 
-### Settings
+## Water
 
-Grouped warm form. Posture thresholds, water interval. Respects Reduced Motion.
+Target: daily litres (default 2.0L, adjustable 1.0–4.0L in Settings). One tap = 250ml glass.
+Now chip shows `"1.0L / 2.0L"` with a teal progress ring. Reminder: "Stay hydrated — grab a
+glass of water" at configurable intervals.
 
-### Nudges (notifications)
+## Walk
 
-Gentle copy; later a stickman pose thumbnail. Posture nudge + water nudge.
+Target: daily steps (default 8000, adjustable 2000–15000 in Settings). Reads from **HealthKit**
+(`HKQuantityType.stepCount`). Now chip shows `"2.1k"` with a clay progress ring. Walk nudge
+fires at the interval boundary only when behind pace — skips if you're already on track.
+Simulator: step count = 0, falls back to interval mode.
 
-## Lifestyle expansion (room to evolve)
+## Sunlight
 
-A habit is a module: `{ id, pose, ringMetric, reminderRule }`. The Today hub
-renders a list of habit modules. Adding a new habit (walk, stretch, breathe,
-eye-rest) = add a module + one stickman pose. No redesign needed.
+Daylight-aware nudge using **CoreLocation** (one-shot) + NOAA sunrise/sunset formula. Schedules
+two local notifications: mid-morning (~2h after sunrise) and mid-afternoon (~2h before sunset).
+"Catch some sunlight — step near a window for a few minutes." Toggle in Settings.
+Simulator: uses default latitude (SF 37.77°N).
 
-- **Water** (phase 1): tap to log → ring fills → stickman sips on reminder.
-- **Walk + HealthKit** (phase 2): step ring → stickman walks.
+## Nudges
+
+- **Quiet nudge (default):** Dynamic Island Live Activity goes clay + a soft AirPods chime,
+  on Drifting/Slouch while backgrounded. (Deferred — needs WidgetKit extension target.)
+- **Escalation banner:** local notification, gated by Settings "Escalate" toggle + ~6 min
+  sustained Slouch. The only loud moment — chime + haptic, tap deep-links to Home.
+
+## Navigation & screens
+
+Root = tab bar: **Now · Trends · Settings**. Onboarding gates the first run; nudges +
+Disconnected appear over any screen.
+
+### Onboarding (first run, linear, each step gates the next)
+
+1. **Connect AirPods** — "Use the AirPods already in your ears."
+2. **Permissions** — Motion & Fitness (required), Notifications, Apple Health (optional).
+3. **Calibrate baseline** — 5s countdown ring → auto-advance to Home.
+
+### Now (Home, hero)
+
+Connection chip. Plant mascot mirrors live posture. State word + colour + sub-copy.
+`42 min upright` streak. Three secondary chips: water (litres + teal ring), walk (steps +
+clay ring), sunlight (next nudge time). Tab bar at bottom.
+
+### Trends (read-only history)
+
+Three KPIs (upright %, nudges, best run). Day timeline = stacked bar per hour
+(up/drift/slouch) with legend. "Earlier this week" list scrolls below.
+
+### Settings (the knobs)
+
+AirPods row · Nudge style (segmented) · Escalate toggle · Slouch sensitivity (segmented) ·
+Plant mascot picker · Water target (slider, litres) · Walk target (slider, steps) ·
+Sunlight nudges (toggle) · Recalibrate baseline.
+
+### Disconnected (critical, replaces any screen)
+
+Warning triangle (clay). "AirPods not connected." CTA "Open Bluetooth settings".
+"waiting for AirPods…" pulse. Auto-dismiss + restore on reconnect.
+
+## Simulator harness
+
+All simulator-only code lives in `Sources/SimulatorSupport/` — `SimulatedMotionSource` +
+floating `SimulatorOverlay` (collapsed SIM chip, expands to presets + pitch slider +
+connection toggle). Visible on ALL screens including onboarding + disconnected. Doesn't
+shift app layout. Delete the folder + strip `#if targetEnvironment(simulator)` guards to
+ship production.
 
 ## Evolve later
 
-Dark warm mode · streaks / accessories · richer rig (Rive) only if procedural
-ever falls short · haptics + sound personality.
+Dark warm mode · Dynamic Island Live Activity quiet nudge (needs WidgetKit extension) ·
+streaks · haptic personality · Apple Watch companion.

@@ -1,4 +1,4 @@
-name: Posture
+name: Synthesis
 options:
   bundleIdPrefix: com.jayden77
   deploymentTarget:
@@ -14,7 +14,7 @@ settings:
     PRODUCT_BUNDLE_IDENTIFIER: com.jayden77.posture
 
 targets:
-  Posture:
+  Synthesis:
     type: application
     platform: iOS
     sources:
@@ -24,9 +24,12 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: Resources/Info.plist
-        PRODUCT_NAME: Posture
+        PRODUCT_NAME: Synthesis
+        CODE_SIGN_ENTITLEMENTS: Synthesis.entitlements
+    dependencies:
+      - sdk: HealthKit.framework
 
-  PostureTests:
+  SynthesisTests:
     type: bundle.unit-test
     platform: iOS
     sources:
@@ -35,4 +38,4 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: "YES"
     dependencies:
-      - target: Posture
+      - target: Synthesis

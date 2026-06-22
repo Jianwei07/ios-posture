@@ -11,6 +11,7 @@ final class SessionManager {
 
     let engine: PostureEngine
     private let scheduler: ReminderScheduler
+    private let stepReader: StepReader?
     private var modelContext: ModelContext?
 
     private var currentSession: PostureSession?
@@ -24,9 +25,10 @@ final class SessionManager {
     private var secondsSinceRecord = 0
     private let recordEverySeconds = 30   // downsample persisted readings
 
-    init(engine: PostureEngine, scheduler: ReminderScheduler) {
+    init(engine: PostureEngine, scheduler: ReminderScheduler, stepReader: StepReader? = nil) {
         self.engine = engine
         self.scheduler = scheduler
+        self.stepReader = stepReader
     }
 
     func configure(modelContext: ModelContext) {
@@ -95,9 +97,10 @@ final class SessionManager {
         guard engine.neutralPitch != nil else { return }
 
         activeSessionSeconds += 1
+        scheduler.currentStepCount = stepReader?.todaySteps ?? 0
         pitchSum += engine.currentPitch
         sampleCount += 1
-        if engine.postureState == .poor { poorCount += 1 }
+        if engine.postureState == .slouch { poorCount += 1 }
 
         secondsSinceRecord += 1
         if secondsSinceRecord >= recordEverySeconds {

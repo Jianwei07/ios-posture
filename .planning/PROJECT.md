@@ -1,15 +1,16 @@
-# iOS Posture App
+# Synthesis — App for Office Workers to Live Well
 
 ## Problem Statement (Root)
 
 Software engineers wear AirPods Pro for hours. Those AirPods have a 9-axis IMU.
 Use what's already in their ears to detect bad head posture and adaptively remind
-them to fix posture, drink water, and take a walk — no new hardware required.
+them to fix posture, drink water, take a walk, and catch some sunlight — no new
+hardware required.
 
 ## Vision
 
-Posture → Water → Movement → Lifestyle. A warm desk companion that grows with you.
-On-device, private, open source MIT.
+Posture → Water → Movement → Sunlight → Lifestyle. A calm desk companion that
+grows with you. On-device, private, open source MIT.
 
 ## Stack
 

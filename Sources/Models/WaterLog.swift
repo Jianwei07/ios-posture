@@ -1,16 +1,18 @@
 import Foundation
 import SwiftData
 
-// One logged glass of water. Today's count = entries since start of today.
+// One logged glass of water. Default 250ml per tap. Volume stored in ml.
 @Model
 final class WaterEntry {
-    var timestamp: Date
+    var volumeMl: Double = 250
+    var timestamp: Date = Date(timeIntervalSince1970: 0)
 
-    init(timestamp: Date = .now) {
+    init(volumeMl: Double = 250, timestamp: Date = .now) {
+        self.volumeMl = volumeMl
         self.timestamp = timestamp
     }
 }
 
 enum WaterGoal {
-    static let dailyTarget = 8  // glasses
+    static let dailyTargetMl: Double = 2000  // 2.0L default
 }

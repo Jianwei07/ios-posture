@@ -1,72 +1,56 @@
 import SwiftUI
 
-// Warm-minimal design tokens. See design.md.
+// Sage design tokens. See design.md.
 enum Theme {
 
-    // MARK: Color
+    // MARK: Color (Sage — light)
     enum Palette {
-        static let canvas  = Color(hex: 0xF4EEE2)  // warm cream background
-        static let surface = Color(hex: 0xFBF7EF)  // cards / raised
-        static let ink     = Color(hex: 0x2E2A25)  // charcoal text + stickman
-        static let inkSoft = Color(hex: 0x6B6457)  // secondary text
-        static let honey   = Color(hex: 0xE0A33E)  // single accent
+        static let bg       = Color(hex: 0xF4F2EC)  // app background
+        static let surface  = Color(hex: 0xFBFAF6)  // cards / raised
+        static let ink      = Color(hex: 0x2A2A26)  // primary text + icon stroke
+        static let inkSoft  = Color(hex: 0x6F685E)  // secondary text
+        static let inkFaint = Color(hex: 0x9A9183)  // tertiary / captions
+        static let accent   = Color(hex: 0x4F8A7B)  // single accent (teal)
 
-        static let good    = Color(hex: 0x7C9A6B)  // warm sage
-        static let warn    = Color(hex: 0xD8973C)  // ochre
-        static let poor    = Color(hex: 0xC96F53)  // clay
+        static let aligned  = Color(hex: 0x5F9A78)  // sage green
+        static let drift    = Color(hex: 0xCC8A5A)  // clay / ochre
+        static let slouch   = Color(hex: 0xB05A38)  // terracotta
     }
 
-    // MARK: Typography (SF Pro Rounded)
+    // MARK: Typography (SF Pro / system)
     enum Font {
         static func hero(_ size: CGFloat = 40) -> SwiftUI.Font {
-            .system(size: size, weight: .semibold, design: .rounded)
+            .system(size: size, weight: .semibold).monospacedDigit()
         }
         static func number(_ size: CGFloat = 28) -> SwiftUI.Font {
-            .system(size: size, weight: .semibold, design: .rounded).monospacedDigit()
+            .system(size: size, weight: .semibold).monospacedDigit()
         }
         static func title(_ size: CGFloat = 20) -> SwiftUI.Font {
-            .system(size: size, weight: .semibold, design: .rounded)
+            .system(size: size, weight: .semibold)
         }
         static func body(_ size: CGFloat = 15) -> SwiftUI.Font {
-            .system(size: size, weight: .regular, design: .rounded)
+            .system(size: size, weight: .regular)
         }
         static func caption(_ size: CGFloat = 12) -> SwiftUI.Font {
-            .system(size: size, weight: .medium, design: .rounded)
+            .system(size: size, weight: .medium)
+        }
+        static func label(_ size: CGFloat = 11) -> SwiftUI.Font {
+            .system(size: size, weight: .bold)
         }
     }
 
     // MARK: Motion
     enum Motion {
-        static let ui     = Animation.spring(duration: 0.35, bounce: 0.15)
-        static let mascot = Animation.spring(duration: 0.50, bounce: 0.20)
-        static let fade   = Animation.easeOut(duration: 0.22)
+        static let ui    = Animation.spring(duration: 0.35, bounce: 0.15)
+        static let pose  = Animation.spring(duration: 0.50, bounce: 0.20)
+        static let fade  = Animation.easeOut(duration: 0.22)
         static let press: CGFloat = 0.97
     }
 
     enum Radius {
-        static let card: CGFloat = 22
+        static let card: CGFloat = 18
+        static let chip: CGFloat = 14
         static let pill: CGFloat = 999
-    }
-}
-
-// MARK: - Posture state colors
-
-extension PostureState {
-    var warmColor: Color {
-        switch self {
-        case .good:    return Theme.Palette.good
-        case .warning: return Theme.Palette.warn
-        case .poor:    return Theme.Palette.poor
-        }
-    }
-
-    // Kind, human status copy — no shouting numbers.
-    var kindCopy: String {
-        switch self {
-        case .good:    return "Sitting tall"
-        case .warning: return "Ease back a little"
-        case .poor:    return "Lift your head up"
-        }
     }
 }
 

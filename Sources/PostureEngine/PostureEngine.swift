@@ -50,38 +50,12 @@ final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionMana
     }
 }
 
-// Fake source for Simulator + UI iteration. Pitch driven by a debug slider.
-@Observable
-final class SimulatedMotionSource: MotionSource {
-    var simulatedPitch: Double = 0
-    var available: Bool = true {
-        didSet { onAvailabilityChanged?(available) }
-    }
-    @ObservationIgnored var onAvailabilityChanged: ((Bool) -> Void)?
-    @ObservationIgnored private var timer: Timer?
-
-    var isAvailable: Bool { available }
-
-    func start(onSample: @escaping (Double) -> Void) {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
-            guard let self, self.available else { return }
-            onSample(self.simulatedPitch)
-        }
-    }
-
-    func stop() {
-        timer?.invalidate()
-        timer = nil
-    }
-}
-
 // MARK: - PostureEngine
 
 @Observable
 final class PostureEngine {
     private(set) var currentPitch: Double = 0
-    private(set) var postureState: PostureState = .good
+    private(set) var postureState: PostureState = .aligned
     private(set) var calibrationProgress: Double = 0
     private(set) var neutralPitch: Double?
     private(set) var lastSampleAt: Date?
@@ -94,20 +68,41 @@ final class PostureEngine {
 
     // Inlined calibration: average the first N samples into a neutral baseline.
     private var calibrationSamples: [Double] = []
-    private let calibrationTarget = 60   // ~3s @ 20Hz
+    private let calibrationTarget = 100   // ~5s @ 20Hz
 
     init(classifier: PostureClassifier = PostureClassifier(), source: MotionSource) {
         self.classifier = classifier
         self.source = source
     }
 
-    func start() {
-        guard source.isAvailable else { return }
-        pitchFilter.reset()
+    // Forward angle (deg below baseline) of the current smoothed pitch. 0 until calibrated.
+    var forwardAngle: Double {
+        guard let n = neutralPitch else { return 0 }
+        return classifier.forwardAngle(filteredPitch: currentPitch, neutralPitch: n)
+    }
+
+    // Seed a persisted baseline so a reconnecting session skips re-calibration.
+    func seedBaseline(_ pitch: Double?) {
+        neutralPitch = pitch
+        calibrationProgress = pitch == nil ? 0 : 1
+    }
+
+    // Force a fresh 5-second baseline capture (Recalibrate / onboarding).
+    func recalibrate() {
         calibrationSamples = []
         neutralPitch = nil
         calibrationProgress = 0
+    }
+
+    func start() {
+        guard source.isAvailable else { return }
+        pitchFilter.reset()
         lastSampleAt = nil
+        // Keep a seeded baseline; only auto-calibrate when we have none.
+        if neutralPitch == nil {
+            calibrationSamples = []
+            calibrationProgress = 0
+        }
         source.start { [weak self] pitch in self?.process(pitch: pitch) }
     }
 

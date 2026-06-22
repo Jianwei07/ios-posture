@@ -1,5 +1,5 @@
 import Testing
-@testable import Posture
+@testable import Synthesis
 
 @Suite("MotionFilter")
 struct MotionFilterTests {

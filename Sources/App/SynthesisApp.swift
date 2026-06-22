@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct PostureApp: App {
+struct SynthesisApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

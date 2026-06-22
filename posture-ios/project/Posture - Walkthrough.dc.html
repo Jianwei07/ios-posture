@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; -webkit-font-smoothing: antialiased; }
+</style>
+</helmet>
+
+<div style="min-width:100%;min-height:100vh;width:max-content;box-sizing:border-box;padding:48px 56px 90px;background:#e7e5df;font-family:system-ui,-apple-system,sans-serif;">
+
+  <!-- ===== TITLE ===== -->
+  <div style="max-width:880px;">
+    <div style="font:700 12px system-ui;letter-spacing:.18em;text-transform:uppercase;color:#a59a89;">Wireframe + build spec · for handoff</div>
+    <div style="font:700 40px/1.05 system-ui;color:#23201c;margin-top:8px;letter-spacing:-.02em;">Posture — full flow wireframes</div>
+    <div style="font:400 17px/1.5 system-ui;color:#6f685e;margin-top:12px;">Low-fi layout of every screen in the agreed v1 flow, wired in order with annotations. Structure &amp; copy are real; visuals stay sketchy on purpose — the <b>target look is the Sage system</b> (swatches below, see <i>Posture - Hi-Fi</i>). Built so an engineer (or Claude Code) can implement screen-by-screen.</div>
+  </div>
+
+  <!-- ===== BUILD SPEC CARD ===== -->
+  <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;max-width:1120px;">
+    <div style="flex:1;min-width:330px;background:#fbf9f4;border:1.5px solid #ddd6c8;border-radius:14px;padding:18px 20px;">
+      <div style="font:700 13px system-ui;color:#5a8f6f;margin-bottom:10px;letter-spacing:.02em;">SYSTEM &amp; STACK</div>
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:12px;">
+        <span style="width:20px;height:20px;border-radius:5px;background:#F4F2EC;border:1px solid #d8d4c8;"></span>
+        <span style="width:20px;height:20px;border-radius:5px;background:#2A2A26;"></span>
+        <span style="width:20px;height:20px;border-radius:5px;background:#5F9A78;"></span>
+        <span style="width:20px;height:20px;border-radius:5px;background:#CC8A5A;"></span>
+        <span style="width:20px;height:20px;border-radius:5px;background:#B05A38;"></span>
+        <span style="width:20px;height:20px;border-radius:5px;background:#4F8A7B;"></span>
+      </div>
+      <div style="font:400 13px/1.7 system-ui;color:#6f685e;">
+        <b>Type</b> SF Pro / system · <b>Tabs</b> Now · Trends · Settings<br>
+        <span style="font:600 12px ui-monospace,monospace;color:#8a8276;">aligned #5F9A78&nbsp; drift #CC8A5A&nbsp; slouch #B05A38&nbsp; accent #4F8A7B&nbsp; bg #F4F2EC&nbsp; ink #2A2A26</span><br>
+        <b>Sensing</b> AirPods Pro IMU via CMHeadphoneMotionManager — angle vs calibrated baseline. On-device only.
+      </div>
+    </div>
+    <div style="flex:1;min-width:330px;background:#fbf9f4;border:1.5px solid #ddd6c8;border-radius:14px;padding:18px 20px;">
+      <div style="font:700 13px system-ui;color:#5a8f6f;margin-bottom:10px;letter-spacing:.02em;">CORE BEHAVIOR</div>
+      <div style="font:400 13px/1.7 system-ui;color:#6f685e;">
+        <b>States</b> Aligned → Drifting (past threshold) → Slouch (sustained).<br>
+        <b>Sensitivity</b> Relaxed 22° · Balanced 15° · Strict 8° (Settings).<br>
+        <b>Nudge</b> default = quiet Dynamic Island + AirPods chime; escalate to banner after ~6 min sustained slouch (toggle).<br>
+        <b>Calibrate</b> 5-second still hold captures baseline; re-runnable from Settings.<br>
+        <b>Edge</b> IMU unavailable / BT off / non-Pro buds → Disconnected; never show stale data.
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1120px;margin-top:14px;font:400 13px/1.6 system-ui;color:#9a8f80;">Each frame below carries an <b>italic build note</b> — data, triggers, transitions. Toggle them off with the <b>showNotes</b> control to read the wireframes clean. Arrows show navigation.</div>
+  </sc-if>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 1 — ONBOARDING (first run, happy path) -->
+  <!-- ============================================================ -->
+  <div style="margin:54px 0 22px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#b58b6a;">Flow 1 · first run</div>
+    <div style="font:700 27px system-ui;color:#23201c;margin-top:4px;letter-spacing:-.01em;">Onboarding — connect, permit, calibrate</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+      <div style="font:400 14.5px/1.6 system-ui;color:#6f685e;margin-top:8px;">A linear 3-step setup that lands on Home. Each step gates the next; calibration must complete before tracking starts.</div>
+    </sc-if>
+  </div>
+
+  <div style="display:flex;gap:18px;align-items:flex-start;">
+
+    <!-- 01 CONNECT -->
+    <div data-screen-label="Connect" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">01</span> &nbsp;Connect AirPods</div>
+      <div style="width:248px;height:512px;background:#fff;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#111;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;inset:58px 22px 26px;display:flex;flex-direction:column;align-items:center;">
+          <div style="width:118px;height:118px;border:1.5px dashed #bdb6a6;border-radius:18px;background:#f4f1ea;display:flex;align-items:center;justify-content:center;text-align:center;font:400 11px ui-monospace,monospace;color:#9a9183;line-height:1.4;margin-top:14px;">AirPods&nbsp;Pro<br>render</div>
+          <div style="font:700 22px/1.18 'Kalam';margin-top:26px;text-align:center;">Use the AirPods<br>already in your ears</div>
+          <div style="font:400 13.5px/1.45 'Kalam';color:#8a8276;margin-top:11px;text-align:center;">Reads tiny head movements from the AirPods Pro sensor. Nothing leaves your phone.</div>
+          <div style="margin-top:auto;width:100%;background:#23201c;border-radius:14px;padding:13px;text-align:center;font:700 14px 'Kalam';color:#fff;">Connect AirPods</div>
+          <div style="margin-top:12px;font:400 13px 'Kalam';color:#4F8A7B;">Why AirPods?</div>
+        </div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">First-run only. CTA triggers BT/AirPods check → if connected go to <b>02</b>, else show Disconnected (08). Drop the real AirPods render in the dashed slot.</div>
+      </sc-if>
+    </div>
+
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:60px;color:#b0a48f;"><span style="font:700 24px system-ui;">→</span><span style="font:600 10px system-ui;">connect</span></div>
+
+    <!-- 02 PERMISSIONS -->
+    <div data-screen-label="Permissions" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">02</span> &nbsp;Permissions</div>
+      <div style="width:248px;height:512px;background:#fff;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#111;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;inset:58px 20px 26px;display:flex;flex-direction:column;">
+          <div style="font:700 21px 'Kalam';margin-top:6px;">A couple of permissions</div>
+          <div style="font:400 13px 'Kalam';color:#8a8276;margin-top:5px;margin-bottom:16px;">Everything stays on your device.</div>
+          <div style="border:1.5px solid #d4cdbf;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;margin-bottom:11px;">
+            <div style="width:24px;height:24px;border:2px solid #5F9A78;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#5F9A78;font:700 12px 'Kalam';">✓</div>
+            <div style="flex:1;"><div style="font:700 14px 'Kalam';">Motion &amp; Fitness</div><div style="font:400 11.5px 'Kalam';color:#9a9183;">required — head motion</div></div>
+          </div>
+          <div style="border:1.5px solid #d4cdbf;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;margin-bottom:11px;">
+            <div style="width:24px;height:24px;border:2px solid #5F9A78;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#5F9A78;font:700 12px 'Kalam';">✓</div>
+            <div style="flex:1;"><div style="font:700 14px 'Kalam';">Notifications</div><div style="font:400 11.5px 'Kalam';color:#9a9183;">for gentle nudges</div></div>
+          </div>
+          <div style="border:1.5px solid #d4cdbf;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;">
+            <div style="width:24px;height:24px;border:2px solid #c9c2b4;border-radius:50%;flex:none;"></div>
+            <div style="flex:1;"><div style="font:700 14px 'Kalam';">Apple Health</div><div style="font:400 11.5px 'Kalam';color:#9a9183;">optional — steps</div></div>
+          </div>
+          <div style="margin-top:auto;width:100%;background:#23201c;border-radius:14px;padding:13px;text-align:center;font:700 14px 'Kalam';color:#fff;">Continue</div>
+        </div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Motion = hard requirement (blocks if denied). Notifications needed for nudges. Health optional — refusal must not block the core loop. Continue → <b>03</b>.</div>
+      </sc-if>
+    </div>
+
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:60px;color:#b0a48f;"><span style="font:700 24px system-ui;">→</span><span style="font:600 10px system-ui;">grant</span></div>
+
+    <!-- 03 CALIBRATE -->
+    <div data-screen-label="Calibrate" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">03</span> &nbsp;Calibrate baseline</div>
+      <div style="width:248px;height:512px;background:#fff;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#111;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;inset:58px 22px 26px;display:flex;flex-direction:column;align-items:center;">
+          <div style="font:700 21px/1.2 'Kalam';text-align:center;margin-top:10px;">Sit how you want<br>to hold yourself</div>
+          <div style="font:400 13px/1.4 'Kalam';color:#8a8276;margin-top:9px;text-align:center;">Hold still 5 seconds — your upright becomes the baseline.</div>
+          <div style="position:relative;margin-top:32px;width:158px;height:158px;display:flex;align-items:center;justify-content:center;">
+            <svg width="158" height="158" viewBox="0 0 158 158"><circle cx="79" cy="79" r="70" stroke="#eee7d8" stroke-width="8" fill="none"/><circle cx="79" cy="79" r="70" stroke="#5F9A78" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="286 440" transform="rotate(-90 79 79)"/></svg>
+            <div style="position:absolute;display:flex;flex-direction:column;align-items:center;"><svg width="50" height="66" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#5F9A78" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#5F9A78" stroke-width="8"/></svg><div style="font:700 24px 'Kalam';color:#5F9A78;margin-top:6px;">3</div></div>
+          </div>
+          <div style="margin-top:auto;width:100%;background:#4F8A7B;border-radius:14px;padding:13px;text-align:center;font:700 14px 'Kalam';color:#fff;">Set baseline</div>
+          <div style="margin-top:11px;font:400 12.5px 'Kalam';color:#9a9183;">Adjust sensitivity later</div>
+        </div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Tap → 5s countdown ring; capture baseline quaternion at completion → auto-advance to Home (04). Re-entry point from Settings "Recalibrate".</div>
+      </sc-if>
+    </div>
+
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:5px;padding-top:60px;color:#b0a48f;"><span style="font:700 24px system-ui;">→</span><span style="font:600 10px system-ui;">done</span></div>
+
+    <!-- 04 HOME (aligned, default landing) -->
+    <div data-screen-label="Home landing" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">04</span> &nbsp;Home · Now</div>
+      <div style="width:248px;height:512px;background:#fff;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#111;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;top:14px;left:22px;font:700 12px system-ui;color:#111;">9:41</div>
+        <div style="position:absolute;left:16px;right:16px;top:50px;bottom:62px;display:flex;flex-direction:column;align-items:center;">
+          <div style="margin-top:4px;display:flex;align-items:center;gap:6px;border:1.5px solid #cfcabf;border-radius:18px;padding:5px 12px;font:400 12px 'Kalam';color:#4F8A7B;"><span style="width:6px;height:6px;border-radius:50%;background:#4F8A7B;display:inline-block;"></span>AirPods connected</div>
+          <div style="margin-top:40px;"><svg width="92" height="120" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#5F9A78" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#5F9A78" stroke-width="7"/></svg></div>
+          <div style="font:700 30px 'Kalam';color:#5F9A78;margin-top:14px;">Aligned</div>
+          <div style="font:400 13px 'Kalam';color:#8a8276;margin-top:2px;">head &amp; neck look good</div>
+          <div style="font:700 13px 'Kalam';color:#b3ada1;margin-top:8px;">42 min upright</div>
+          <div style="display:flex;gap:11px;margin-top:auto;width:100%;">
+            <div style="flex:1;border:1.5px solid #d4cdbf;border-radius:14px;padding:10px;"><div style="display:flex;justify-content:space-between;"><div style="font:400 12px 'Kalam';color:#9a9183;">water</div><div style="font:700 14px 'Kalam';">4/8</div></div><div style="height:5px;background:#eee7d8;border-radius:3px;margin-top:7px;"><div style="width:50%;height:5px;background:#4F8A7B;border-radius:3px;"></div></div></div>
+            <div style="flex:1;border:1.5px solid #d4cdbf;border-radius:14px;padding:10px;"><div style="display:flex;justify-content:space-between;"><div style="font:400 12px 'Kalam';color:#9a9183;">walk</div><div style="font:700 14px 'Kalam';">2.1k</div></div><div style="height:5px;background:#eee7d8;border-radius:3px;margin-top:7px;"><div style="width:53%;height:5px;background:#CC8A5A;border-radius:3px;"></div></div></div>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:62px;border-top:1.5px solid #e6e0d4;background:#fbfaf6;display:flex;align-items:center;">
+          <div style="flex:1;text-align:center;color:#4F8A7B;"><div style="width:17px;height:17px;border:2.5px solid #4F8A7B;border-radius:50%;margin:0 auto 3px;"></div><div style="font:700 11px 'Kalam';">Now</div></div>
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:17px;height:17px;border:2px solid #b3ada1;margin:0 auto 3px;"></div><div style="font:400 11px 'Kalam';">Trends</div></div>
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:17px;height:17px;border:2px solid #b3ada1;border-radius:4px;margin:0 auto 3px;"></div><div style="font:400 11px 'Kalam';">Settings</div></div>
+        </div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">A1 hero. Live status updates from the posture engine — see the 3 states next. Tab bar is the app's root nav. Water/walk are secondary chips.</div>
+      </sc-if>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 2 — HOME STATES -->
+  <!-- ============================================================ -->
+  <div style="margin:62px 0 22px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#b58b6a;">Screen 04 · states</div>
+    <div style="font:700 27px system-ui;color:#23201c;margin-top:4px;letter-spacing:-.01em;">Home — the three live states</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+      <div style="font:400 14.5px/1.6 system-ui;color:#6f685e;margin-top:8px;">Same screen, driven by the engine. Icon, word and colour change together. Angle readout (−°) appears once past baseline.</div>
+    </sc-if>
+  </div>
+
+  <div style="display:flex;gap:36px;align-items:flex-start;">
+
+    <!-- Aligned -->
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#5F9A78;">Aligned <span style="font:400 11px ui-monospace,monospace;color:#b0a896;">&lt; threshold</span></div>
+      <div style="width:248px;height:300px;background:#fff;border:1.5px solid #d4cdbf;border-radius:22px;box-shadow:0 8px 18px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Kalam',cursive;">
+        <svg width="78" height="102" viewBox="0 0 100 132" fill="none"><line x1="50" y1="124" x2="50" y2="56" stroke="#5F9A78" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="35" r="19" stroke="#5F9A78" stroke-width="7"/></svg>
+        <div style="font:700 27px 'Kalam';color:#5F9A78;margin-top:14px;">Aligned</div>
+        <div style="font:400 13px 'Kalam';color:#8a8276;margin-top:2px;">head &amp; neck look good</div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Upright spine icon, green. No nudge. Accrues "min upright" streak.</div>
+      </sc-if>
+    </div>
+
+    <!-- Drifting -->
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#CC8A5A;">Drifting <span style="font:400 11px ui-monospace,monospace;color:#b0a896;">past threshold</span></div>
+      <div style="width:248px;height:300px;background:#fff;border:1.5px solid #d4cdbf;border-radius:22px;box-shadow:0 8px 18px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Kalam',cursive;">
+        <svg width="78" height="102" viewBox="0 0 100 132" fill="none"><path d="M50 124 C50 100 51 90 58 82" stroke="#CC8A5A" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="64" cy="62" r="19" stroke="#CC8A5A" stroke-width="7"/></svg>
+        <div style="font:700 25px 'Kalam';color:#CC8A5A;margin-top:14px;">Easing forward</div>
+        <div style="font:400 13px 'Kalam';color:#8a8276;margin-top:2px;">−11° · 2 min</div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Crossed the sensitivity angle. Quiet island goes clay (06). Soft copy — invite, don't scold.</div>
+      </sc-if>
+    </div>
+
+    <!-- Slouch -->
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#B05A38;">Slouch <span style="font:400 11px ui-monospace,monospace;color:#b0a896;">sustained</span></div>
+      <div style="width:248px;height:300px;background:#fff;border:1.5px solid #d4cdbf;border-radius:22px;box-shadow:0 8px 18px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Kalam',cursive;">
+        <svg width="78" height="102" viewBox="0 0 100 132" fill="none"><path d="M48 124 C48 98 52 80 64 70" stroke="#B05A38" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="74" cy="52" r="19" stroke="#B05A38" stroke-width="7"/></svg>
+        <div style="font:700 27px 'Kalam';color:#B05A38;margin-top:14px;">Slouching</div>
+        <div style="font:400 13px 'Kalam';color:#8a8276;margin-top:2px;">−19° · 6 min</div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Deep + sustained. Triggers escalation banner (07) if enabled. Terracotta, strongest of the three.</div>
+      </sc-if>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 3 — TABS -->
+  <!-- ============================================================ -->
+  <div style="margin:62px 0 22px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#b58b6a;">Flow 2 · the app</div>
+    <div style="font:700 27px system-ui;color:#23201c;margin-top:4px;letter-spacing:-.01em;">Trends &amp; Settings tabs</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+      <div style="font:400 14.5px/1.6 system-ui;color:#6f685e;margin-top:8px;">Reached from the tab bar. Trends = read-only history; Settings = all the knobs.</div>
+    </sc-if>
+  </div>
+
+  <div style="display:flex;gap:36px;align-items:flex-start;">
+
+    <!-- 05 TRENDS -->
+    <div data-screen-label="Trends" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">05</span> &nbsp;Trends</div>
+      <div style="width:248px;height:512px;background:#fff;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#111;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;top:14px;left:22px;font:700 12px system-ui;color:#111;">9:41</div>
+        <div style="position:absolute;left:16px;right:16px;top:50px;bottom:62px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font:700 22px 'Kalam';">Today</div><div style="font:400 12px 'Kalam';color:#9a9183;">Mon Jun 22</div></div>
+          <div style="display:flex;gap:7px;margin-top:12px;">
+            <div style="flex:1;border:1.5px solid #d4cdbf;border-radius:12px;padding:9px 4px;text-align:center;"><div style="font:700 17px 'Kalam';color:#5F9A78;">82%</div><div style="font:400 9.5px 'Kalam';color:#9a9183;">upright</div></div>
+            <div style="flex:1;border:1.5px solid #d4cdbf;border-radius:12px;padding:9px 4px;text-align:center;"><div style="font:700 17px 'Kalam';color:#CC8A5A;">4</div><div style="font:400 9.5px 'Kalam';color:#9a9183;">nudges</div></div>
+            <div style="flex:1;border:1.5px solid #d4cdbf;border-radius:12px;padding:9px 4px;text-align:center;"><div style="font:700 17px 'Kalam';color:#23201c;">1h12</div><div style="font:400 9.5px 'Kalam';color:#9a9183;">best run</div></div>
+          </div>
+          <div style="border:1.5px solid #d4cdbf;border-radius:14px;padding:11px 10px;margin-top:12px;">
+            <div style="font:400 12px 'Kalam';color:#9a9183;margin-bottom:8px;">posture through the day</div>
+            <div style="display:flex;align-items:flex-end;gap:3px;height:96px;">
+              {{ chartBars }}
+            </div>
+            <div style="display:flex;gap:10px;margin-top:9px;padding-top:8px;border-top:1px solid #eee7d8;">
+              <div style="display:flex;align-items:center;gap:4px;font:400 9.5px 'Kalam';color:#8a8276;"><span style="width:8px;height:8px;border-radius:2px;background:#5F9A78;"></span>up</div>
+              <div style="display:flex;align-items:center;gap:4px;font:400 9.5px 'Kalam';color:#8a8276;"><span style="width:8px;height:8px;border-radius:2px;background:#CC8A5A;"></span>drift</div>
+              <div style="display:flex;align-items:center;gap:4px;font:400 9.5px 'Kalam';color:#8a8276;"><span style="width:8px;height:8px;border-radius:2px;background:#B05A38;"></span>slouch</div>
+            </div>
+          </div>
+          <div style="border:1.5px dashed #d4cdbf;border-radius:14px;padding:11px;margin-top:11px;font:400 12px 'Kalam';color:#b3ada1;text-align:center;">earlier this week ↓ (list, scrolls)</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:62px;border-top:1.5px solid #e6e0d4;background:#fbfaf6;display:flex;align-items:center;">
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:17px;height:17px;border:2px solid #b3ada1;border-radius:50%;margin:0 auto 3px;"></div><div style="font:400 11px 'Kalam';">Now</div></div>
+          <div style="flex:1;text-align:center;color:#4F8A7B;"><div style="width:17px;height:17px;border:2.5px solid #4F8A7B;margin:0 auto 3px;"></div><div style="font:700 11px 'Kalam';">Trends</div></div>
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:17px;height:17px;border:2px solid #b3ada1;border-radius:4px;margin:0 auto 3px;"></div><div style="font:400 11px 'Kalam';">Settings</div></div>
+        </div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Day timeline = stacked bar per hour (up/drift/slouch). Three KPIs up top. Week list below scrolls. Read-only — no actions.</div>
+      </sc-if>
+    </div>
+
+    <!-- 06 SETTINGS -->
+    <div data-screen-label="Settings" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">06</span> &nbsp;Settings</div>
+      <div style="width:248px;height:512px;background:#fff;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#111;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;top:14px;left:22px;font:700 12px system-ui;color:#111;">9:41</div>
+        <div style="position:absolute;left:16px;right:16px;top:50px;bottom:62px;overflow:hidden;">
+          <div style="font:700 22px 'Kalam';">Settings</div>
+          <div style="border:1.5px solid #d4cdbf;border-radius:13px;padding:11px;margin-top:11px;display:flex;align-items:center;gap:9px;">
+            <div style="width:30px;height:30px;border-radius:8px;border:1.5px solid #cfcabf;display:flex;align-items:center;justify-content:center;flex:none;"><span style="width:7px;height:7px;border-radius:50%;background:#4F8A7B;"></span></div>
+            <div style="flex:1;"><div style="font:700 13.5px 'Kalam';">AirPods Pro</div><div style="font:400 11px 'Kalam';color:#4F8A7B;">connected · tracking</div></div>
+            <div style="font:400 11px 'Kalam';color:#9a9183;">manage ›</div>
+          </div>
+          <div style="font:700 11px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#b0a896;margin:15px 2px 8px;">Nudge style</div>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;text-align:center;padding:11px 4px;border-radius:12px;border:2px solid #4F8A7B;background:#eef4f1;"><div style="font:700 12.5px 'Kalam';">Quiet island</div><div style="font:400 10px 'Kalam';color:#9a9183;">+ chime</div></div>
+            <div style="flex:1;text-align:center;padding:11px 4px;border-radius:12px;border:1.5px solid #d4cdbf;"><div style="font:700 12.5px 'Kalam';">Banner</div><div style="font:400 10px 'Kalam';color:#9a9183;">notification</div></div>
+          </div>
+          <div style="border:1.5px solid #d4cdbf;border-radius:13px;padding:11px;margin-top:10px;display:flex;align-items:center;gap:9px;">
+            <div style="flex:1;"><div style="font:700 13px 'Kalam';">Escalate long slouches</div><div style="font:400 11px 'Kalam';color:#9a9183;">banner after 6 min</div></div>
+            <div style="width:42px;height:25px;border-radius:13px;background:#5F9A78;position:relative;flex:none;"><div style="position:absolute;top:3px;right:3px;width:19px;height:19px;border-radius:50%;background:#fff;"></div></div>
+          </div>
+          <div style="font:700 11px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#b0a896;margin:15px 2px 8px;">Slouch sensitivity</div>
+          <div style="border:1.5px solid #d4cdbf;border-radius:13px;padding:12px 11px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;"><div style="font:400 12px 'Kalam';color:#9a9183;">triggers past</div><div style="font:700 15px 'Kalam';color:#4F8A7B;">15°</div></div>
+            <div style="display:flex;gap:6px;">
+              <div style="flex:1;text-align:center;padding:8px 2px;border-radius:9px;border:1.5px solid #d4cdbf;font:700 11px 'Kalam';">Relaxed</div>
+              <div style="flex:1;text-align:center;padding:8px 2px;border-radius:9px;background:#23201c;color:#fff;font:700 11px 'Kalam';">Balanced</div>
+              <div style="flex:1;text-align:center;padding:8px 2px;border-radius:9px;border:1.5px solid #d4cdbf;font:700 11px 'Kalam';">Strict</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;width:100%;border:1.5px solid #cfc8ba;border-radius:13px;padding:12px;text-align:center;font:700 13px 'Kalam';box-sizing:border-box;">Recalibrate baseline</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:62px;border-top:1.5px solid #e6e0d4;background:#fbfaf6;display:flex;align-items:center;">
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:17px;height:17px;border:2px solid #b3ada1;border-radius:50%;margin:0 auto 3px;"></div><div style="font:400 11px 'Kalam';">Now</div></div>
+          <div style="flex:1;text-align:center;color:#b3ada1;"><div style="width:17px;height:17px;border:2px solid #b3ada1;margin:0 auto 3px;"></div><div style="font:400 11px 'Kalam';">Trends</div></div>
+          <div style="flex:1;text-align:center;color:#4F8A7B;"><div style="width:17px;height:17px;border:2.5px solid #4F8A7B;border-radius:4px;margin:0 auto 3px;"></div><div style="font:700 11px 'Kalam';">Settings</div></div>
+        </div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Nudge style (segmented) · escalate toggle · sensitivity (Relaxed 22°/Balanced 15°/Strict 8° — updates the °) · Recalibrate → reopens 03. AirPods "manage" → 08.</div>
+      </sc-if>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 4 — NUDGES & EDGE CASES -->
+  <!-- ============================================================ -->
+  <div style="margin:62px 0 22px;max-width:820px;">
+    <div style="font:700 12px system-ui;letter-spacing:.16em;text-transform:uppercase;color:#b58b6a;">Flow 3 · interrupts &amp; edge</div>
+    <div style="font:700 27px system-ui;color:#23201c;margin-top:4px;letter-spacing:-.01em;">Nudges &amp; the disconnected state</div>
+    <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+      <div style="font:400 14.5px/1.6 system-ui;color:#6f685e;margin-top:8px;">These appear over whatever the user is doing — not inside the tab shell. Disconnected can replace any screen at any time.</div>
+    </sc-if>
+  </div>
+
+  <div style="display:flex;gap:36px;align-items:flex-start;">
+
+    <!-- 07 QUIET NUDGE -->
+    <div data-screen-label="Quiet nudge" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">07</span> &nbsp;Quiet nudge <span style="font:400 11px ui-monospace,monospace;color:#b0a896;">default</span></div>
+      <div style="width:248px;height:512px;background:#f3f0ea;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:7px;background:#111;border-radius:15px;padding:6px 13px;z-index:6;">
+          <svg width="11" height="14" viewBox="0 0 100 132" fill="none"><path d="M50 124 C50 100 51 90 58 82" stroke="#E0A86B" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="64" cy="62" r="19" stroke="#E0A86B" stroke-width="13"/></svg>
+          <span style="font:700 12px 'Kalam';color:#E8B57C;">−18° · ease up</span>
+        </div>
+        <div style="position:absolute;top:80px;left:0;right:0;text-align:center;font:400 12px 'Kalam';color:#a89f8f;">— home screen, app in background —</div>
+        <div style="position:absolute;left:26px;right:26px;top:150px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;">
+          <div style="height:46px;background:#e2ddd2;border-radius:11px;"></div><div style="height:46px;background:#e2ddd2;border-radius:11px;"></div><div style="height:46px;background:#e2ddd2;border-radius:11px;"></div>
+          <div style="height:46px;background:#e2ddd2;border-radius:11px;"></div><div style="height:46px;background:#e2ddd2;border-radius:11px;"></div><div style="height:46px;background:#e2ddd2;border-radius:11px;"></div>
+        </div>
+        <div style="position:absolute;left:24px;right:24px;bottom:64px;text-align:center;"><div style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #e2ddd2;border-radius:12px;padding:9px 13px;font:400 12px 'Kalam';color:#6f685e;"><span style="width:7px;height:7px;border-radius:50%;background:#CC8A5A;"></span>soft AirPods chime</div></div>
+        <div style="position:absolute;left:24px;right:24px;bottom:24px;text-align:center;font:400 12px/1.45 'Kalam';color:#9a9183;">island turns clay + a tone in your ears. No banner, nothing to clear.</div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Dynamic Island Live Activity, fires on Drifting/Slouch while app backgrounded. Colour shift + chime, no interruption. Clears on return to Aligned.</div>
+      </sc-if>
+    </div>
+
+    <!-- 08 ESCALATION BANNER -->
+    <div data-screen-label="Escalation banner" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#b0a896;">08</span> &nbsp;Escalation banner</div>
+      <div style="width:248px;height:512px;background:#2b2722;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#fff;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#000;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;left:12px;right:12px;top:52px;background:rgba(245,242,236,.96);border-radius:18px;padding:12px 13px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 24px rgba(0,0,0,.35);">
+          <div style="width:32px;height:32px;border-radius:8px;background:#CC8A5A;flex:none;display:flex;align-items:center;justify-content:center;"><svg width="16" height="20" viewBox="0 0 100 132" fill="none"><path d="M48 124 C48 98 52 80 64 70" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round"/><circle cx="74" cy="52" r="19" stroke="#fff" stroke-width="11"/></svg></div>
+          <div style="flex:1;color:#23201c;"><div style="font:700 13.5px 'Kalam';">Heads up</div><div style="font:400 12px/1.3 'Kalam';color:#6f685e;">Leaning forward ~6 min. Sit tall?</div></div>
+          <div style="font:400 10px system-ui;color:#a89f8f;align-self:flex-start;">now</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;top:150px;text-align:center;font:400 12px 'Kalam';color:#6c6458;">— lock/home dimmed behind —</div>
+        <div style="position:absolute;left:24px;right:24px;bottom:24px;text-align:center;font:400 12px/1.45 'Kalam';color:#8a8276;">fires only after sustained slouch (if escalate on). chime + haptic. tap → opens Home.</div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Local notification, gated by Settings "escalate" toggle + ~6 min sustained Slouch. The only loud moment — keep rare. Tap deep-links to Home.</div>
+      </sc-if>
+    </div>
+
+    <!-- 09 DISCONNECTED -->
+    <div data-screen-label="Disconnected" style="display:flex;flex-direction:column;align-items:flex-start;gap:11px;flex:none;width:248px;">
+      <div style="font:600 13px system-ui;color:#23201c;"><span style="font:700 11px ui-monospace,monospace;color:#c08a5a;">09</span> &nbsp;Not connected <span style="font:400 11px ui-monospace,monospace;color:#c08a5a;">critical</span></div>
+      <div style="width:248px;height:512px;background:#fbf1ec;border:2.5px solid #23201c;border-radius:38px;position:relative;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.12);font-family:'Kalam',cursive;color:#23201c;">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#111;border-radius:13px;z-index:6;"></div>
+        <div style="position:absolute;top:14px;left:22px;font:700 12px system-ui;color:#111;">9:41</div>
+        <div style="position:absolute;inset:58px 24px 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <svg width="84" height="78" viewBox="0 0 92 84"><polygon points="46,8 88,76 4,76" fill="none" stroke="#CC8A5A" stroke-width="5" stroke-linejoin="round"/><line x1="46" y1="34" x2="46" y2="56" stroke="#CC8A5A" stroke-width="5" stroke-linecap="round"/><circle cx="46" cy="66" r="2.6" fill="#CC8A5A"/></svg>
+          <div style="font:700 22px 'Kalam';color:#B0703F;margin-top:22px;text-align:center;">AirPods not connected</div>
+          <div style="font:400 13px/1.45 'Kalam';color:#a8896f;margin-top:10px;text-align:center;">Turn on Bluetooth and pop in your AirPods Pro to start tracking.</div>
+          <div style="margin-top:26px;width:100%;background:#23201c;border-radius:14px;padding:13px;text-align:center;font:700 14px 'Kalam';color:#fff;box-sizing:border-box;">Open Bluetooth settings</div>
+          <div style="margin-top:16px;display:flex;align-items:center;gap:8px;font:400 12.5px 'Kalam';color:#b89a86;"><span style="width:8px;height:8px;border-radius:50%;background:#cdb6a6;"></span>waiting for AirPods…</div>
+        </div>
+      </div>
+      <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+        <div style="font:italic 12.5px/1.45 system-ui;color:#857d70;width:248px;">Replaces the active screen whenever the IMU stream drops (BT off, AirPods out, non-Pro). Auto-dismiss + restore tracking on reconnect. Never show stale posture.</div>
+      </sc-if>
+    </div>
+
+  </div>
+
+  <!-- ===== HANDOFF NOTE ===== -->
+  <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:880px;margin:62px 0 0;background:#fbf9f4;border:1.5px solid #ddd6c8;border-radius:14px;padding:20px 22px;">
+      <div style="font:700 14px system-ui;color:#5a8f6f;margin-bottom:10px;">Build order for handoff</div>
+      <div style="font:400 14px/1.7 system-ui;color:#6f685e;">Suggested sequence: <b>(1)</b> posture engine + calibration (03) → drives everything. <b>(2)</b> Home (04) with the three states. <b>(3)</b> tab shell + Trends (05) + Settings (06). <b>(4)</b> onboarding gate (01–02). <b>(5)</b> nudges (07/08) + Disconnected (09). Apply the Sage tokens up top; wireframe layout &amp; copy here are the spec. Anything ambiguous, flag it and I'll tighten the frame.</div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showNotes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const R = React.createElement;
+    // day-timeline stacked bars (up / drift / slouch) per hour
+    const hours = [
+      [70, 20, 10], [88, 8, 4], [60, 28, 12], [92, 6, 2],
+      [44, 30, 26], [66, 24, 10], [30, 28, 42], [74, 18, 8],
+      [55, 30, 15], [84, 12, 4], [90, 8, 2], [68, 22, 10],
+    ];
+    const seg = (c, pct) => R('div', { style: { width: '100%', height: pct + '%', background: c } });
+    const chartBars = hours.map((h, i) =>
+      R('div', { key: i, style: { flex: 1, height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 3, overflow: 'hidden' } },
+        seg('#5F9A78', h[0]), seg('#CC8A5A', h[1]), seg('#B05A38', h[2])));
+    return {
+      showNotes: this.props.showNotes ?? true,
+      chartBars,
+    };
+  }
+}
+</script>
+</body>
+</html>

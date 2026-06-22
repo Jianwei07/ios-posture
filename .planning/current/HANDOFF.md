@@ -69,3 +69,23 @@ Ready to continue next session — no loose ends, no broken build.
 
 ## Skills used this project
 grilling, jayden-workflow, design-taste-frontend, ponytail-audit
+
+## Open Issues From Mobile QA
+
+1. AirPods detection was skipped on mobile
+- Real-device onboarding allowed the user past AirPods detection too easily.
+- Expected: only proceed with posture setup after actual AirPods motion stream is detected.
+- If user intentionally skips, button copy should be explicit: "Skip Posture Check".
+
+2. Permissions are forced accepted
+- Current permissions UI marks required permissions as accepted.
+- Expected: user can uncheck/check permissions.
+- Hit target must be the full permission row/button, not only the small circle.
+
+3. Hold-still calibration did not count down
+- App asked user to stay still, but countdown never started.
+- Likely causes: AirPods not actually streaming, axis/confidence issue, or calibration never receives enough samples.
+- Expected: if AirPods are not in / no motion stream / low confidence, do not infer baseline.
+- Consider posture adjustment guidance during calibration: "go left", "go right", "raise head", etc., if axis confidence needs balancing.
+- Add "Skip Posture Check" below "Hold Still" to skip to dashboard without saving a fake baseline.
+- Accuracy rule: never save fallback/currentPitch/0 as baseline.

@@ -72,7 +72,10 @@ struct CalibrateView: View {
         .onChange(of: progress) { _, p in
             if capturing && p >= 1 { finish() }
         }
-        .onDisappear { cleanup() }
+        .onDisappear {
+            if capturing { engine.cancelCalibration() }
+            cleanup()
+        }
     }
 
     private var ring: some View {
@@ -114,9 +117,10 @@ struct CalibrateView: View {
         if let baseline = engine.neutralPitch {
             onDone(baseline)
         } else {
+            let spread = engine.calibrationSpread
             engine.cancelCalibration()
             failed = true
-            failReason = engine.calibrationSpread > 4
+            failReason = spread > 4
                 ? "Too much movement. Sit upright, keep your head still, and try again."
                 : "Couldn't get a steady baseline. Check your AirPods are in and try again."
         }

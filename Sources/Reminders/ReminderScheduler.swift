@@ -3,32 +3,38 @@ import Observation
 
 // Reminder scheduler.
 // - Posture alert: event-driven (sustained poor posture)
-// - Water: interval-based, settings-driven (Phase 1: no adaptation, no HealthKit)
+// - Water + Walk: simple interval reminders, settings-driven (no HealthKit)
 @Observable
 final class ReminderScheduler {
     private let notifications = NotificationModule.shared
     private let settings: UserSettings
 
-    // Posture alert state
+    // Posture alert timing (constants — not user-configurable)
+    private let alertSustainedSeconds: Double = 30
+    private let alertCooldownMin: Double = 5
+
     private var poorPostureStartTime: Date?
     private var lastPostureAlertTime: Date?
 
-    // Session elapsed seconds (from SessionManager.activeSessionSeconds)
     private var lastWaterReminderAt: Double = 0
+    private var lastWalkReminderAt: Double = 0
 
     init(settings: UserSettings) {
         self.settings = settings
     }
 
-    // Called every second by SessionManager when state == .active
     func tick(postureState: PostureState, sessionSeconds: Double) {
         checkPostureAlert(postureState)
-        checkWaterReminder(sessionSeconds: sessionSeconds)
+        checkInterval(&lastWaterReminderAt, intervalMin: settings.baseWaterIntervalMin,
+                      sessionSeconds: sessionSeconds, type: .water)
+        checkInterval(&lastWalkReminderAt, intervalMin: settings.baseWalkIntervalMin,
+                      sessionSeconds: sessionSeconds, type: .walk)
     }
 
     func reset() {
         poorPostureStartTime = nil
         lastWaterReminderAt = 0
+        lastWalkReminderAt = 0
         notifications.cancelAll()
     }
 
@@ -36,35 +42,28 @@ final class ReminderScheduler {
 
     private func checkPostureAlert(_ state: PostureState) {
         let now = Date()
-
         if state == .poor {
-            if poorPostureStartTime == nil {
-                poorPostureStartTime = now
-            }
+            if poorPostureStartTime == nil { poorPostureStartTime = now }
         } else {
             poorPostureStartTime = nil
         }
 
-        guard let alertStart = poorPostureStartTime else { return }
-        let sustained = now.timeIntervalSince(alertStart)
+        guard let start = poorPostureStartTime,
+              now.timeIntervalSince(start) >= alertSustainedSeconds else { return }
 
-        guard sustained >= settings.postureAlertSustainedSeconds else { return }
-
-        // Cooldown check
         if let last = lastPostureAlertTime,
-           now.timeIntervalSince(last) < settings.postureAlertCooldownMin * 60 { return }
+           now.timeIntervalSince(last) < alertCooldownMin * 60 { return }
 
         lastPostureAlertTime = now
         poorPostureStartTime = nil
         notifications.fire(.posture)
     }
 
-    private func checkWaterReminder(sessionSeconds: Double) {
-        let interval = settings.baseWaterIntervalMin * 60  // pure interval
-
-        if sessionSeconds - lastWaterReminderAt >= interval {
-            lastWaterReminderAt = sessionSeconds
-            notifications.fire(.water)
+    private func checkInterval(_ lastAt: inout Double, intervalMin: Double,
+                               sessionSeconds: Double, type: ReminderType) {
+        if sessionSeconds - lastAt >= intervalMin * 60 {
+            lastAt = sessionSeconds
+            notifications.fire(type)
         }
     }
 }

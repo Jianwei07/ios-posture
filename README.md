@@ -50,9 +50,19 @@ Views/           SwiftUI: session, history, settings
 
 Zero external runtime dependencies — pure Apple frameworks (SwiftUI, SwiftData, CoreMotion, UserNotifications).
 
+## Privacy
+
+Everything stays on your device. No account, no backend, no analytics, no tracking.
+Posture data is stored locally (SwiftData) and downsampled. It exists only to power
+future on-device wellness insights — it never leaves your phone.
+
 ## Prior art
 
-Inspired by [workwell](https://github.com/wizenheimer/workwell), which demonstrated AirPods-based posture tracking. This project is a fresh implementation with a session lifecycle, reminders, and persistence.
+- [workwell](https://github.com/wizenheimer/workwell) — demonstrated AirPods-based posture tracking.
+- [dorso](https://github.com/tldev/dorso) — AirPods connectivity pattern (CMHeadphoneMotionManager delegate).
+
+This project is a fresh implementation with a stickman that mirrors your posture, simple
+interval reminders (water + walk), and on-device session history.
 
 ## License
 

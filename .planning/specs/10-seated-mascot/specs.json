@@ -1,0 +1,35 @@
+{
+  "session": "10-mascot",
+  "phase": "1.7 → 1.8",
+  "status": "done",
+  "iterations": [
+    {
+      "version": "1.7",
+      "approach": "Procedural Canvas/Path — side-profile seated figure",
+      "result": "Built and shipped. User found stick lines unnatural regardless of proportions. Superseded."
+    },
+    {
+      "version": "1.8",
+      "approach": "SF Symbol figure.stand + SwiftUI rotationEffect",
+      "result": "SUPERSEDED. Built fine but read as a bathroom sign / icon, not a mascot. User: 'image of a human is terrible.'"
+    },
+    {
+      "version": "1.9",
+      "approach": "Potted plant drawn with filled SwiftUI Canvas paths (zero deps)",
+      "result": "DONE. Build green, 8/8 tests pass, upright + wilt both verified on simulator.",
+      "rationale": "Literal humans drawn in code always look cheap. A plant is forgiving (organic curves can't look 'broken'), keeps warm living-companion feel, maps posture perfectly. User picked plant over abstract-spine, breathing-orb, Lottie.",
+      "craft_fix": "Filled tapered Paths, not hairline strokes — solid shapes read as designed, strokes read as wireframe.",
+      "implementation": {
+        "pot": "filled terracotta trapezoid 0xC98A5B + rim 0xB87A4C + soil ellipse 0x4A3B2E",
+        "stem": "tapered filled path (offset quad-curves), tip leans +0.16x / +0.22y at full wilt",
+        "leaves": "3 almond leaves (two quad curves), sag up to ~40deg with slouch",
+        "foliage_color": "lerp sage 0x7C9A6B -> clay 0xC96F53 by pow(droop,1.4)",
+        "sway": "rotation +/-1.6deg at pot base, 4.5s loop, reduced-motion aware",
+        "resting": "foliage opacity 0.55 + extra 0.18 droop, sway off"
+      }
+    }
+  ],
+  "api_unchanged": ["StickmanView(slouch:resting:ink:)", "StickmanPose.upright/.napping", "StickmanMapping.slouch(pitch:neutral:)"],
+  "files": ["Sources/DesignSystem/Stickman.swift (filename kept; now renders a plant)"],
+  "next_tune": "Tune wilt lean/drop/sag after real-device AirPods test. Consider 4th leaf if sparse."
+}

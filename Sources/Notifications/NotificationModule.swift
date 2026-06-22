@@ -2,12 +2,13 @@ import UserNotifications
 import Foundation
 
 enum ReminderType {
-    case posture, water
+    case posture, water, walk
 
     var title: String {
         switch self {
         case .posture: return "Check your posture"
         case .water:   return "Time to hydrate"
+        case .walk:    return "Time to move"
         }
     }
 
@@ -15,6 +16,7 @@ enum ReminderType {
         switch self {
         case .posture: return "You've been slouching for a while. Sit up straight."
         case .water:   return "Stay hydrated — grab a glass of water."
+        case .walk:    return "Stand up, stretch, take a short walk."
         }
     }
 
@@ -28,7 +30,7 @@ final class NotificationModule {
     private init() {}
 
     func requestPermission() async {
-        try? await UNUserNotificationCenter.current()
+        _ = try? await UNUserNotificationCenter.current()
             .requestAuthorization(options: [.alert, .sound, .badge])
     }
 

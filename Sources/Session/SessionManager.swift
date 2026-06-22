@@ -2,112 +2,124 @@ import Foundation
 import SwiftData
 import Observation
 
+// Owns the single 1Hz heartbeat that drives the whole session: connect/pause
+// detection, the session clock, downsampled persistence, and reminder ticks.
 @Observable
 final class SessionManager {
     private(set) var state: SessionState = .idle
-    private(set) var activeSessionSeconds: Double = 0  // cumulative in-ear time
-
-    private var currentSession: PostureSession?
-    private var clockTimer: Timer?
-    private var modelContext: ModelContext?
+    private(set) var activeSessionSeconds: Double = 0   // cumulative in-ear time
 
     let engine: PostureEngine
+    private let scheduler: ReminderScheduler
+    private var modelContext: ModelContext?
 
-    init(engine: PostureEngine) {
+    private var currentSession: PostureSession?
+    private var heartbeat: Timer?
+    private var endedManually = false
+
+    // Running accumulators → accurate score without storing every second.
+    private var pitchSum = 0.0
+    private var sampleCount = 0
+    private var poorCount = 0
+    private var secondsSinceRecord = 0
+    private let recordEverySeconds = 30   // downsample persisted readings
+
+    init(engine: PostureEngine, scheduler: ReminderScheduler) {
         self.engine = engine
+        self.scheduler = scheduler
     }
 
     func configure(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
 
-    func onAirPodsConnected() {
-        switch state {
-        case .idle:
-            startCalibrating()
-        case .paused:
-            startCalibrating()  // re-calibrate on reconnect
-        default:
-            break
+    // Start the heartbeat. Called once when the view appears.
+    func begin() {
+        engine.source.onAvailabilityChanged = { [weak self] _ in self?.evaluate() }
+        heartbeat?.invalidate()
+        heartbeat = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            self?.evaluate()
         }
-    }
-
-    func onAirPodsDisconnected() {
-        switch state {
-        case .calibrating, .active:
-            pauseSession()
-        default:
-            break
-        }
-    }
-
-    func onCalibrationComplete() {
-        guard state == .calibrating else { return }
-        state = .active
-        startClock()
     }
 
     func endSession() {
         guard state == .active || state == .paused else { return }
-        stopClock()
-        engine.stop()
         finalizeSession()
-        state = .ended
-        // Reset for next session
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.state = .idle
-            self.activeSessionSeconds = 0
-        }
+        engine.stop()
+        state = .idle
+        activeSessionSeconds = 0
+        endedManually = true
+        scheduler.reset()
     }
 
-    private func startCalibrating() {
-        if currentSession == nil {
-            currentSession = PostureSession()
-            modelContext?.insert(currentSession!)
+    // The single heartbeat. Runs every second.
+    private func evaluate() {
+        let available = engine.isHeadphoneMotionAvailable
+        let receiving = engine.isReceiving()
+
+        switch state {
+        case .idle:
+            if available && !endedManually { startSession() }
+
+        case .active:
+            if !available || !receiving {
+                pauseSession()
+            } else {
+                tickActive()
+            }
+
+        case .paused:
+            if available { startSession() }   // reconnected → recalibrate
         }
-        state = .calibrating
+
+        if !available { endedManually = false }  // AirPods removed → allow auto-start again
+    }
+
+    private func startSession() {
+        if currentSession == nil {
+            let s = PostureSession()
+            modelContext?.insert(s)
+            currentSession = s
+        }
         engine.start()
+        state = .active
     }
 
     private func pauseSession() {
         state = .paused
-        stopClock()
         engine.stop()
     }
 
-    private func startClock() {
-        clockTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            guard let self, self.state == .active else { return }
-            self.activeSessionSeconds += 1
-            self.recordReading()
+    private func tickActive() {
+        // Don't count time / score until calibrated.
+        guard engine.neutralPitch != nil else { return }
+
+        activeSessionSeconds += 1
+        pitchSum += engine.currentPitch
+        sampleCount += 1
+        if engine.postureState == .poor { poorCount += 1 }
+
+        secondsSinceRecord += 1
+        if secondsSinceRecord >= recordEverySeconds {
+            secondsSinceRecord = 0
+            currentSession?.readings.append(
+                PostureReading(pitch: engine.currentPitch, classification: engine.postureState)
+            )
         }
-    }
 
-    private func stopClock() {
-        clockTimer?.invalidate()
-        clockTimer = nil
-    }
-
-    private func recordReading() {
-        guard let session = currentSession else { return }
-        let reading = PostureReading(
-            pitch: engine.currentPitch,
-            classification: engine.postureState
-        )
-        session.readings.append(reading)
+        scheduler.tick(postureState: engine.postureState, sessionSeconds: activeSessionSeconds)
     }
 
     private func finalizeSession() {
         guard let session = currentSession else { return }
         session.endTime = .now
-        let readings = session.readings
-        guard !readings.isEmpty else { return }
-        let pitches = readings.map(\.pitch)
-        session.avgPitch = pitches.reduce(0, +) / Double(pitches.count)
-        let poorCount = readings.filter { $0.classification == PostureState.poor.rawValue }.count
-        session.poorPosturePct = Double(poorCount) / Double(readings.count)
-        session.score = max(0, 100 - Int(session.poorPosturePct * 100))
+        if sampleCount > 0 {
+            session.avgPitch = pitchSum / Double(sampleCount)
+            session.poorPosturePct = Double(poorCount) / Double(sampleCount)
+            session.score = max(0, 100 - Int(session.poorPosturePct * 100))
+        }
         try? modelContext?.save()
         currentSession = nil
+        pitchSum = 0; sampleCount = 0; poorCount = 0; secondsSinceRecord = 0
     }
 }

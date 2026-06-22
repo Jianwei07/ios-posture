@@ -67,6 +67,7 @@ struct SettingsView: View {
         .sheet(isPresented: $showCalibrate) {
             CalibrateView(engine: app.engine, mode: .recalibrate) { baseline in
                 if let b = baseline { settings.baselinePitch = b; save() }
+                else { app.engine.seedBaseline(settings.baselinePitch) }
                 showCalibrate = false
             }
         }

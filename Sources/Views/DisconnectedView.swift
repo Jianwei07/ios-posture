@@ -46,8 +46,10 @@ struct DisconnectedView: View {
     }
 
     private func openSettings() {
+        #if os(iOS)
         if let url = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(url)
         }
+        #endif
     }
 }

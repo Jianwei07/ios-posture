@@ -10,7 +10,7 @@
       "id": "02",
       "title": "Add platform adapters",
       "spec": ".planning/specs/12-macos-first-pivot/02-add-platform-adapters.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "03",

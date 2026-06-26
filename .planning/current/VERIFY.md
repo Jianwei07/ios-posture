@@ -56,3 +56,20 @@ Checks:
 Notes:
 - Added minimal macOS compile guards for `navigationBarTitleDisplayMode` and sunlight location fallback.
 - Compact macOS-specific shell remains leaf 04.
+
+## 2026-06-26 — Leaf 04 Add compact macOS shell
+
+Verdict: PASS
+
+Must-haves:
+- macOS app creates compact main window: `WindowGroup(id: "main")`, fixed `440x720`, `.windowResizability(.contentSize)`.
+- macOS app has `MenuBarExtra` with Open App, Recalibrate, Quit.
+- Recalibrate menu action opens main window and presents existing `CalibrateView`.
+- iOS `WindowGroup` path unchanged behind `#else`.
+
+Checks:
+- `xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' build` -> BUILD SUCCEEDED
+- `xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS' build` -> BUILD SUCCEEDED
+
+Manual gap:
+- Menu bar item visual/open behavior still needs manual launch check.

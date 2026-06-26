@@ -8,6 +8,9 @@ struct ContentView: View {
     @Query private var settingsArray: [UserSettings]
 
     @State private var app: AppModel?
+    #if os(macOS)
+    @State private var showRecalibrate = false
+    #endif
 
     private var settings: UserSettings { settingsArray.first ?? UserSettings() }
 
@@ -44,6 +47,25 @@ struct ContentView: View {
         }
         .task { await setup() }
         .tint(Theme.Palette.accent)
+        #if os(macOS)
+        .onReceive(NotificationCenter.default.publisher(for: .recalibrateRequested)) { _ in
+            showRecalibrate = true
+        }
+        .sheet(isPresented: $showRecalibrate) {
+            if let app {
+                CalibrateView(engine: app.engine, mode: .recalibrate) { baseline in
+                    if let baseline {
+                        settings.baselinePitch = baseline
+                        save()
+                    } else {
+                        app.engine.seedBaseline(settings.baselinePitch)
+                    }
+                    showRecalibrate = false
+                }
+                .environment(app)
+            }
+        }
+        #endif
     }
 
     private func setup() async {

@@ -22,7 +22,7 @@
       "id": "04",
       "title": "Add compact macOS shell",
       "spec": ".planning/specs/12-macos-first-pivot/04-add-compact-macos-shell.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "05",

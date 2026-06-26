@@ -1,5 +1,31 @@
 # Handoff
 
+## Current — 2026-06-26 macOS-first pivot plan
+
+Direction Check: CONFIRMED
+Chosen direction: macOS-first Synthesis app with compact desktop screens, shared posture engine, and AirPods stream-based detection.
+Why: `.planning/PLATFORM-STRATEGY.md` confirms `CMHeadphoneMotionManager` on macOS 14+, and Dorso proves the production pattern.
+Main risk: real AirPods QA still required; simulator cannot validate CoreMotion headphone samples.
+User confirmation needed: no
+
+Grill Gate: SKIPPED_NOT_NEEDED
+Reason: user chose macOS pivot, compact similar screens, and Dorso reference; no first-slice ambiguity changes the plan.
+
+Spec Session: 12 | `.planning/specs/12-macos-first-pivot`
+Quality Gates: READY
+Check result: PASS
+Spec Tree: READY
+Execution gate: CLOSED
+Reason: Spec tree validates and first session is scoped to the macOS pivot without executing it.
+Next: approve plan | revise plan | grill menu-bar decision | stop
+
+Verification:
+- `python3 /Users/jayden77/.claude/skills/jayden-workflow/scripts/validate_specs.py /Users/jayden77/dev/ios-posture` -> spec tree valid
+- `xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` -> BUILD SUCCEEDED
+
+Archived legacy specs: `.planning/specs-legacy-20260626/`
+Skills used: jayden-workflow, gsd-lite-plan, gsd-lite-check, diagnose
+
 ## Where we are (2026-06-21, end of session)
 
 Phase 1 engine WORKING. UI done. Mascot iterated twice and now uses SF Symbol.

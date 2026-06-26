@@ -77,7 +77,7 @@
 		8931605AAAE63A5861811287 /* NowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowView.swift; sourceTree = "<group>"; };
 		8DE96556B7C778F797B1D0CA /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		93DDE8EB8B33CDF0C8632CB7 /* PostureClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureClassifier.swift; sourceTree = "<group>"; };
-		94766EAADF687406DFE8EF10 /* Synthesis.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Synthesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		94766EAADF687406DFE8EF10 /* Synthesis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synthesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		956441B48F69F52F11EFBD35 /* PostureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureEngine.swift; sourceTree = "<group>"; };
 		969966FA7A6F091E9D9BC4CC /* NotificationModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModule.swift; sourceTree = "<group>"; };
 		96CB4F6112A86304628E4F36 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 		B28C3204DC6B6631DE317362 /* PostureClassifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureClassifierTests.swift; sourceTree = "<group>"; };
 		B69593EB47D66F038545CAF0 /* Monstera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monstera.swift; sourceTree = "<group>"; };
 		C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
-		CB12B512D469835052AE3E60 /* SynthesisTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SynthesisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB12B512D469835052AE3E60 /* SynthesisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SynthesisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDC556E9AF90B026FB2792C0 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
 		D3C175572A062064D96E4747 /* PostureReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureReading.swift; sourceTree = "<group>"; };
 		DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunlightScheduler.swift; sourceTree = "<group>"; };
@@ -345,9 +345,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1600;
-				TargetAttributes = {
-				};
+				LastUpgradeCheck = 2650;
 			};
 			buildConfigurationList = A0A7868C5A70705184A0AD7F /* Build configuration list for PBXProject "Synthesis" */;
 			developmentRegion = en;
@@ -468,6 +466,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -482,6 +481,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
@@ -495,6 +495,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Synthesis.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = X8668S9J7Z;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -512,6 +513,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Synthesis.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = X8668S9J7Z;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -560,6 +562,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -581,6 +584,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;

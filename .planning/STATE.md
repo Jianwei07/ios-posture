@@ -1,6 +1,15 @@
 # State
 
-## Current: PHASE 1.10 BASELINE ACCURACY — DONE
+## Current: macOS-first pivot planned
+
+## Status: Spec session 12 drafted. Execution gate closed. Legacy specs preserved in `.planning/specs-legacy-20260626/`.
+
+## Next
+- Review/approve `.planning/specs/12-macos-first-pivot/`.
+- Execute only after explicit execution command.
+- First implementation leaf fixes AirPods stream truth before adding macOS target.
+
+## Previous: PHASE 1.10 BASELINE ACCURACY — DONE
 
 ## Status: Build green, 13/13 tests pass. No fake/inferred baselines; calibration explicit + stability-gated. Monstera redrawn.
 

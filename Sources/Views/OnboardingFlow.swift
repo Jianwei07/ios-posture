@@ -54,7 +54,7 @@ private struct ConnectStep: View {
             Text(detected ? "AirPods detected" : "Use the AirPods\nalready in your ears")
                 .font(Theme.Font.hero(26)).multilineTextAlignment(.center)
                 .foregroundStyle(Theme.Palette.ink).padding(.top, 28)
-            Text("Reads tiny head movements from the AirPods Pro sensor. Nothing leaves your phone.")
+            Text("Reads tiny head movements from compatible AirPods. Nothing leaves your device.")
                 .font(Theme.Font.body(14)).multilineTextAlignment(.center)
                 .foregroundStyle(Theme.Palette.inkSoft).padding(.top, 10).padding(.horizontal, 36)
             Spacer()

@@ -88,7 +88,7 @@ struct SettingsView: View {
                 .frame(width: 30, height: 30)
                 .overlay(Circle().fill(connected ? Theme.Palette.accent : Theme.Palette.inkFaint).frame(width: 7, height: 7))
             VStack(alignment: .leading, spacing: 1) {
-                Text("AirPods Pro").font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
+                Text("Compatible AirPods").font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
                 Text(connected ? "connected · tracking" : "not connected")
                     .font(Theme.Font.caption(11))
                     .foregroundStyle(connected ? Theme.Palette.accent : Theme.Palette.inkFaint)

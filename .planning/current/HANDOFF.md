@@ -31,6 +31,18 @@ Verification:
 Archived legacy specs: `.planning/specs-legacy-20260626/`
 Skills used: jayden-workflow, gsd-lite-plan, gsd-lite-check, diagnose
 
+## macOS AirPods QA checklist — pending
+
+- [ ] Launch `SynthesisMac`; menu bar item appears.
+- [ ] Open compact window from menu bar.
+- [ ] Wear A3047 AirPods Pro 2 USB-C; app reaches connected state without flicker.
+- [ ] Start calibration; real samples advance countdown.
+- [ ] Finish calibration; no fake baseline saved if samples absent.
+- [ ] Slouch changes live posture state.
+- [ ] Remove AirPods for 5s; app shows one stable disconnected state.
+- [ ] Reinsert AirPods; app resumes without start/pause loop.
+- [ ] Recalibrate from menu bar opens app and presents calibration.
+
 ## Where we are (2026-06-21, end of session)
 
 Phase 1 engine WORKING. UI done. Mascot iterated twice and now uses SF Symbol.

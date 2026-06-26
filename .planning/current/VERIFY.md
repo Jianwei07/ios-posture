@@ -35,3 +35,24 @@ Checks:
 
 Manual gap:
 - macOS build waits for leaf 03, because `SynthesisMac` target does not exist yet.
+
+## 2026-06-26 — Leaf 03 Add macOS target
+
+Verdict: PASS
+
+Must-haves:
+- `project.yml` defines `SynthesisMac` as a macOS 14.0 app target.
+- macOS target uses generated Info.plist and does not attach iOS HealthKit entitlements/framework.
+- iOS target keeps HealthKit entitlement/framework and restored `DEVELOPMENT_TEAM` after XcodeGen regeneration.
+- `SynthesisMac` is buildable from the generated project.
+- iOS `Synthesis` remains buildable from the generated project.
+
+Checks:
+- `xcodegen generate` -> generated project
+- `xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' build` -> BUILD SUCCEEDED
+- `xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS' build` -> BUILD SUCCEEDED
+- `xcodebuild test -project Synthesis.xcodeproj -scheme Synthesis -destination 'platform=iOS Simulator,name=iPhone 17'` -> TEST SUCCEEDED, 15 tests
+
+Notes:
+- Added minimal macOS compile guards for `navigationBarTitleDisplayMode` and sunlight location fallback.
+- Compact macOS-specific shell remains leaf 04.

@@ -16,14 +16,16 @@ Quality Gates: READY
 Check result: PASS
 Spec Tree: READY
 Execution gate: OPENED_FOR_APPROVED_EXECUTION
-Reason: Leaves 01 and 02 executed and verified; remaining macOS pivot leaves are still incomplete.
-Next: execute leaf 03 add macOS target | stop
+Reason: Leaves 01-03 executed and verified; remaining macOS pivot leaves are still incomplete.
+Next: execute leaf 04 add compact macOS shell | stop
 
 Verification:
 - `python3 /Users/jayden77/.claude/skills/jayden-workflow/scripts/validate_specs.py /Users/jayden77/dev/ios-posture` -> spec tree valid
 - `xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` -> BUILD SUCCEEDED
 - `xcodebuild test -project Synthesis.xcodeproj -scheme Synthesis -destination 'platform=iOS Simulator,name=iPhone 17'` -> TEST SUCCEEDED, 15 tests
 - `xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS' build` -> BUILD SUCCEEDED
+- `xcodegen generate` -> generated project
+- `xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' build` -> BUILD SUCCEEDED
 
 Archived legacy specs: `.planning/specs-legacy-20260626/`
 Skills used: jayden-workflow, gsd-lite-plan, gsd-lite-check, diagnose

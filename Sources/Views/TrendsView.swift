@@ -43,7 +43,9 @@ struct TrendsView: View {
             .scrollContentBackground(.hidden)
             .background(Theme.Palette.bg.ignoresSafeArea())
             .navigationTitle("Trends")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
         }
     }
 

@@ -7,21 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06D36290CE50FCF249BFA5A9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CB4F6112A86304628E4F36 /* SessionManager.swift */; };
 		079C0D2FDE34812FE63A56B3 /* DisconnectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3059E70F032DE7AA10838 /* DisconnectedView.swift */; };
+		0BDF1C62183436922C956DDC /* SunlightScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */; };
+		0C65869519AC994D2123C089 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90D94EC04E4B75FF0C33D0 /* AppModel.swift */; };
+		16E5C1DD3C06616C1E03D97C /* NotificationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969966FA7A6F091E9D9BC4CC /* NotificationModule.swift */; };
+		1997F2A48CF21B0E8E3063C1 /* MotionFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A7257CD4CF570D0B24716E /* MotionFilter.swift */; };
 		1C5ABBCAA7B3F780B11A2A11 /* MotionFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A7257CD4CF570D0B24716E /* MotionFilter.swift */; };
 		1E13E2BEDE2AB1D73F9F0C49 /* PostureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4936AC11A4E0CDE792094471 /* PostureSession.swift */; };
 		230DCE1F824C8763166AEFBA /* SynthesisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C1349A6E6426322435F153 /* SynthesisApp.swift */; };
+		23D75DDA45F8BDC1BF88B5D6 /* PlantMascot.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA77A4EEDEE0DC4C3A0CBC7 /* PlantMascot.swift */; };
+		241D2048842E47BB4F3A86F1 /* CalibrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE69DA461C091185EFE251E /* CalibrateView.swift */; };
 		2CC4A5A7E85BE22D8174F6EF /* SimulatorOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22EEE52F811688AEBBC7A /* SimulatorOverlay.swift */; };
 		2CE60710E86BAE018AE59ABF /* Monstera.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69593EB47D66F038545CAF0 /* Monstera.swift */; };
+		2D54E31D8EB6E4E4E1CD4B6E /* Sunflower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1288F1A5E07F1598670506 /* Sunflower.swift */; };
 		34E6ED75CD9031D1E91FE9E6 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CB4F6112A86304628E4F36 /* SessionManager.swift */; };
+		377D85C9B5A7A5C731204902 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CAF54E676B437C3870AAF9 /* ContentView.swift */; };
 		3D2490F86348028E39D5A54C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6041CD6092FFA063455AA /* SettingsView.swift */; };
+		3FAEB413FAEFFCF235B9090F /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC556E9AF90B026FB2792C0 /* TrendsView.swift */; };
 		44FB4373C017E71C0032E8BD /* PostureClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DDE8EB8B33CDF0C8632CB7 /* PostureClassifier.swift */; };
 		45037AED78BFD38D50898025 /* StepReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25C75BA2813E3FA774DA720 /* StepReader.swift */; };
 		4E4C3959BC58DD4B26EB57CD /* PlantPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B0BE979AD5A2731FEA9A96 /* PlantPicker.swift */; };
 		4FB3428AA9FE063F94E34DE4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E93BDDC49F4CAB11E49BAB /* Theme.swift */; };
+		50D3BB0F28CF7CA177D4D341 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE96556B7C778F797B1D0CA /* SessionState.swift */; };
+		54B8C221572CBEB299671501 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E93BDDC49F4CAB11E49BAB /* Theme.swift */; };
+		5AB33C7117C54A05021155C7 /* SynthesisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C1349A6E6426322435F153 /* SynthesisApp.swift */; };
+		5AEBA15F00E2287444F759C7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6041CD6092FFA063455AA /* SettingsView.swift */; };
 		60E0CFC79E5488961AD61C3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CAF54E676B437C3870AAF9 /* ContentView.swift */; };
 		637B28C8ADB826A125857493 /* PostureReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C175572A062064D96E4747 /* PostureReading.swift */; };
 		64531A6A05F6EA7281A6C9A5 /* WaterLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE114FE2B5ACFFF0589D292 /* WaterLog.swift */; };
+		6655EAF276097DE8AE8A8E5B /* NowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931605AAAE63A5861811287 /* NowView.swift */; };
 		6969CBDCA33498FAAE779C47 /* SolarCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB8A0252B3194AA8926440E /* SolarCalculator.swift */; };
 		6AC6069A418476449C9F94D1 /* PostureEngineCalibrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0146062510D6296BEAD5EC07 /* PostureEngineCalibrationTests.swift */; };
 		6D36027EA5669685B5C8BD46 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */; };
@@ -29,19 +44,37 @@
 		6F53A347C58B35C88444200A /* PlantMascot.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA77A4EEDEE0DC4C3A0CBC7 /* PlantMascot.swift */; };
 		727CB4C45F691161D9996439 /* PostureClassifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28C3204DC6B6631DE317362 /* PostureClassifierTests.swift */; };
 		79FB3DFB13EE5E4C41007C03 /* MotionFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0974D445CBC729D74A799425 /* MotionFilterTests.swift */; };
+		83CEBAF15B3E0E991E4EE3C9 /* SimulatedMotionSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612354F2ADC3F0BCEBB31E80 /* SimulatedMotionSource.swift */; };
+		8AB9951181973A726088271E /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */; };
 		8BC5ECB28D1B3C3093FEABA7 /* Cactus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13C3C6AB2470CB4ABBE69E0 /* Cactus.swift */; };
+		8C034AE3F2659832204687A0 /* DisconnectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3059E70F032DE7AA10838 /* DisconnectedView.swift */; };
 		8FA4D9F2E468231A95620D17 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC556E9AF90B026FB2792C0 /* TrendsView.swift */; };
 		94A2D8B68AC69E6FC7D38E26 /* PostureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956441B48F69F52F11EFBD35 /* PostureEngine.swift */; };
+		98E8C6D45973CEA7C6BC223C /* Cactus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13C3C6AB2470CB4ABBE69E0 /* Cactus.swift */; };
 		A00F72965F7BC406B6D9BDC7 /* SunlightScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */; };
 		A0350BE0DD78E6E5DC2A07D3 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2843195070E290EA13E24 /* UserSettings.swift */; };
 		A25F0B9ED69027DA997EEDE4 /* SpineIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72822619BE8C893C15952B6 /* SpineIcon.swift */; };
 		A53A1F4B60C602DDC34EC7D9 /* PostureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26D1CF9110B5B14C2040D56 /* PostureState.swift */; };
+		A94183FFE7D0E205BF08647B /* PostureReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C175572A062064D96E4747 /* PostureReading.swift */; };
+		A96A7A839F73BEC73BA050EF /* PostureClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DDE8EB8B33CDF0C8632CB7 /* PostureClassifier.swift */; };
 		B24BCD6752658463092BAA5E /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */; };
+		B460887B66902164F26D77CE /* PostureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4936AC11A4E0CDE792094471 /* PostureSession.swift */; };
+		BD4390435F856BF4094A55B8 /* Monstera.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69593EB47D66F038545CAF0 /* Monstera.swift */; };
 		C3B8B1366FEA33F915819BE3 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE96556B7C778F797B1D0CA /* SessionState.swift */; };
+		C48B7AAEE1D65EA5612CEE1E /* PostureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26D1CF9110B5B14C2040D56 /* PostureState.swift */; };
 		C550CFB16A6E39CE8A3764F0 /* NotificationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969966FA7A6F091E9D9BC4CC /* NotificationModule.swift */; };
+		C653D7E16C7F5A39C61E642F /* SolarCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB8A0252B3194AA8926440E /* SolarCalculator.swift */; };
+		CA0F78082AB264F9FA3D544F /* SpineIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72822619BE8C893C15952B6 /* SpineIcon.swift */; };
+		D775A5E889BC79FE6A9280B9 /* SimulatorOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22EEE52F811688AEBBC7A /* SimulatorOverlay.swift */; };
+		DAC6814A2CC9E95B4EB61FE8 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */; };
+		DEFD0E94C8FE8E7E7524A713 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2843195070E290EA13E24 /* UserSettings.swift */; };
+		E0469B58D549F9F513C08ED0 /* StepReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25C75BA2813E3FA774DA720 /* StepReader.swift */; };
+		E4531133CCD5613C413B90AB /* PlantPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B0BE979AD5A2731FEA9A96 /* PlantPicker.swift */; };
 		EE112D97A3BEA328F5157E45 /* SimulatedMotionSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612354F2ADC3F0BCEBB31E80 /* SimulatedMotionSource.swift */; };
+		F0B126BEB07BCBCCCDBBAF89 /* WaterLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE114FE2B5ACFFF0589D292 /* WaterLog.swift */; };
 		F7956DAA1C62AA43E95277B9 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90D94EC04E4B75FF0C33D0 /* AppModel.swift */; };
 		F9FCA8604220B30A98C1343D /* Sunflower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1288F1A5E07F1598670506 /* Sunflower.swift */; };
+		FD6289CFE93A4796E766C41B /* PostureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956441B48F69F52F11EFBD35 /* PostureEngine.swift */; };
 		FDCD8C94DACB52999FA0F31A /* NowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931605AAAE63A5861811287 /* NowView.swift */; };
 		FF70E1B4EEC63A1E894DC807 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68960274C4B382BE2E7E9879 /* HealthKit.framework */; };
 /* End PBXBuildFile section */
@@ -77,7 +110,7 @@
 		8931605AAAE63A5861811287 /* NowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowView.swift; sourceTree = "<group>"; };
 		8DE96556B7C778F797B1D0CA /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		93DDE8EB8B33CDF0C8632CB7 /* PostureClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureClassifier.swift; sourceTree = "<group>"; };
-		94766EAADF687406DFE8EF10 /* Synthesis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synthesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		94766EAADF687406DFE8EF10 /* Synthesis.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Synthesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		956441B48F69F52F11EFBD35 /* PostureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureEngine.swift; sourceTree = "<group>"; };
 		969966FA7A6F091E9D9BC4CC /* NotificationModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModule.swift; sourceTree = "<group>"; };
 		96CB4F6112A86304628E4F36 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -88,7 +121,8 @@
 		B28C3204DC6B6631DE317362 /* PostureClassifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureClassifierTests.swift; sourceTree = "<group>"; };
 		B69593EB47D66F038545CAF0 /* Monstera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monstera.swift; sourceTree = "<group>"; };
 		C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
-		CB12B512D469835052AE3E60 /* SynthesisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SynthesisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C871C272669551031585FFFF /* SynthesisMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SynthesisMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB12B512D469835052AE3E60 /* SynthesisTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SynthesisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDC556E9AF90B026FB2792C0 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
 		D3C175572A062064D96E4747 /* PostureReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureReading.swift; sourceTree = "<group>"; };
 		DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunlightScheduler.swift; sourceTree = "<group>"; };
@@ -125,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				94766EAADF687406DFE8EF10 /* Synthesis.app */,
+				C871C272669551031585FFFF /* SynthesisMac.app */,
 				CB12B512D469835052AE3E60 /* SynthesisTests.xctest */,
 			);
 			name = Products;
@@ -338,6 +373,23 @@
 			productReference = CB12B512D469835052AE3E60 /* SynthesisTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C89E18E9829D1D67A0FABF34 /* SynthesisMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01DF8C4FC2DA837724F2CF0B /* Build configuration list for PBXNativeTarget "SynthesisMac" */;
+			buildPhases = (
+				1603214E80C91CB3AC0B9E09 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SynthesisMac;
+			packageProductDependencies = (
+			);
+			productName = SynthesisMac;
+			productReference = C871C272669551031585FFFF /* SynthesisMac.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -345,7 +397,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2650;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					51412B453DF63B2FB32963D9 = {
+						DevelopmentTeam = X8668S9J7Z;
+					};
+				};
 			};
 			buildConfigurationList = A0A7868C5A70705184A0AD7F /* Build configuration list for PBXProject "Synthesis" */;
 			developmentRegion = en;
@@ -362,12 +419,53 @@
 			projectRoot = "";
 			targets = (
 				51412B453DF63B2FB32963D9 /* Synthesis */,
+				C89E18E9829D1D67A0FABF34 /* SynthesisMac */,
 				6DEF7223B6C5AE5DA96CA435 /* SynthesisTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1603214E80C91CB3AC0B9E09 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C65869519AC994D2123C089 /* AppModel.swift in Sources */,
+				98E8C6D45973CEA7C6BC223C /* Cactus.swift in Sources */,
+				241D2048842E47BB4F3A86F1 /* CalibrateView.swift in Sources */,
+				377D85C9B5A7A5C731204902 /* ContentView.swift in Sources */,
+				8C034AE3F2659832204687A0 /* DisconnectedView.swift in Sources */,
+				BD4390435F856BF4094A55B8 /* Monstera.swift in Sources */,
+				1997F2A48CF21B0E8E3063C1 /* MotionFilter.swift in Sources */,
+				16E5C1DD3C06616C1E03D97C /* NotificationModule.swift in Sources */,
+				6655EAF276097DE8AE8A8E5B /* NowView.swift in Sources */,
+				8AB9951181973A726088271E /* OnboardingFlow.swift in Sources */,
+				23D75DDA45F8BDC1BF88B5D6 /* PlantMascot.swift in Sources */,
+				E4531133CCD5613C413B90AB /* PlantPicker.swift in Sources */,
+				A96A7A839F73BEC73BA050EF /* PostureClassifier.swift in Sources */,
+				FD6289CFE93A4796E766C41B /* PostureEngine.swift in Sources */,
+				A94183FFE7D0E205BF08647B /* PostureReading.swift in Sources */,
+				B460887B66902164F26D77CE /* PostureSession.swift in Sources */,
+				C48B7AAEE1D65EA5612CEE1E /* PostureState.swift in Sources */,
+				DAC6814A2CC9E95B4EB61FE8 /* ReminderScheduler.swift in Sources */,
+				06D36290CE50FCF249BFA5A9 /* SessionManager.swift in Sources */,
+				50D3BB0F28CF7CA177D4D341 /* SessionState.swift in Sources */,
+				5AEBA15F00E2287444F759C7 /* SettingsView.swift in Sources */,
+				83CEBAF15B3E0E991E4EE3C9 /* SimulatedMotionSource.swift in Sources */,
+				D775A5E889BC79FE6A9280B9 /* SimulatorOverlay.swift in Sources */,
+				C653D7E16C7F5A39C61E642F /* SolarCalculator.swift in Sources */,
+				CA0F78082AB264F9FA3D544F /* SpineIcon.swift in Sources */,
+				E0469B58D549F9F513C08ED0 /* StepReader.swift in Sources */,
+				2D54E31D8EB6E4E4E1CD4B6E /* Sunflower.swift in Sources */,
+				0BDF1C62183436922C956DDC /* SunlightScheduler.swift in Sources */,
+				5AB33C7117C54A05021155C7 /* SynthesisApp.swift in Sources */,
+				54B8C221572CBEB299671501 /* Theme.swift in Sources */,
+				3FAEB413FAEFFCF235B9090F /* TrendsView.swift in Sources */,
+				DEFD0E94C8FE8E7E7524A713 /* UserSettings.swift in Sources */,
+				F0B126BEB07BCBCCCDBBAF89 /* WaterLog.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D7995C7F889D21EE05BFE6C1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -429,6 +527,23 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0290CFFE84C8D0D21FF1628D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture.mac;
+				PRODUCT_NAME = Synthesis;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
 		267D9E7A697E4DD8FE6E0D24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -466,7 +581,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -476,16 +590,30 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
-				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		2C8504BB3BCAB467CEBC6EB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture.mac;
+				PRODUCT_NAME = Synthesis;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -497,13 +625,15 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = X8668S9J7Z;
 				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture;
 				PRODUCT_NAME = Synthesis;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -515,13 +645,15 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = X8668S9J7Z;
 				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture;
 				PRODUCT_NAME = Synthesis;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -562,7 +694,6 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -578,17 +709,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.posture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;
-				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -602,6 +730,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.SynthesisTests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Synthesis.app/Synthesis";
@@ -618,6 +747,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayden77.SynthesisTests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Synthesis.app/Synthesis";
@@ -627,6 +757,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		01DF8C4FC2DA837724F2CF0B /* Build configuration list for PBXNativeTarget "SynthesisMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0290CFFE84C8D0D21FF1628D /* Debug */,
+				2C8504BB3BCAB467CEBC6EB2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		A0A7868C5A70705184A0AD7F /* Build configuration list for PBXProject "Synthesis" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

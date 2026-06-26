@@ -16,7 +16,7 @@
       "id": "03",
       "title": "Add macOS target",
       "spec": ".planning/specs/12-macos-first-pivot/03-add-macos-target.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "04",

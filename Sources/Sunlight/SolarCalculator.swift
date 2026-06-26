@@ -22,6 +22,9 @@ final class SolarCalculator: NSObject, CLLocationManagerDelegate {
     func compute() async -> DaylightWindows {
         // ponytail: Simulator/CoreLocation often fails — default to SF lat/lon.
         let fallback = computeFor(lat: 37.77, lon: -122.42)
+        #if os(macOS)
+        return fallback
+        #else
         guard manager.authorizationStatus == .authorizedWhenInUse
                 || manager.authorizationStatus == .notDetermined else {
             return fallback
@@ -36,10 +39,13 @@ final class SolarCalculator: NSObject, CLLocationManagerDelegate {
                 self.finish(fallback)
             }
         }
+        #endif
     }
 
     func requestPermission() {
+        #if !os(macOS)
         manager.requestWhenInUseAuthorization()
+        #endif
     }
 
     private func finish(_ windows: DaylightWindows) {

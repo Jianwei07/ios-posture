@@ -3,15 +3,13 @@ options:
   bundleIdPrefix: com.jayden77
   deploymentTarget:
     iOS: "17.0"
+    macOS: "14.0"
   xcodeVersion: "16.0"
   createIntermediateGroups: true
 
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
-    TARGETED_DEVICE_FAMILY: "1"  # iPhone only
-    PRODUCT_BUNDLE_IDENTIFIER: com.jayden77.posture
 
 targets:
   Synthesis:
@@ -25,9 +23,26 @@ targets:
       base:
         INFOPLIST_FILE: Resources/Info.plist
         PRODUCT_NAME: Synthesis
+        PRODUCT_BUNDLE_IDENTIFIER: com.jayden77.posture
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        TARGETED_DEVICE_FAMILY: "1"  # iPhone only
+        DEVELOPMENT_TEAM: X8668S9J7Z
         CODE_SIGN_ENTITLEMENTS: Synthesis.entitlements
     dependencies:
       - sdk: HealthKit.framework
+
+  SynthesisMac:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: "YES"
+        PRODUCT_NAME: Synthesis
+        PRODUCT_BUNDLE_IDENTIFIER: com.jayden77.posture.mac
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
 
   SynthesisTests:
     type: bundle.unit-test

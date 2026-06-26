@@ -62,7 +62,9 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(Theme.Palette.bg.ignoresSafeArea())
             .navigationTitle("Settings")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
         }
         .sheet(isPresented: $showCalibrate, onDismiss: {
             if app.engine.neutralPitch == nil, settings.baselinePitch != nil {

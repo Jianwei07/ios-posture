@@ -15,13 +15,14 @@ Spec Session: 12 | `.planning/specs/12-macos-first-pivot`
 Quality Gates: READY
 Check result: PASS
 Spec Tree: READY
-Execution gate: CLOSED
-Reason: Spec tree validates and first session is scoped to the macOS pivot without executing it.
-Next: approve plan | revise plan | grill menu-bar decision | stop
+Execution gate: OPENED_FOR_APPROVED_EXECUTION
+Reason: Leaf 01 executed and verified; remaining macOS pivot leaves are still incomplete.
+Next: execute leaf 02 add platform adapters | stop
 
 Verification:
 - `python3 /Users/jayden77/.claude/skills/jayden-workflow/scripts/validate_specs.py /Users/jayden77/dev/ios-posture` -> spec tree valid
 - `xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` -> BUILD SUCCEEDED
+- `xcodebuild test -project Synthesis.xcodeproj -scheme Synthesis -destination 'platform=iOS Simulator,name=iPhone 17'` -> TEST SUCCEEDED, 15 tests
 
 Archived legacy specs: `.planning/specs-legacy-20260626/`
 Skills used: jayden-workflow, gsd-lite-plan, gsd-lite-check, diagnose

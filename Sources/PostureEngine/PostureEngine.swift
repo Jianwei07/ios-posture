@@ -8,7 +8,9 @@ import Observation
 
 protocol MotionSource: AnyObject {
     var isAvailable: Bool { get }
+    var isConnected: Bool { get }
     var onAvailabilityChanged: ((Bool) -> Void)? { get set }
+    func startMonitoring()
     func start(onSample: @escaping (Double) -> Void)  // emits pitch in degrees
     func stop()
 }
@@ -18,6 +20,7 @@ protocol MotionSource: AnyObject {
 final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionManagerDelegate {
     private let manager = CMHeadphoneMotionManager()
     private let queue = OperationQueue()
+    private var connected = false
     var onAvailabilityChanged: ((Bool) -> Void)?
 
     override init() {
@@ -28,11 +31,21 @@ final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionMana
     }
 
     var isAvailable: Bool { manager.isDeviceMotionAvailable }
+    var isConnected: Bool { connected }
+
+    func startMonitoring() {
+        guard manager.isDeviceMotionAvailable else { return }
+        manager.startConnectionStatusUpdates()
+    }
 
     func start(onSample: @escaping (Double) -> Void) {
         guard manager.isDeviceMotionAvailable else { return }
         manager.startDeviceMotionUpdates(to: queue) { motion, error in
             guard let motion, error == nil else { return }
+            if !self.connected {
+                self.connected = true
+                self.onAvailabilityChanged?(true)
+            }
             onSample(motion.attitude.pitch * 180 / .pi)
         }
     }
@@ -43,9 +56,11 @@ final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionMana
 
     // Delegate push — AirPods connected / removed.
     func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
+        connected = true
         onAvailabilityChanged?(true)
     }
     func headphoneMotionManagerDidDisconnect(_ manager: CMHeadphoneMotionManager) {
+        connected = false
         onAvailabilityChanged?(false)
     }
 }
@@ -63,6 +78,7 @@ final class PostureEngine {
 
     var classifier: PostureClassifier
     var isHeadphoneMotionAvailable: Bool { source.isAvailable }
+    var isHeadphoneMotionConnected: Bool { source.isConnected }
 
     let source: MotionSource
     private var pitchFilter = MotionFilter()

@@ -38,6 +38,7 @@ final class SessionManager {
     // Start the heartbeat. Called once when the view appears.
     func begin() {
         engine.source.onAvailabilityChanged = { [weak self] _ in self?.evaluate() }
+        engine.source.startMonitoring()
         heartbeat?.invalidate()
         heartbeat = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.evaluate()
@@ -56,7 +57,7 @@ final class SessionManager {
 
     // The single heartbeat. Runs every second.
     private func evaluate() {
-        let available = engine.isHeadphoneMotionAvailable
+        let available = engine.isHeadphoneMotionConnected
         let receiving = engine.isReceiving()
 
         switch state {

@@ -63,8 +63,8 @@ final class AppModel {
         engine.classifier.threshold = settings.sensitivity.degrees
     }
 
-    // True when AirPods Pro motion is available (drives the Disconnected gate).
-    var isConnected: Bool { engine.isHeadphoneMotionAvailable }
+    // True when AirPods Pro motion is connected/streaming (drives the Disconnected gate).
+    var isConnected: Bool { engine.isHeadphoneMotionConnected }
 
     // Live bend for the Home spine mirror.
     var liveBend: Double {

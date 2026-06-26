@@ -4,7 +4,7 @@
       "id": "01",
       "title": "Fix AirPods stream truth",
       "spec": ".planning/specs/12-macos-first-pivot/01-fix-airpods-stream-truth.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "02",

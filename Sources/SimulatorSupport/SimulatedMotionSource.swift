@@ -16,6 +16,9 @@ final class SimulatedMotionSource: MotionSource {
     @ObservationIgnored private var timer: Timer?
 
     var isAvailable: Bool { available }
+    var isConnected: Bool { available }
+
+    func startMonitoring() {}
 
     func start(onSample: @escaping (Double) -> Void) {
         timer?.invalidate()

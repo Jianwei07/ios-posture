@@ -3,10 +3,16 @@ import Testing
 
 private final class FakeMotionSource: MotionSource {
     var isAvailable: Bool = true
+    var isConnected: Bool = true
     var onAvailabilityChanged: ((Bool) -> Void)?
     private var handler: ((Double) -> Void)?
+    private(set) var startCount = 0
 
-    func start(onSample: @escaping (Double) -> Void) { handler = onSample }
+    func startMonitoring() {}
+    func start(onSample: @escaping (Double) -> Void) {
+        startCount += 1
+        handler = onSample
+    }
     func stop() { handler = nil }
     func emit(_ pitch: Double) { handler?(pitch) }
 }
@@ -66,5 +72,19 @@ struct PostureEngineCalibrationTests {
         for _ in 0..<100 { source.emit(-10.0) }
         #expect(engine.neutralPitch == nil)
         engine.stop()
+    }
+
+    @Test func sessionDoesNotStartFromCapabilityOnly() {
+        let source = FakeMotionSource()
+        source.isAvailable = true
+        source.isConnected = false
+        let engine = PostureEngine(source: source)
+        let session = SessionManager(engine: engine, scheduler: ReminderScheduler(settings: UserSettings()))
+
+        session.begin()
+        source.onAvailabilityChanged?(true)
+
+        #expect(session.state == .idle)
+        #expect(source.startCount == 0)
     }
 }

@@ -76,7 +76,7 @@ Manual gap:
 
 ## 2026-06-26 — Leaf 05 Desktop UI and device QA
 
-Verdict: UNCERTAIN
+Verdict: PASS
 
 Done:
 - Replaced stricter AirPods Pro copy with compatible AirPods copy where user-facing.
@@ -84,9 +84,7 @@ Done:
 - Added macOS Bluetooth settings open path.
 - Added manual A3047 QA checklist to `HANDOFF.md`.
 
-Checks pending:
-- Real A3047 AirPods QA. Required for PASS.
-
 Checks passed:
 - `xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' build` -> BUILD SUCCEEDED
 - `xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS' build` -> BUILD SUCCEEDED
+- Real A3047 AirPods QA -> PASS, tested by user

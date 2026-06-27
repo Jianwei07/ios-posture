@@ -28,7 +28,7 @@
       "id": "05",
       "title": "Desktop UI and device QA",
       "spec": ".planning/specs/12-macos-first-pivot/05-desktop-ui-and-device-qa.md",
-      "completed": false
+      "completed": true
     }
   ]
 }

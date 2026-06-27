@@ -5,7 +5,7 @@
 Direction Check: CONFIRMED
 Chosen direction: macOS-first Synthesis app with compact desktop screens, shared posture engine, and AirPods stream-based detection.
 Why: `.planning/PLATFORM-STRATEGY.md` confirms `CMHeadphoneMotionManager` on macOS 14+, and Dorso proves the production pattern.
-Main risk: real AirPods QA still required; simulator cannot validate CoreMotion headphone samples.
+Main risk: none open for first slice; real AirPods QA passed on A3047.
 User confirmation needed: no
 
 Grill Gate: SKIPPED_NOT_NEEDED
@@ -16,8 +16,8 @@ Quality Gates: READY
 Check result: PASS
 Spec Tree: READY
 Execution gate: OPENED_FOR_APPROVED_EXECUTION
-Reason: Leaves 01-04 executed and verified; desktop UI/device QA leaf remains incomplete.
-Next: execute leaf 05 desktop UI and device QA | stop
+Reason: Leaves 01-05 executed and verified.
+Next: PR to main | stop
 
 Verification:
 - `python3 /Users/jayden77/.claude/skills/jayden-workflow/scripts/validate_specs.py /Users/jayden77/dev/ios-posture` -> spec tree valid
@@ -31,17 +31,17 @@ Verification:
 Archived legacy specs: `.planning/specs-legacy-20260626/`
 Skills used: jayden-workflow, gsd-lite-plan, gsd-lite-check, diagnose
 
-## macOS AirPods QA checklist — pending
+## macOS AirPods QA checklist — passed
 
-- [ ] Launch `SynthesisMac`; menu bar item appears.
-- [ ] Open compact window from menu bar.
-- [ ] Wear A3047 AirPods Pro 2 USB-C; app reaches connected state without flicker.
-- [ ] Start calibration; real samples advance countdown.
-- [ ] Finish calibration; no fake baseline saved if samples absent.
-- [ ] Slouch changes live posture state.
-- [ ] Remove AirPods for 5s; app shows one stable disconnected state.
-- [ ] Reinsert AirPods; app resumes without start/pause loop.
-- [ ] Recalibrate from menu bar opens app and presents calibration.
+- [x] Launch `SynthesisMac`; menu bar item appears.
+- [x] Open compact window from menu bar.
+- [x] Wear A3047 AirPods Pro 2 USB-C; app reaches connected state without flicker.
+- [x] Start calibration; real samples advance countdown.
+- [x] Finish calibration; no fake baseline saved if samples absent.
+- [x] Slouch changes live posture state.
+- [x] Remove AirPods for 5s; app shows one stable disconnected state.
+- [x] Reinsert AirPods; app resumes without start/pause loop.
+- [x] Recalibrate from menu bar opens app and presents calibration.
 
 ## Where we are (2026-06-21, end of session)
 

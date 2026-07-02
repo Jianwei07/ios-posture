@@ -5,9 +5,12 @@ import SwiftData
 // the Disconnected screen whenever the IMU stream is unavailable.
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppModel.self) private var app
     @Query private var settingsArray: [UserSettings]
 
-    @State private var app: AppModel?
+    #if os(macOS)
+    @State private var showRecalibrate = false
+    #endif
 
     private var settings: UserSettings { settingsArray.first ?? UserSettings() }
 
@@ -15,47 +18,47 @@ struct ContentView: View {
         ZStack {
             Theme.Palette.bg.ignoresSafeArea()
 
-            if let app {
-                if settings.hasOnboarded {
-                    MainShell()
-                        .environment(app)
-                        .overlay {
-                            if app.session.state == .paused {
-                                DisconnectedView()
-                                    .transition(.opacity)
-                            }
+            if settings.hasOnboarded {
+                MainShell()
+                    .overlay {
+                        if app.session.state == .paused {
+                            DisconnectedView()
+                                .transition(.opacity)
                         }
-                        .animation(Theme.Motion.fade, value: app.isConnected)
-                } else {
-                    OnboardingFlow(
-                        settings: settings,
-                        onFinish: { settings.hasOnboarded = true; save() },
-                        onSkip: { settings.hasOnboarded = true; save() }
-                    )
-                    .environment(app)
-                }
+                    }
+                    .animation(Theme.Motion.fade, value: app.isConnected)
+            } else {
+                OnboardingFlow(
+                    settings: settings,
+                    onFinish: { settings.hasOnboarded = true; save() },
+                    onSkip: { settings.hasOnboarded = true; save() }
+                )
             }
 
             #if targetEnvironment(simulator)
-            if let sim = app?.simSource {
+            if let sim = app.simSource {
                 SimulatorOverlay(source: sim)
             }
             #endif
         }
-        .task { await setup() }
+        .task { app.start(modelContext: modelContext) }
         .tint(Theme.Palette.accent)
-    }
-
-    private func setup() async {
-        if settingsArray.isEmpty {
-            modelContext.insert(UserSettings())
-            try? modelContext.save()
+        #if os(macOS)
+        .onReceive(NotificationCenter.default.publisher(for: .recalibrateRequested)) { _ in
+            showRecalibrate = true
         }
-        if app == nil {
-            let model = AppModel(settings: settings)
-            model.start(modelContext: modelContext)
-            app = model
+        .sheet(isPresented: $showRecalibrate) {
+            CalibrateView(engine: app.engine, mode: .recalibrate) { baseline in
+                if let baseline {
+                    settings.baselinePitch = baseline
+                    save()
+                } else {
+                    app.engine.seedBaseline(settings.baselinePitch)
+                }
+                showRecalibrate = false
+            }
         }
+        #endif
     }
 
     private func save() { try? modelContext.save() }

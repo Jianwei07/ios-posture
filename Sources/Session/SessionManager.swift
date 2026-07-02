@@ -11,12 +11,20 @@ final class SessionManager {
 
     let engine: PostureEngine
     private let scheduler: ReminderScheduler
-    private let stepReader: StepReader?
     private var modelContext: ModelContext?
 
     private var currentSession: PostureSession?
     private var heartbeat: Timer?
     private var endedManually = false
+    private var pausedAt: Date?
+
+    // A break of at least this long (AirPods out) is treated as "the user
+    // got up and walked" — resets the walk reminder interval on resume.
+    private let breakResetsWalkSeconds: TimeInterval = 300
+
+    // Piggybacks the existing 1Hz heartbeat — no separate timer. AppModel
+    // uses this to drive the ambient menu bar glyph.
+    var onHeartbeat: ((SessionState, PostureState) -> Void)?
 
     // Running accumulators → accurate score without storing every second.
     private var pitchSum = 0.0
@@ -25,10 +33,9 @@ final class SessionManager {
     private var secondsSinceRecord = 0
     private let recordEverySeconds = 30   // downsample persisted readings
 
-    init(engine: PostureEngine, scheduler: ReminderScheduler, stepReader: StepReader? = nil) {
+    init(engine: PostureEngine, scheduler: ReminderScheduler) {
         self.engine = engine
         self.scheduler = scheduler
-        self.stepReader = stepReader
     }
 
     func configure(modelContext: ModelContext) {
@@ -38,6 +45,7 @@ final class SessionManager {
     // Start the heartbeat. Called once when the view appears.
     func begin() {
         engine.source.onAvailabilityChanged = { [weak self] _ in self?.evaluate() }
+        engine.source.startMonitoring()
         heartbeat?.invalidate()
         heartbeat = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.evaluate()
@@ -51,12 +59,13 @@ final class SessionManager {
         state = .idle
         activeSessionSeconds = 0
         endedManually = true
+        pausedAt = nil
         scheduler.reset()
     }
 
     // The single heartbeat. Runs every second.
     private func evaluate() {
-        let available = engine.isHeadphoneMotionAvailable
+        let available = engine.isHeadphoneMotionConnected
         let receiving = engine.isReceiving()
 
         switch state {
@@ -75,9 +84,16 @@ final class SessionManager {
         }
 
         if !available { endedManually = false }  // AirPods removed → allow auto-start again
+
+        onHeartbeat?(state, engine.postureState)
     }
 
     private func startSession() {
+        if let pausedAt, Date.now.timeIntervalSince(pausedAt) >= breakResetsWalkSeconds {
+            scheduler.noteBreakTaken(sessionSeconds: activeSessionSeconds)
+        }
+        pausedAt = nil
+
         if currentSession == nil {
             let s = PostureSession()
             modelContext?.insert(s)
@@ -89,15 +105,24 @@ final class SessionManager {
 
     private func pauseSession() {
         state = .paused
+        pausedAt = .now
         engine.stop()
     }
 
     private func tickActive() {
-        // Don't count time / score until calibrated.
-        guard engine.neutralPitch != nil else { return }
+        // Don't count time / score until calibrated, and don't count it on
+        // the strength of the post-start() spin-up grace alone: if the
+        // stream is connected but stalled (no disconnect event, samples just
+        // stopped), evaluate() resumes .paused -> .active via startSession(),
+        // and isReceiving() reports true for up to spinUpGraceSeconds even
+        // though nothing has actually arrived yet. Requiring a real sample
+        // (engine.lastSampleAt != nil, which start() clears) means this tick
+        // is a no-op until the stream proves it's actually alive again —
+        // stale currentPitch/postureState from before the stall never gets
+        // counted as active time or fed to the reminder scheduler.
+        guard engine.neutralPitch != nil, engine.lastSampleAt != nil else { return }
 
         activeSessionSeconds += 1
-        scheduler.currentStepCount = stepReader?.todaySteps ?? 0
         pitchSum += engine.currentPitch
         sampleCount += 1
         if engine.postureState == .slouch { poorCount += 1 }

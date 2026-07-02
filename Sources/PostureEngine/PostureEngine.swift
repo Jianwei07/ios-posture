@@ -8,7 +8,9 @@ import Observation
 
 protocol MotionSource: AnyObject {
     var isAvailable: Bool { get }
+    var isConnected: Bool { get }
     var onAvailabilityChanged: ((Bool) -> Void)? { get set }
+    func startMonitoring()
     func start(onSample: @escaping (Double) -> Void)  // emits pitch in degrees
     func stop()
 }
@@ -18,6 +20,7 @@ protocol MotionSource: AnyObject {
 final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionManagerDelegate {
     private let manager = CMHeadphoneMotionManager()
     private let queue = OperationQueue()
+    private var connected = false
     var onAvailabilityChanged: ((Bool) -> Void)?
 
     override init() {
@@ -28,11 +31,18 @@ final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionMana
     }
 
     var isAvailable: Bool { manager.isDeviceMotionAvailable }
+    var isConnected: Bool { connected }
+
+    func startMonitoring() {
+        guard manager.isDeviceMotionAvailable else { return }
+        manager.startConnectionStatusUpdates()
+    }
 
     func start(onSample: @escaping (Double) -> Void) {
         guard manager.isDeviceMotionAvailable else { return }
-        manager.startDeviceMotionUpdates(to: queue) { motion, error in
-            guard let motion, error == nil else { return }
+        manager.startDeviceMotionUpdates(to: queue) { [weak self] motion, error in
+            guard let self, let motion, error == nil else { return }
+            if !self.connected { self.setConnected(true) }
             onSample(motion.attitude.pitch * 180 / .pi)
         }
     }
@@ -41,12 +51,24 @@ final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionMana
         manager.stopDeviceMotionUpdates()
     }
 
+    // `connected` + onAvailabilityChanged drive SessionManager.evaluate(),
+    // which mutates @Observable state and writes SwiftData — main-thread only.
+    // Sources of these events (the motion queue, CoreMotion delegate callbacks)
+    // make no threading guarantee, so funnel every change through main.
+    private func setConnected(_ value: Bool) {
+        DispatchQueue.main.async {
+            guard self.connected != value else { return }
+            self.connected = value
+            self.onAvailabilityChanged?(value)
+        }
+    }
+
     // Delegate push — AirPods connected / removed.
     func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
-        onAvailabilityChanged?(true)
+        setConnected(true)
     }
     func headphoneMotionManagerDidDisconnect(_ manager: CMHeadphoneMotionManager) {
-        onAvailabilityChanged?(false)
+        setConnected(false)
     }
 }
 
@@ -63,9 +85,12 @@ final class PostureEngine {
 
     var classifier: PostureClassifier
     var isHeadphoneMotionAvailable: Bool { source.isAvailable }
+    var isHeadphoneMotionConnected: Bool { source.isConnected }
 
     let source: MotionSource
     private var pitchFilter = MotionFilter()
+    private var startedAt: Date?
+    private let spinUpGraceSeconds: TimeInterval = 4
 
     // Calibration only runs after recalibrate() — never silently on start().
     private var calibrationSamples: [Double] = []
@@ -113,6 +138,7 @@ final class PostureEngine {
         guard source.isAvailable else { return }
         pitchFilter.reset()
         lastSampleAt = nil
+        startedAt = Date()
         source.start { [weak self] pitch in self?.process(pitch: pitch) }
     }
 
@@ -121,14 +147,30 @@ final class PostureEngine {
     }
 
     // True while samples are arriving (AirPods in ear and streaming).
+    // Before the first sample, a spin-up grace window counts as receiving —
+    // AirPods motion takes a couple of seconds to start streaming after
+    // start(), and without the grace the 1Hz heartbeat sees "stale" and
+    // flaps the session active↔paused until the first sample lands.
     func isReceiving(timeout: TimeInterval = 1.5) -> Bool {
-        guard let last = lastSampleAt else { return false }
-        return Date().timeIntervalSince(last) < timeout
+        if let last = lastSampleAt {
+            return Date().timeIntervalSince(last) < timeout
+        }
+        guard let started = startedAt else { return false }
+        return Date().timeIntervalSince(started) < spinUpGraceSeconds
     }
 
+    // Runs on the motion source's queue. Only the filter (single-owner there)
+    // touches engine state off-main; everything else hops to main so
+    // calibration/classification state has exactly one writer thread —
+    // recalibrate()/cancelCalibration() also mutate it from main.
     private func process(pitch rawPitch: Double) {
         let smoothPitch = pitchFilter.filter(rawPitch)
+        DispatchQueue.main.async { [weak self] in
+            self?.ingest(smoothPitch: smoothPitch)
+        }
+    }
 
+    private func ingest(smoothPitch: Double) {
         if isCalibrating, neutralPitch == nil {
             calibrationSamples.append(smoothPitch)
             if calibrationSamples.count >= calibrationTarget {
@@ -143,11 +185,9 @@ final class PostureEngine {
 
         let state = classifier.classify(filteredPitch: smoothPitch, neutralPitch: neutralPitch)
 
-        DispatchQueue.main.async {
-            self.lastSampleAt = Date()
-            self.currentPitch = smoothPitch
-            self.postureState = state
-            self.calibrationProgress = min(1, Double(self.calibrationSamples.count) / Double(self.calibrationTarget))
-        }
+        lastSampleAt = Date()
+        currentPitch = smoothPitch
+        postureState = state
+        calibrationProgress = min(1, Double(calibrationSamples.count) / Double(calibrationTarget))
     }
 }

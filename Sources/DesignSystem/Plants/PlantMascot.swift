@@ -25,9 +25,18 @@ enum PlantKind: String, CaseIterable, Identifiable {
     }
 }
 
-protocol Plant: View {
-    var bend: Double { get }      // 0 = upright/happy, 1 = slouched/drooped
+protocol Plant: View, Animatable {
+    var bend: Double { get set }  // 0 = upright/happy, 1 = slouched/drooped
     var color: Color { get }      // state color (aligned/drift/slouch)
+}
+
+// Canvas has no animatable properties of its own — without this, pose changes
+// snap instead of tweening. Interpolating `bend` re-renders each frame.
+extension Plant {
+    var animatableData: Double {
+        get { bend }
+        set { bend = newValue }
+    }
 }
 
 // Wrapper view so call sites don't need to know the concrete plant type.

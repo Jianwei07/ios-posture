@@ -2,13 +2,15 @@ import Foundation
 import Observation
 
 // Reminder scheduler.
-// - Posture alert: event-driven (sustained poor posture)
-// - Water: interval reminders, settings-driven
-// - Walk: fires at interval if step count is behind pace target
+// - Posture alert: event-driven (sustained poor posture), priority tier.
+// - Water: interval reminders, deferred if recently logged or target already met.
+// - Walk: fires at interval; reset by a presence break (AirPods out ≥5min).
 @Observable
 final class ReminderScheduler {
-    private let notifications = NotificationModule.shared
     private let settings: UserSettings
+    private let fire: (ReminderType, String?) -> Void
+    private let cancelAll: () -> Void
+    private let now: () -> Date
 
     // Escalation timing: only after ~6 min sustained slouch, then cool down.
     private let alertSustainedSeconds: Double = 360
@@ -20,33 +22,47 @@ final class ReminderScheduler {
     private var lastWaterReminderAt: Double = 0
     private var lastWalkReminderAt: Double = 0
 
-    // Injected step count for pace check. 0 on Simulator (falls back to interval mode).
-    var currentStepCount: Int = 0
+    // Injected by AppModel: newest logged WaterEntry timestamp, and today's
+    // water progress (for softened, target-aware reminder copy). Wall-clock
+    // based — logging during a paused/AirPods-out break still counts.
+    var lastWaterLogAt: (() -> Date?)?
+    var waterProgress: (() -> (todayMl: Double, targetMl: Double))?
 
-    init(settings: UserSettings) {
+    init(settings: UserSettings,
+         fire: @escaping (ReminderType, String?) -> Void = { NotificationModule.shared.fire($0, detail: $1) },
+         cancelAll: @escaping () -> Void = { NotificationModule.shared.cancelAll() },
+         now: @escaping () -> Date = Date.init) {
         self.settings = settings
+        self.fire = fire
+        self.cancelAll = cancelAll
+        self.now = now
     }
 
     func tick(postureState: PostureState, sessionSeconds: Double) {
         checkPostureAlert(postureState)
-        checkInterval(&lastWaterReminderAt, intervalMin: settings.baseWaterIntervalMin,
-                      sessionSeconds: sessionSeconds, type: .water)
+        checkWater(sessionSeconds: sessionSeconds)
         checkWalk(sessionSeconds: sessionSeconds)
+    }
+
+    // Called when the session resumes after an AirPods-out break of ≥5min —
+    // treated as "the user got up and walked", resetting the walk interval.
+    func noteBreakTaken(sessionSeconds: Double) {
+        lastWalkReminderAt = sessionSeconds
     }
 
     func reset() {
         poorPostureStartTime = nil
         lastWaterReminderAt = 0
         lastWalkReminderAt = 0
-        notifications.cancelAll()
+        cancelAll()
     }
 
     // MARK: Private
 
     private func checkPostureAlert(_ state: PostureState) {
-        let now = Date()
+        let currentTime = now()
         if state == .slouch {
-            if poorPostureStartTime == nil { poorPostureStartTime = now }
+            if poorPostureStartTime == nil { poorPostureStartTime = currentTime }
         } else {
             poorPostureStartTime = nil
         }
@@ -55,35 +71,44 @@ final class ReminderScheduler {
         guard settings.escalateLongSlouches else { return }
 
         guard let start = poorPostureStartTime,
-              now.timeIntervalSince(start) >= alertSustainedSeconds else { return }
+              currentTime.timeIntervalSince(start) >= alertSustainedSeconds else { return }
 
         if let last = lastPostureAlertTime,
-           now.timeIntervalSince(last) < alertCooldownMin * 60 { return }
+           currentTime.timeIntervalSince(last) < alertCooldownMin * 60 { return }
 
-        lastPostureAlertTime = now
+        lastPostureAlertTime = currentTime
         poorPostureStartTime = nil
-        notifications.fire(.posture)
+        fire(.posture, nil)
     }
 
-    private func checkInterval(_ lastAt: inout Double, intervalMin: Double,
-                               sessionSeconds: Double, type: ReminderType) {
-        if sessionSeconds - lastAt >= intervalMin * 60 {
-            lastAt = sessionSeconds
-            notifications.fire(type)
+    private func checkWater(sessionSeconds: Double) {
+        let intervalSec = settings.baseWaterIntervalMin * 60
+        guard sessionSeconds - lastWaterReminderAt >= intervalSec else { return }
+        lastWaterReminderAt = sessionSeconds
+
+        // Recently logged (wall clock — a glass during a break still counts)?
+        if let lastLog = lastWaterLogAt?(), now().timeIntervalSince(lastLog) < intervalSec {
+            return
         }
+
+        if let progress = waterProgress?(), progress.targetMl > 0, progress.todayMl >= progress.targetMl {
+            return
+        }
+
+        var detail: String?
+        if let progress = waterProgress?(), progress.targetMl > 0 {
+            let today = String(format: "%.1fL", progress.todayMl / 1000)
+            let target = String(format: "%.1fL", progress.targetMl / 1000)
+            detail = "\(today) of \(target) today"
+        }
+        fire(.water, detail)
     }
 
-    // Walk nudge: fire at interval boundary. On Simulator (steps=0), always fire.
-    // On device, skip if already past the pace target for this time of day.
+    // Walk nudge: fire at interval boundary. noteBreakTaken() resets the
+    // interval when a real break (AirPods-out ≥5min) is detected.
     private func checkWalk(sessionSeconds: Double) {
         guard sessionSeconds - lastWalkReminderAt >= settings.baseWalkIntervalMin * 60 else { return }
         lastWalkReminderAt = sessionSeconds
-
-        if currentStepCount == 0 { notifications.fire(.walk); return }
-
-        // ponytail: simple pace check — proportional to hours elapsed. Good enough for a nudge.
-        let hoursElapsed = max(1, Calendar.current.component(.hour, from: .now))
-        let paceTarget = settings.dailyStepTarget * hoursElapsed / 16  // 16 active hours
-        if currentStepCount < paceTarget { notifications.fire(.walk) }
+        fire(.walk, nil)
     }
 }

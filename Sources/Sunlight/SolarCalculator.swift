@@ -20,20 +20,38 @@ final class SolarCalculator: NSObject, CLLocationManagerDelegate {
     }
 
     func compute() async -> DaylightWindows {
-        // ponytail: Simulator/CoreLocation often fails — default to SF lat/lon.
+        // Simulator/CoreLocation can fail to resolve — default to SF lat/lon
+        // as a fallback only, not a macOS-wide substitute (CoreLocation works
+        // fine on native macOS 10.15+).
         let fallback = computeFor(lat: 37.77, lon: -122.42)
-        guard manager.authorizationStatus == .authorizedWhenInUse
-                || manager.authorizationStatus == .notDetermined else {
+        let status = manager.authorizationStatus
+        #if os(macOS)
+        let isAuthorized = status == .authorizedAlways
+        #else
+        let isAuthorized = status == .authorizedWhenInUse
+        #endif
+        guard isAuthorized || status == .notDetermined else {
             return fallback
         }
         return await withCheckedContinuation { cont in
-            self.continuation = cont
-            manager.requestWhenInUseAuthorization()
-            manager.requestLocation()
-            // ponytail: 3s timeout — if location fails, use fallback
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                guard let self, self.continuation != nil else { return }
-                self.finish(fallback)
+            // Everything that touches `continuation` runs on main — the
+            // delegate/timeout finish paths already do; this hop closes the
+            // race where compute()'s caller executor assigned it concurrently.
+            DispatchQueue.main.async { [weak self] in
+                // A second overlapping compute() must not silently overwrite
+                // (and thereby leak/hang) the first continuation.
+                guard let self, self.continuation == nil else {
+                    cont.resume(returning: fallback)
+                    return
+                }
+                self.continuation = cont
+                self.manager.requestWhenInUseAuthorization()
+                self.manager.requestLocation()
+                // 3s timeout — if location fails to resolve, use fallback.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                    guard let self, self.continuation != nil else { return }
+                    self.finish(fallback)
+                }
             }
         }
     }
@@ -51,23 +69,26 @@ final class SolarCalculator: NSObject, CLLocationManagerDelegate {
     // MARK: - CLLocationManagerDelegate
 
     func locationManager(_ mgr: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let coord = locations.last?.coordinate
-        let windows = coord != nil
-            ? computeFor(lat: coord!.latitude, lon: coord!.longitude)
-            : computeFor(lat: 37.77, lon: -122.42)
-        finish(windows)
+        let windows: DaylightWindows
+        if let coord = locations.last?.coordinate {
+            windows = computeFor(lat: coord.latitude, lon: coord.longitude)
+        } else {
+            windows = computeFor(lat: 37.77, lon: -122.42)
+        }
+        DispatchQueue.main.async { self.finish(windows) }
     }
 
     func locationManager(_ mgr: CLLocationManager, didFailWithError error: Error) {
-        finish(computeFor(lat: 37.77, lon: -122.42))
+        let windows = computeFor(lat: 37.77, lon: -122.42)
+        DispatchQueue.main.async { self.finish(windows) }
     }
 
     // MARK: - NOAA solar calculation (simplified)
 
-    func computeFor(lat: Double, lon: Double) -> DaylightWindows {
-        let now = Date()
-        let cal = Calendar.current
-        let dayOfYear = Double(cal.ordinality(of: .day, in: .year, for: now) ?? 1)
+    func computeFor(lat: Double, lon: Double, now: Date = Date()) -> DaylightWindows {
+        var utcCal = Calendar(identifier: .gregorian)
+        utcCal.timeZone = TimeZone(identifier: "UTC")!
+        let dayOfYear = Double(utcCal.ordinality(of: .day, in: .year, for: now) ?? 1)
 
         // Solar declination (degrees)
         let decl = 23.45 * sin(deg2rad(360 * (284 + dayOfYear) / 365))
@@ -88,9 +109,12 @@ final class SolarCalculator: NSObject, CLLocationManagerDelegate {
         let morningMin = sunriseMin + 120
         let afternoonMin = sunsetMin - 120
 
-        let startOfDay = cal.startOfDay(for: now)
-        let morning = startOfDay.addingTimeInterval(morningMin * 60)
-        let afternoon = startOfDay.addingTimeInterval(afternoonMin * 60)
+        // sunriseMin/sunsetMin are UTC minutes-of-day — anchor to the UTC
+        // start of day, not the caller's local start of day, or the nudge
+        // times drift by the local UTC offset (previously wrong outside UTC).
+        let startOfDayUTC = utcCal.startOfDay(for: now)
+        let morning = startOfDayUTC.addingTimeInterval(morningMin * 60)
+        let afternoon = startOfDayUTC.addingTimeInterval(afternoonMin * 60)
 
         // If both times have already passed today, they'll just be in the past —
         // the scheduler won't fire them. Next day's compute() will be fresh.

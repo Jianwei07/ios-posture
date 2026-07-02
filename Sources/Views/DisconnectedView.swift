@@ -1,4 +1,7 @@
 import SwiftUI
+#if os(macOS)
+import AppKit
+#endif
 
 // Replaces the active screen whenever the IMU stream drops (BT off / AirPods out
 // / non-Pro buds). Auto-dismisses on reconnect. Never shows stale posture.
@@ -16,7 +19,7 @@ struct DisconnectedView: View {
                 Text("AirPods not connected")
                     .font(Theme.Font.hero(22)).foregroundStyle(Color(hex: 0xB0703F))
                     .padding(.top, 22)
-                Text("Turn on Bluetooth and pop in your AirPods Pro to start tracking.")
+                Text("Turn on Bluetooth and wear compatible AirPods to start tracking.")
                     .font(Theme.Font.body(14)).multilineTextAlignment(.center)
                     .foregroundStyle(Color(hex: 0xA8896F))
                     .padding(.top, 10).padding(.horizontal, 36)
@@ -46,8 +49,14 @@ struct DisconnectedView: View {
     }
 
     private func openSettings() {
+        #if os(iOS)
         if let url = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(url)
         }
+        #elseif os(macOS)
+        if let url = URL(string: "x-apple.systempreferences:com.apple.BluetoothSettings") {
+            NSWorkspace.shared.open(url)
+        }
+        #endif
     }
 }

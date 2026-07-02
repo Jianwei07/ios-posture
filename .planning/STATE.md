@@ -1,6 +1,16 @@
 # State
 
-## Current: PHASE 1.10 BASELINE ACCURACY — DONE
+## Current: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
+
+## Status: Session 13 all leaves + bug sweep done on `feat/macos-pivot`; PR #2 open to main (https://github.com/Jianwei07/ios-posture/pull/2). Bug sweep fixed: motion-source threading (off-main @Observable/SwiftData writes), session start flap (4s spin-up grace), sunlight nextNudge display, SolarCalculator continuation race.
+
+## Next
+- Manual on-device QA: menu bar glyph transitions (minimized, sustained slouch ≥30s), water notification "Log 250 ml" action end-to-end, plant pose animation feel with live bend stream
+- Session 14 candidate: SynthesisCore SPM extraction for iOS relaunch (see plan's architecture direction)
+
+## Previous: macOS-first pivot — DONE (session 12)
+
+## Previous: PHASE 1.10 BASELINE ACCURACY — DONE
 
 ## Status: Build green, 13/13 tests pass. No fake/inferred baselines; calibration explicit + stability-gated. Monstera redrawn.
 

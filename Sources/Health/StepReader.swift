@@ -1,6 +1,8 @@
-import HealthKit
 import Foundation
 import Observation
+#if os(iOS)
+import HealthKit
+#endif
 
 // Reads today's step count from HealthKit. On Simulator, HKHealthStore.isHealthDataAvailable
 // returns true but queries return no data — walk chip falls back to interval mode.
@@ -8,15 +10,26 @@ import Observation
 final class StepReader {
     private(set) var todaySteps: Int = 0
 
+    #if os(iOS)
     private let store: HKHealthStore?
+    #endif
 
     init() {
+        #if os(iOS)
         store = HKHealthStore.isHealthDataAvailable() ? HKHealthStore() : nil
+        #endif
     }
 
-    var isAvailable: Bool { store != nil }
+    var isAvailable: Bool {
+        #if os(iOS)
+        store != nil
+        #else
+        false
+        #endif
+    }
 
     func requestPermission() async {
+        #if os(iOS)
         guard let store else { return }
         guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else { return }
         do {
@@ -24,9 +37,11 @@ final class StepReader {
         } catch {
             // ponytail: permission denied — walk chip stays in interval fallback
         }
+        #endif
     }
 
     func refresh() {
+        #if os(iOS)
         guard let store, let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
             todaySteps = 0
             return
@@ -39,5 +54,8 @@ final class StepReader {
             DispatchQueue.main.async { self?.todaySteps = Int(total) }
         }
         store.execute(query)
+        #else
+        todaySteps = 0
+        #endif
     }
 }

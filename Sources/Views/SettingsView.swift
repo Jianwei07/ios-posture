@@ -18,11 +18,6 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     airpodsRow
 
-                    sectionLabel("Nudge style")
-                    segmented(NudgeStyle.allCases, selected: settings.nudgeStyle, label: \.label) {
-                        settings.nudgeStyle = $0; save()
-                    }
-
                     escalateRow
 
                     sectionLabel("Slouch sensitivity")
@@ -62,7 +57,9 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(Theme.Palette.bg.ignoresSafeArea())
             .navigationTitle("Settings")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
         }
         .sheet(isPresented: $showCalibrate, onDismiss: {
             if app.engine.neutralPitch == nil, settings.baselinePitch != nil {
@@ -86,7 +83,7 @@ struct SettingsView: View {
                 .frame(width: 30, height: 30)
                 .overlay(Circle().fill(connected ? Theme.Palette.accent : Theme.Palette.inkFaint).frame(width: 7, height: 7))
             VStack(alignment: .leading, spacing: 1) {
-                Text("AirPods Pro").font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
+                Text("Compatible AirPods").font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
                 Text(connected ? "connected · tracking" : "not connected")
                     .font(Theme.Font.caption(11))
                     .foregroundStyle(connected ? Theme.Palette.accent : Theme.Palette.inkFaint)
@@ -94,8 +91,7 @@ struct SettingsView: View {
             Spacer()
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private var escalateRow: some View {
@@ -108,8 +104,7 @@ struct SettingsView: View {
         }
         .tint(Theme.Palette.aligned)
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private var sensitivityCard: some View {
@@ -127,8 +122,7 @@ struct SettingsView: View {
             }
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     // MARK: Components
@@ -182,8 +176,7 @@ struct SettingsView: View {
             .tint(Theme.Palette.accent)
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private func save() { try? modelContext.save() }
@@ -206,8 +199,7 @@ struct SettingsView: View {
             .tint(Theme.Palette.drift)
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private var sunlightRow: some View {
@@ -233,7 +225,6 @@ struct SettingsView: View {
         }
         .tint(Theme.Palette.aligned)
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 }

@@ -3,15 +3,13 @@ options:
   bundleIdPrefix: com.jayden77
   deploymentTarget:
     iOS: "17.0"
+    macOS: "14.0"
   xcodeVersion: "16.0"
   createIntermediateGroups: true
 
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
-    TARGETED_DEVICE_FAMILY: "1"  # iPhone only
-    PRODUCT_BUNDLE_IDENTIFIER: com.jayden77.posture
 
 targets:
   Synthesis:
@@ -25,9 +23,29 @@ targets:
       base:
         INFOPLIST_FILE: Resources/Info.plist
         PRODUCT_NAME: Synthesis
+        PRODUCT_BUNDLE_IDENTIFIER: com.jayden77.posture
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        TARGETED_DEVICE_FAMILY: "1"  # iPhone only
+        DEVELOPMENT_TEAM: X8668S9J7Z
         CODE_SIGN_ENTITLEMENTS: Synthesis.entitlements
     dependencies:
       - sdk: HealthKit.framework
+
+  SynthesisMac:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: "YES"
+        PRODUCT_NAME: Synthesis
+        PRODUCT_BUNDLE_IDENTIFIER: com.jayden77.posture.mac
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        INFOPLIST_KEY_NSMotionUsageDescription: "Synthesis uses AirPods motion sensors to detect your head posture."
+        INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "Synthesis uses your location for daylight-aware sunlight nudges."
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.healthcare-fitness"
 
   SynthesisTests:
     type: bundle.unit-test
@@ -39,3 +57,33 @@ targets:
         GENERATE_INFOPLIST_FILE: "YES"
     dependencies:
       - target: Synthesis
+
+  SynthesisMacTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Tests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: "YES"
+        # SynthesisMac's PRODUCT_NAME is overridden to "Synthesis" (matches the
+        # module name so @testable import Synthesis works unchanged), so the
+        # auto-derived TEST_HOST (which assumes SynthesisMac.app) is wrong —
+        # point it at the actual built product.
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Synthesis.app/Contents/MacOS/Synthesis"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    dependencies:
+      - target: SynthesisMac
+
+schemes:
+  SynthesisMac:
+    build:
+      targets:
+        SynthesisMac: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - SynthesisMacTests

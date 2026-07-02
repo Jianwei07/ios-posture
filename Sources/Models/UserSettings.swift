@@ -22,18 +22,6 @@ enum Sensitivity: String, CaseIterable, Identifiable {
     }
 }
 
-// How nudges surface. Quiet island = Dynamic Island + AirPods chime (default).
-enum NudgeStyle: String, CaseIterable, Identifiable {
-    case quietIsland, banner
-    var id: String { rawValue }
-    var label: String {
-        switch self {
-        case .quietIsland: return "Quiet island"
-        case .banner:      return "Banner"
-        }
-    }
-}
-
 @Model
 final class UserSettings {
     // Inline defaults below let SwiftData lightweight-migrate existing stores
@@ -45,7 +33,6 @@ final class UserSettings {
 
     // Posture behaviour.
     var sensitivityRaw: String = Sensitivity.balanced.rawValue
-    var nudgeStyleRaw: String = NudgeStyle.quietIsland.rawValue
     var escalateLongSlouches: Bool = true
     var sunlightEnabled: Bool = true
 
@@ -62,7 +49,6 @@ final class UserSettings {
         hasOnboarded = false
         baselinePitch = nil
         sensitivityRaw = Sensitivity.balanced.rawValue
-        nudgeStyleRaw = NudgeStyle.quietIsland.rawValue
         escalateLongSlouches = true
         sunlightEnabled = true
         baseWaterIntervalMin = 30.0
@@ -76,10 +62,6 @@ final class UserSettings {
         get { Sensitivity(rawValue: sensitivityRaw) ?? .balanced }
         set { sensitivityRaw = newValue.rawValue }
     }
-    var nudgeStyle: NudgeStyle {
-        get { NudgeStyle(rawValue: nudgeStyleRaw) ?? .quietIsland }
-        set { nudgeStyleRaw = newValue.rawValue }
-    }
     var selectedPlant: PlantKind {
         get { PlantKind(rawValue: selectedPlantRaw) ?? .sunflower }
         set { selectedPlantRaw = newValue.rawValue }
@@ -87,7 +69,6 @@ final class UserSettings {
 
     func reset() {
         sensitivity = .balanced
-        nudgeStyle = .quietIsland
         escalateLongSlouches = true
         sunlightEnabled = true
         baseWaterIntervalMin = 30.0

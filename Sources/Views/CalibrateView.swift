@@ -12,7 +12,7 @@ struct CalibrateView: View {
     @State private var capturing = false
     @State private var failed = false
     @State private var failReason: String?
-    @State private var timeoutTimer: Timer?
+    @State private var timeoutTask: Task<Void, Never>?
 
     private var progress: Double { engine.calibrationProgress }
     private var countdown: Int { max(1, Int(ceil((1 - progress) * 5))) }
@@ -102,12 +102,11 @@ struct CalibrateView: View {
         capturing = true
         failed = false
         failReason = nil
-        timeoutTimer?.invalidate()
-        timeoutTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
-            DispatchQueue.main.async {
-                guard capturing else { return }
-                finish()
-            }
+        timeoutTask?.cancel()
+        timeoutTask = Task {
+            try? await Task.sleep(for: .seconds(10))
+            guard !Task.isCancelled, capturing else { return }
+            finish()
         }
     }
 
@@ -139,7 +138,7 @@ struct CalibrateView: View {
     }
 
     private func cleanup() {
-        timeoutTimer?.invalidate()
-        timeoutTimer = nil
+        timeoutTask?.cancel()
+        timeoutTask = nil
     }
 }

@@ -1,0 +1,28 @@
+{
+  "todos": [
+    {
+      "id": "01",
+      "title": "Plumbing and bug fixes",
+      "spec": ".planning/specs/13-macos-polish/01-plumbing-and-bug-fixes.md",
+      "completed": true
+    },
+    {
+      "id": "02",
+      "title": "Notification tiering and reminders",
+      "spec": ".planning/specs/13-macos-polish/02-notification-tiering-and-reminders.md",
+      "completed": true
+    },
+    {
+      "id": "03",
+      "title": "AppModel lift and menu bar icon",
+      "spec": ".planning/specs/13-macos-polish/03-appmodel-lift-and-menubar-icon.md",
+      "completed": true
+    },
+    {
+      "id": "04",
+      "title": "Plant redesign",
+      "spec": ".planning/specs/13-macos-polish/04-plant-redesign.md",
+      "completed": true
+    }
+  ]
+}

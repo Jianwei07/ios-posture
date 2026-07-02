@@ -22,6 +22,7 @@ struct MotionFilterTests {
         var filter = MotionFilter(alpha: 0.15)
         var stable = 0.0
         for _ in 0..<50 { stable = filter.filter(0.0) }
+        #expect(stable == 0.0)  // settled at baseline before the spike
         let afterSpike = filter.filter(100.0)
         #expect(afterSpike < 20.0)  // spike attenuated
     }

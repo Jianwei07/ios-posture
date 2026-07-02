@@ -57,8 +57,11 @@ struct Monstera: Plant {
                 (-0.38, 0.52),
                 ( 0.28, 0.56),
             ]
+            let showHoles = size.width >= 80  // holes alias into noise at thumbnail scale
 
-            for stem in stems {
+            for (i, stem) in stems.enumerated() {
+                let isBack = i == 0
+                let alpha = isBack ? 0.82 : 1.0
                 let tipX = cx + sin(stem.angle) * stem.len * w + droopX
                 let tipY = baseY - cos(stem.angle) * stem.len * h + droopY
                 let ctrlX = cx + sin(stem.angle) * stem.len * w * 0.45 + droopX * 0.3
@@ -67,10 +70,12 @@ struct Monstera: Plant {
                 sPath.move(to: CGPoint(x: cx, y: baseY))
                 sPath.addQuadCurve(to: CGPoint(x: tipX, y: tipY),
                                    control: CGPoint(x: ctrlX, y: ctrlY))
-                ctx.stroke(sPath, with: .color(stemColor),
-                           style: StrokeStyle(lineWidth: w * 0.032, lineCap: .round))
+                ctx.stroke(sPath, with: .color(stemColor.opacity(alpha)),
+                           style: StrokeStyle(lineWidth: w * (isBack ? 0.026 : 0.032),
+                                              lineCap: .round))
 
-                // Leaves along stem — 3 per stem, drooping with bend
+                // Leaves along stem, base→tip so upper leaves overlap lower.
+                // Droop is t-weighted: leaves farther from base rotate more.
                 let leafSizes: [(t: Double, len: Double, off: Double)] = [
                     (0.50, 0.20, -0.6),
                     (0.72, 0.24,  0.5),
@@ -80,54 +85,91 @@ struct Monstera: Plant {
                     let u = 1 - ll.t
                     let lx = u*u*cx + 2*u*ll.t*ctrlX + ll.t*ll.t*tipX
                     let ly = u*u*baseY + 2*u*ll.t*ctrlY + ll.t*ll.t*tipY
-                    let leafAngle = stem.angle + ll.off + b * 0.35
-                    drawSplitLeaf(ctx: ctx, base: CGPoint(x: lx, y: ly),
-                                  angle: leafAngle, length: ll.len,
-                                  w: w, fill: color)
+                    let leafAngle = stem.angle + ll.off + b * (0.30 + 0.45 * ll.t)
+                    drawLeaf(ctx: ctx, base: CGPoint(x: lx, y: ly),
+                             angle: leafAngle, length: ll.len * w,
+                             w: w, fill: color.opacity(alpha),
+                             outlineWidth: w * (isBack ? 0.006 : 0.008),
+                             bend: b, showHoles: showHoles)
                 }
             }
         }
         .aspectRatio(0.82, contentMode: .fit)
     }
 
-    private func drawSplitLeaf(ctx: GraphicsContext, base: CGPoint,
-                               angle: Double, length: Double, w: Double, fill: Color) {
-        let len = length * w
-        let tipX = base.x + cos(angle) * len
-        let tipY = base.y + sin(angle) * len
-        let halfW = len * 0.42
-        let perpX = -sin(angle), perpY = cos(angle)
-
-        // Build notched leaf path — 3 deep splits per side.
-        var p = Path()
-        p.move(to: base)
-        let segs = 8
-        for i in 1...segs {
-            let t = Double(i) / Double(segs)
-            let ew = halfW * sin(.pi * t)
-            let isDip = (i % 2 == 0) && i < segs
-            let ww = isDip ? ew * 0.38 : ew
-            p.addLine(to: CGPoint(x: base.x + (tipX - base.x) * t + perpX * ww,
-                                  y: base.y + (tipY - base.y) * t + perpY * ww))
+    // One cubic-Bézier segment of the blade margin (unit leaf space).
+    private struct Seg {
+        let c1: CGPoint, c2: CGPoint, p: CGPoint
+        init(_ c1x: Double, _ c1y: Double, _ c2x: Double, _ c2y: Double,
+             _ px: Double, _ py: Double) {
+            c1 = CGPoint(x: c1x, y: c1y)
+            c2 = CGPoint(x: c2x, y: c2y)
+            p  = CGPoint(x: px, y: py)
         }
-        for i in 1..<segs {
-            let t = 1.0 - Double(i) / Double(segs)
-            let ew = halfW * sin(.pi * t)
-            let isDip = (i % 2 == 0) && i < segs
-            let ww = isDip ? ew * 0.38 : ew
-            p.addLine(to: CGPoint(x: base.x + (tipX - base.x) * t - perpX * ww,
-                                  y: base.y + (tipY - base.y) * t - perpY * ww))
-        }
-        p.closeSubpath()
-        ctx.fill(p, with: .color(fill))
-        ctx.stroke(p, with: .color(leafOutline),
-                   style: StrokeStyle(lineWidth: w * 0.008, lineJoin: .round))
+    }
 
-        // Central vein
-        var v = Path()
-        v.move(to: base)
-        v.addLine(to: CGPoint(x: tipX, y: tipY))
-        ctx.stroke(v, with: .color(leafOutline.opacity(0.4)),
-                   style: StrokeStyle(lineWidth: w * 0.006))
+    // Upper margin, base (0,0) → tip (1,0), +y = droop side.
+    // Three deep marginal splits (in-and-back-out wedges angled toward base).
+    private static let upperMargin: [Seg] = [
+        Seg(-0.05, 0.14,  0.01, 0.30,  0.09, 0.33),  // base lobe
+        Seg( 0.15, 0.40,  0.20, 0.44,  0.26, 0.44),  // → split 1 entry
+        Seg( 0.24, 0.36,  0.19, 0.20,  0.16, 0.13),  // split 1 in
+        Seg( 0.22, 0.16,  0.28, 0.38,  0.34, 0.45),  // split 1 out
+        Seg( 0.40, 0.48,  0.45, 0.46,  0.50, 0.42),  // margin bulge → split 2 entry
+        Seg( 0.48, 0.32,  0.44, 0.17,  0.42, 0.11),  // split 2 in
+        Seg( 0.47, 0.15,  0.52, 0.33,  0.58, 0.40),  // split 2 out
+        Seg( 0.64, 0.40,  0.70, 0.35,  0.74, 0.30),  // → split 3 entry
+        Seg( 0.72, 0.22,  0.70, 0.13,  0.68, 0.09),  // split 3 in
+        Seg( 0.72, 0.11,  0.76, 0.21,  0.80, 0.26),  // split 3 out
+        Seg( 0.88, 0.22,  0.97, 0.08,  1.00, 0.00),  // taper to tip
+    ]
+
+    // Elongated fenestration holes flanking the midrib (unit space).
+    private static let holes: [CGRect] = [
+        CGRect(x: 0.245, y:  0.198, width: 0.11, height: 0.044),
+        CGRect(x: 0.495, y:  0.168, width: 0.11, height: 0.044),
+        CGRect(x: 0.290, y: -0.252, width: 0.10, height: 0.044),
+        CGRect(x: 0.530, y: -0.192, width: 0.10, height: 0.044),
+    ]
+
+    private func drawLeaf(ctx: GraphicsContext, base: CGPoint,
+                          angle: Double, length: Double, w: Double,
+                          fill: Color, outlineWidth: Double,
+                          bend: Double, showHoles: Bool) {
+        // Blade outline in unit space: up the +y margin, mirrored back down −y.
+        var blade = Path()
+        blade.move(to: .zero)
+        for s in Self.upperMargin {
+            blade.addCurve(to: s.p, control1: s.c1, control2: s.c2)
+        }
+        func flip(_ p: CGPoint) -> CGPoint { CGPoint(x: p.x, y: -p.y) }
+        for i in stride(from: Self.upperMargin.count - 1, through: 0, by: -1) {
+            let end = i == 0 ? CGPoint.zero : flip(Self.upperMargin[i - 1].p)
+            blade.addCurve(to: end,
+                           control1: flip(Self.upperMargin[i].c2),
+                           control2: flip(Self.upperMargin[i].c1))
+        }
+        blade.closeSubpath()
+
+        var leaf = blade
+        if showHoles {
+            for hole in Self.holes { leaf.addPath(Path(ellipseIn: hole)) }
+        }
+
+        let transform = CGAffineTransform(translationX: base.x, y: base.y)
+            .rotated(by: angle)
+            .scaledBy(x: length, y: length)
+        let world = leaf.applying(transform)
+        ctx.fill(world, with: .color(fill), style: FillStyle(eoFill: true))
+        ctx.stroke(blade.applying(transform), with: .color(leafOutline),
+                   style: StrokeStyle(lineWidth: outlineWidth, lineJoin: .round))
+
+        // Midrib — quadratic whose sag grows with bend (tip leads the droop).
+        var rib = Path()
+        rib.move(to: CGPoint(x: 0.02, y: 0))
+        rib.addQuadCurve(to: CGPoint(x: 0.96, y: 0),
+                         control: CGPoint(x: 0.5, y: 0.06 + 0.20 * bend))
+        ctx.stroke(rib.applying(transform), with: .color(leafOutline.opacity(0.4)),
+                   style: StrokeStyle(lineWidth: w * 0.006, lineCap: .round))
     }
 }

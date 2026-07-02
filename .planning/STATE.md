@@ -1,13 +1,12 @@
 # State
 
-## Current: macOS polish round (spec session 13) — leaves 01-03 DONE, leaf 04 reserved for Fable
+## Current: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
 
-## Status: Session 12 (macOS-first pivot) DONE, all 5 leaves verified. Session 13 leaves 01-03 executed, verified (mac build + iOS build + 32/32 native tests), and committed on `feat/macos-pivot`. Leaf 04 (plant redesign) untouched — reserved for a Fable session per user instruction.
+## Status: Session 13 all leaves executed and verified (mac build + iOS build + 32/32 native tests) on `feat/macos-pivot`. Leaf 04 (Fable): Monstera Bézier blade + eoFill fenestrations + progressive t-weighted droop, Cactus rigid-body lean about pot top, Plant protocol made Animatable (poses now tween instead of snapping — all 3 plants).
 
 ## Next
-- Push `feat/macos-pivot` to remote
-- Hand `.planning/specs/13-macos-polish/04-plant-redesign.md` to a Fable session (Monstera/Cactus geometry — a taste call)
-- Manual on-device QA still open: minimized-window menu bar glyph transitions, water notification "Log 250 ml" action end-to-end (see HANDOFF leaf 03/02 checkpoints)
+- Manual on-device QA: menu bar glyph transitions (minimized, sustained slouch ≥30s), water notification "Log 250 ml" action end-to-end, plant pose animation feel with live bend stream
+- Session 14 candidate: SynthesisCore SPM extraction for iOS relaunch (see plan's architecture direction)
 
 ## Previous: macOS-first pivot — DONE (session 12)
 

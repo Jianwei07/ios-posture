@@ -51,7 +51,17 @@ Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme S
 
 Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` ✓ (MenuBarExtra code stays inside the existing `#if os(macOS)` guard — iOS unaffected), `xcodebuild -scheme SynthesisMac test` ✓ 32/32 tests native. Manual on-device check (minimize window, sustain real slouch ≥30s, confirm glyph changes without any window visible) not performed this session — no real AirPods attached; flag for a hands-on pass before shipping.
 
-**All of spec session 13 leaves 01-03 are done and committed on `feat/macos-pivot`. Leaf 04 (plant redesign) remains untouched, reserved for a Fable session per user instruction.**
+### Leaf 04 checkpoint — DONE (2026-07-02, Fable session per plan)
+- `Monstera.drawSplitLeaf` replaced by `drawLeaf`: blade built in unit space (base origin, tip (1,0)) from an 11-segment cubic-Bézier margin table (`upperMargin`) — base lobe, 3 deep in-and-back-out marginal splits per side (mirrored programmatically, reversed-cubic controls), taper to tip; zero straight segments. 4 elongated elliptical fenestration holes flank the midrib as subpaths in the same `Path`, rendered as true holes via `FillStyle(eoFill: true)`. Outline stroked from the blade path only (holes unstroked). Midrib is a quad curve whose sag control grows with bend (0.06 + 0.20·b). World placement via `CGAffineTransform` translate→rotate→scale.
+- Progressive droop: leaf angle `stem.angle + off + b·(0.30 + 0.45·t)` — spec's example coefficients (0.45+0.55t) over-rotated at bend=1 (canopy clumped into a blob in the render sweep); tuned down after visual check.
+- Depth: back stem (index 0) + its leaves draw first at 0.82 opacity with thinner stem/outline strokes; within each stem leaves draw base→tip.
+- Fenestrations skipped when `size.width < 80` — PlantPicker thumbnails render plain split blades, no aliasing noise (confirmed at 64pt in the sweep).
+- `Cactus`: body+arms+dome now rotate as one rigid piece about the pot-top anchor inside `ctx.drawLayer` (translate/rotate/translate-back, ~17° at b=1); `bodyX` lost its `b`-term. Pot unrotated. Arm sag unchanged, layers correctly on the lean.
+- **Bonus animation fix (user: "for animation others")**: `Plant` protocol now extends `Animatable` with a default `animatableData` bridging `bend` — Canvas has no animatable properties of its own, so all three plants previously *snapped* between poses despite `.animation(Theme.Motion.pose, value: bend)`; now bend interpolates and the Canvas re-renders per frame. One protocol change, benefits Sunflower/Cactus/Monstera alike.
+
+Verification: offscreen `ImageRenderer` sweep (scratchpad script compiling the 5 DesignSystem files standalone) rendered bend 0/0.3/0.6/1.0 at 200pt across all 3 state colors + 64pt thumbnail — visually inspected 2 iterations (initial + droop-coefficient tune). `xcodebuild -scheme SynthesisMac build` ✓, iOS Simulator build ✓, `xcodebuild -scheme SynthesisMac test` ✓ 32/32. Live in-app animation feel (spring interpolation at 200pt with real bend stream) still worth a hands-on look.
+
+**Spec session 13 complete: all 4 leaves done on `feat/macos-pivot`. Remaining before ship: manual on-device QA (menu bar glyph, water notification action, plant animation feel).**
 
 ---
 

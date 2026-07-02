@@ -22,38 +22,45 @@ struct Cactus: Plant {
             pot.closeSubpath()
             ctx.fill(pot, with: .color(Color(hex: 0xC98A5B)))
 
-            // Body — rounded rect that leans
-            let bodyW = w * 0.28, bodyH = h * 0.5
-            let bodyX = cx - bodyW / 2 + w * 0.12 * b  // lean right as bend grows
-            let bodyY = potTop - bodyH
-            let bodyRect = CGRect(x: bodyX, y: bodyY, width: bodyW, height: bodyH)
-            ctx.fill(Path(roundedRect: bodyRect, cornerRadius: bodyW / 2),
-                     with: .color(color))
+            // Body + arms + dome lean as one rigid piece, rotating about the
+            // pot-top anchor. Pot and shadow stay unrotated.
+            ctx.drawLayer { layer in
+                layer.translateBy(x: cx, y: potTop)
+                layer.rotate(by: .radians(b * 0.30))
+                layer.translateBy(x: -cx, y: -potTop)
 
-            // Left arm — sags down as bend grows
-            let armLStart = CGPoint(x: bodyX, y: bodyY + bodyH * 0.35)
-            let armLEnd = CGPoint(x: bodyX - w * 0.12, y: bodyY + bodyH * 0.35 + h * 0.08 * b)
-            var armL = Path()
-            armL.move(to: armLStart)
-            armL.addLine(to: CGPoint(x: armLStart.x - w * 0.08, y: armLStart.y))
-            armL.addLine(to: armLEnd)
-            ctx.stroke(armL, with: .color(color),
-                       style: StrokeStyle(lineWidth: w * 0.07, lineCap: .round, lineJoin: .round))
+                let bodyW = w * 0.28, bodyH = h * 0.5
+                let bodyX = cx - bodyW / 2
+                let bodyY = potTop - bodyH
+                let bodyRect = CGRect(x: bodyX, y: bodyY, width: bodyW, height: bodyH)
+                layer.fill(Path(roundedRect: bodyRect, cornerRadius: bodyW / 2),
+                           with: .color(color))
 
-            // Right arm — sags down as bend grows
-            let armRStart = CGPoint(x: bodyX + bodyW, y: bodyY + bodyH * 0.25)
-            let armREnd = CGPoint(x: bodyX + bodyW + w * 0.12, y: bodyY + bodyH * 0.25 + h * 0.06 * b)
-            var armR = Path()
-            armR.move(to: armRStart)
-            armR.addLine(to: CGPoint(x: armRStart.x + w * 0.08, y: armRStart.y))
-            armR.addLine(to: armREnd)
-            ctx.stroke(armR, with: .color(color),
-                       style: StrokeStyle(lineWidth: w * 0.07, lineCap: .round, lineJoin: .round))
+                // Left arm — sags down as bend grows
+                let armLStart = CGPoint(x: bodyX, y: bodyY + bodyH * 0.35)
+                let armLEnd = CGPoint(x: bodyX - w * 0.12, y: bodyY + bodyH * 0.35 + h * 0.08 * b)
+                var armL = Path()
+                armL.move(to: armLStart)
+                armL.addLine(to: CGPoint(x: armLStart.x - w * 0.08, y: armLStart.y))
+                armL.addLine(to: armLEnd)
+                layer.stroke(armL, with: .color(color),
+                             style: StrokeStyle(lineWidth: w * 0.07, lineCap: .round, lineJoin: .round))
 
-            // Top dome
-            ctx.fill(Path(ellipseIn: CGRect(x: bodyX, y: bodyY - bodyW * 0.15,
-                                            width: bodyW, height: bodyW * 0.4)),
-                     with: .color(color))
+                // Right arm — sags down as bend grows
+                let armRStart = CGPoint(x: bodyX + bodyW, y: bodyY + bodyH * 0.25)
+                let armREnd = CGPoint(x: bodyX + bodyW + w * 0.12, y: bodyY + bodyH * 0.25 + h * 0.06 * b)
+                var armR = Path()
+                armR.move(to: armRStart)
+                armR.addLine(to: CGPoint(x: armRStart.x + w * 0.08, y: armRStart.y))
+                armR.addLine(to: armREnd)
+                layer.stroke(armR, with: .color(color),
+                             style: StrokeStyle(lineWidth: w * 0.07, lineCap: .round, lineJoin: .round))
+
+                // Top dome
+                layer.fill(Path(ellipseIn: CGRect(x: bodyX, y: bodyY - bodyW * 0.15,
+                                                  width: bodyW, height: bodyW * 0.4)),
+                           with: .color(color))
+            }
         }
         .aspectRatio(0.82, contentMode: .fit)
     }

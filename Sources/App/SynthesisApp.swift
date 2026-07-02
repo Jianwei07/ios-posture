@@ -14,7 +14,8 @@ struct SynthesisApp: App {
         #if os(macOS)
         WindowGroup(id: "main") {
             appContent
-                .frame(width: 440, height: 720)
+                .frame(minWidth: 400, idealWidth: 440, maxWidth: 600,
+                       minHeight: 640, idealHeight: 720, maxHeight: .infinity)
         }
         .windowResizability(.contentSize)
 

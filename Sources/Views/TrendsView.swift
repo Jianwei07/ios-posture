@@ -58,8 +58,7 @@ struct TrendsView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 11)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private var uprightPct: String {
@@ -108,8 +107,7 @@ struct TrendsView: View {
             .overlay(Divider(), alignment: .top)
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.card).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card(radius: Theme.Radius.card)
     }
 
     private func barColumn(_ pct: (up: Double, drift: Double, slouch: Double)) -> some View {
@@ -173,8 +171,7 @@ struct TrendsView: View {
                 .background(scoreColor(s.score).opacity(0.14), in: Capsule())
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private func scoreColor(_ score: Int) -> Color {

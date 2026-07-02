@@ -12,7 +12,3 @@ final class WaterEntry {
         self.timestamp = timestamp
     }
 }
-
-enum WaterGoal {
-    static let dailyTargetMl: Double = 2000  // 2.0L default
-}

@@ -1,13 +1,17 @@
 # State
 
-## Current: macOS-first pivot planned
+## Current: macOS polish round (spec session 13) — executing
 
-## Status: Spec session 12 drafted. Execution gate closed. Legacy specs preserved in `.planning/specs-legacy-20260626/`.
+## Status: Session 12 (macOS-first pivot) DONE, all 5 leaves verified. Session 13 (polish) spec tree written, leaves 01-03 execution gate open (Sonnet), leaf 04 (plant redesign) reserved closed for Fable.
 
 ## Next
-- Review/approve `.planning/specs/12-macos-first-pivot/`.
-- Execute only after explicit execution command.
-- First implementation leaf fixes AirPods stream truth before adding macOS target.
+- Execute `.planning/specs/13-macos-polish/01-plumbing-and-bug-fixes.md`
+- Execute `.planning/specs/13-macos-polish/02-notification-tiering-and-reminders.md`
+- Execute `.planning/specs/13-macos-polish/03-appmodel-lift-and-menubar-icon.md`
+- Commit + push after each verified leaf
+- Hand `.planning/specs/13-macos-polish/04-plant-redesign.md` to Fable session
+
+## Previous: macOS-first pivot — DONE (session 12)
 
 ## Previous: PHASE 1.10 BASELINE ACCURACY — DONE
 

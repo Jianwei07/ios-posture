@@ -12,6 +12,7 @@ struct NowView: View {
     @State private var overlayMessage: String?
     @State private var showOverlay = false
     @State private var showCalibrate = false
+    @State private var dismissTask: Task<Void, Never>?
 
     private var settings: UserSettings { settingsArray.first ?? UserSettings() }
     private var engine: PostureEngine { app.engine }
@@ -184,9 +185,12 @@ struct NowView: View {
     private func save() { try? modelContext.save() }
 
     private func flash(_ message: String) {
+        dismissTask?.cancel()
         overlayMessage = message
         withAnimation(Theme.Motion.ui) { showOverlay = true }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+        dismissTask = Task {
+            try? await Task.sleep(for: .seconds(4))
+            guard !Task.isCancelled else { return }
             withAnimation(Theme.Motion.fade) { showOverlay = false }
         }
     }
@@ -219,8 +223,7 @@ private struct HabitChip: View {
             }
             .padding(12)
             .frame(maxWidth: .infinity)
-            .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+            .card()
         }
         .pressable()
         .disabled(action == nil)
@@ -247,7 +250,6 @@ private struct SunlightChip: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 }

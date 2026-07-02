@@ -142,9 +142,18 @@ final class PostureEngine {
         return Date().timeIntervalSince(last) < timeout
     }
 
+    // Runs on the motion source's queue. Only the filter (single-owner there)
+    // touches engine state off-main; everything else hops to main so
+    // calibration/classification state has exactly one writer thread —
+    // recalibrate()/cancelCalibration() also mutate it from main.
     private func process(pitch rawPitch: Double) {
         let smoothPitch = pitchFilter.filter(rawPitch)
+        DispatchQueue.main.async { [weak self] in
+            self?.ingest(smoothPitch: smoothPitch)
+        }
+    }
 
+    private func ingest(smoothPitch: Double) {
         if isCalibrating, neutralPitch == nil {
             calibrationSamples.append(smoothPitch)
             if calibrationSamples.count >= calibrationTarget {
@@ -159,11 +168,9 @@ final class PostureEngine {
 
         let state = classifier.classify(filteredPitch: smoothPitch, neutralPitch: neutralPitch)
 
-        DispatchQueue.main.async {
-            self.lastSampleAt = Date()
-            self.currentPitch = smoothPitch
-            self.postureState = state
-            self.calibrationProgress = min(1, Double(self.calibrationSamples.count) / Double(self.calibrationTarget))
-        }
+        lastSampleAt = Date()
+        currentPitch = smoothPitch
+        postureState = state
+        calibrationProgress = min(1, Double(calibrationSamples.count) / Double(calibrationTarget))
     }
 }

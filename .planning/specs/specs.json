@@ -5,6 +5,12 @@
       "title": "macOS first pivot",
       "path": ".planning/specs/12-macos-first-pivot",
       "completed": true
+    },
+    {
+      "id": "13",
+      "title": "macOS polish round",
+      "path": ".planning/specs/13-macos-polish",
+      "completed": false
     }
   ]
 }

@@ -1,3 +1,4 @@
+import Dispatch
 import Testing
 @testable import Synthesis
 
@@ -17,52 +18,67 @@ private final class FakeMotionSource: MotionSource {
     func emit(_ pitch: Double) { handler?(pitch) }
 }
 
+// PostureEngine.process(pitch:) now hops to DispatchQueue.main.async before
+// mutating calibration/classification state (single-owner fix for the
+// motion-queue/main-queue race). DispatchQueue.main is serial FIFO, so
+// awaiting one more block enqueued after the emit loop guarantees every
+// prior emit's state mutation has already landed — deterministic, no sleep.
+private func drainMain() async {
+    await withCheckedContinuation { continuation in
+        DispatchQueue.main.async { continuation.resume() }
+    }
+}
+
 @Suite("PostureEngine Calibration")
 struct PostureEngineCalibrationTests {
-    @Test func recalibrateThenStableSetsBaseline() {
+    @Test func recalibrateThenStableSetsBaseline() async {
         let source = FakeMotionSource()
         let engine = PostureEngine(source: source)
         engine.recalibrate()
         engine.start()
         for _ in 0..<100 { source.emit(-10.0) }
+        await drainMain()
         #expect(engine.neutralPitch != nil)
         #expect(abs(engine.neutralPitch! - (-10.0)) < 1.0)
         #expect(engine.calibrationSpread < 1.0)
         engine.stop()
     }
 
-    @Test func unstableCalibrationRejectsBaseline() {
+    @Test func unstableCalibrationRejectsBaseline() async {
         let source = FakeMotionSource()
         let engine = PostureEngine(source: source)
         engine.recalibrate()
         engine.start()
         for i in 0..<100 { source.emit(i / 10 % 2 == 0 ? -5.0 : -25.0) }
+        await drainMain()
         #expect(engine.neutralPitch == nil)
         #expect(engine.calibrationSpread > 4.0)
         engine.stop()
     }
 
-    @Test func startWithoutRecalibrateDoesNotCalibrate() {
+    @Test func startWithoutRecalibrateDoesNotCalibrate() async {
         let source = FakeMotionSource()
         let engine = PostureEngine(source: source)
         engine.seedBaseline(nil)
         engine.start()
         for _ in 0..<200 { source.emit(-10.0) }
+        await drainMain()
         #expect(engine.neutralPitch == nil)
         engine.stop()
     }
 
-    @Test func seededBaselineSkipsCalibration() {
+    @Test func seededBaselineSkipsCalibration() async {
         let source = FakeMotionSource()
         let engine = PostureEngine(source: source)
         engine.seedBaseline(-12.0)
         engine.start()
         for _ in 0..<50 { source.emit(-30.0) }
+        await drainMain()
         #expect(engine.neutralPitch == -12.0)
         engine.stop()
     }
 
-    @Test func cancelCalibrationStopsLateSamples() {
+    @Test func cancelCalibrationStopsLateSamples() async {
         let source = FakeMotionSource()
         let engine = PostureEngine(source: source)
         engine.recalibrate()
@@ -70,6 +86,7 @@ struct PostureEngineCalibrationTests {
         for _ in 0..<50 { source.emit(-10.0) }
         engine.cancelCalibration()
         for _ in 0..<100 { source.emit(-10.0) }
+        await drainMain()
         #expect(engine.neutralPitch == nil)
         engine.stop()
     }

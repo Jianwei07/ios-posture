@@ -1,6 +1,39 @@
 # Handoff
 
-## Current — 2026-06-26 macOS-first pivot plan
+## Current — 2026-07-02 macOS polish round
+
+Direction Check: CONFIRMED
+Chosen direction: harden macOS pivot (bug fixes, mac test target), tier reminders soft/priority with smart water-skip + presence-aware walk, add live menu-bar posture glyph as the minimized-state alert, redesign Monstera + Cactus. iOS-launch architecture direction recorded (SynthesisCore SPM extraction, thin adapters, deferred to session 14).
+Why: user requested library/optimization pass + soft reminder logic + minimized posture alert + plant polish; 2 Explore agents + 1 Plan agent surfaced bugs (sunlight UTC timezone, calibration cross-thread race), dead code, missing mac Info.plist keys, and confirmed XcodeGen-managed project (no pbxproj hand-edits).
+Main risk: leaf 04 (plant redesign) is a taste call, reserved for Fable to execute/review; leaves 01-03 are decision-complete and assigned to Sonnet.
+User confirmation needed: no — execute command given ("Let sonnet execute 01-03, commit, push. for 04 we use fable").
+
+Grill Gate: SKIPPED_NOT_NEEDED
+Reason: 4-question AskUserQuestion round resolved all first-slice ambiguity (minimized alert mechanism, walk logic, water logic, fix scope) before planning.
+
+Spec Session: 13 | `.planning/specs/13-macos-polish`
+Quality Gates: READY
+Check result: PASS (validate_specs.py: spec tree valid)
+Spec Tree: READY
+Execution gate: OPENED_FOR_APPROVED_EXECUTION — leaves 01-03 only. Leaf 04 stays closed for a Fable session.
+Next: execute leaves 02, 03; checkpoint + commit after each verified leaf; push when 01-03 done; leaf 04 handed to Fable separately.
+
+Skills used: grilling (targeted AskUserQuestion, not full /grilling session — no first-slice ambiguity), jayden-workflow (this spec session).
+
+### Leaf 01 checkpoint — DONE (2026-07-02)
+- Fixed `PostureEngine` cross-thread calibration race: filter stays on motion queue, everything else (calibration accumulation, classify, published state) hops to main via extracted `ingest(smoothPitch:)`. Updated `PostureEngineCalibrationTests` to `async` + deterministic `drainMain()` helper (exploits serial FIFO main queue — no sleep).
+- Fixed `SolarCalculator`: UTC-anchored sunrise/sunset (was local-startOfDay + UTC minutes → wrong outside UTC), removed macOS SF-hardcode (CoreLocation now runs on native macOS, gated on `.authorizedAlways` there vs `.authorizedWhenInUse` on iOS — `authorizedWhenInUse` is unavailable on macOS, caught by mac build), force-unwraps replaced, delegate `finish` calls routed through main to close the timeout race.
+- Removed dead code: `SpineIcon.swift` (tombstone), `WaterGoal` enum, `NudgeStyle` (enum + field + SettingsView picker) end-to-end.
+- Added `.card()` ViewModifier (`Sources/DesignSystem/CardStyle.swift`); replaced ~8 copy-paste sites across NowView/TrendsView/SettingsView (left 2 sites alone — banner's drift-colored border and emptyRow's dashed border are semantically different, not candidates).
+- NowView banner + CalibrateView timeout: `asyncAfter`/raw `Timer` → cancellable `Task`.
+- macOS window: fixed 440×720 → resizable (min 400×640, ideal 440×720, max 600×∞).
+- `project.yml`: added `SynthesisMacTests` target + `SynthesisMac` scheme with test action; had to explicitly override `TEST_HOST`/`BUNDLE_LOADER` (auto-derived path assumed `SynthesisMac.app` but `PRODUCT_NAME` is overridden to `Synthesis`). Added mac `NSMotionUsageDescription`/`NSLocationWhenInUseUsageDescription`/`LSApplicationCategoryType` Info.plist keys — confirmed present in built app via `plutil`.
+
+Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` ✓ (generic/platform=iOS fails on unrelated signing/provisioning, not code — pre-existing, unrelated to this leaf), `xcodebuild -scheme SynthesisMac test` ✓ 15/15 tests native (1.9s, no simulator).
+
+---
+
+## Previous — 2026-06-26 macOS-first pivot plan
 
 Direction Check: CONFIRMED
 Chosen direction: macOS-first Synthesis app with compact desktop screens, shared posture engine, and AirPods stream-based detection.

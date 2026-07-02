@@ -18,11 +18,6 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     airpodsRow
 
-                    sectionLabel("Nudge style")
-                    segmented(NudgeStyle.allCases, selected: settings.nudgeStyle, label: \.label) {
-                        settings.nudgeStyle = $0; save()
-                    }
-
                     escalateRow
 
                     sectionLabel("Slouch sensitivity")
@@ -96,8 +91,7 @@ struct SettingsView: View {
             Spacer()
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private var escalateRow: some View {
@@ -110,8 +104,7 @@ struct SettingsView: View {
         }
         .tint(Theme.Palette.aligned)
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private var sensitivityCard: some View {
@@ -129,8 +122,7 @@ struct SettingsView: View {
             }
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     // MARK: Components
@@ -184,8 +176,7 @@ struct SettingsView: View {
             .tint(Theme.Palette.accent)
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private func save() { try? modelContext.save() }
@@ -208,8 +199,7 @@ struct SettingsView: View {
             .tint(Theme.Palette.drift)
         }
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 
     private var sunlightRow: some View {
@@ -235,7 +225,6 @@ struct SettingsView: View {
         }
         .tint(Theme.Palette.aligned)
         .padding(12)
-        .background(Theme.Palette.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.chip))
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.chip).stroke(Theme.Palette.ink.opacity(0.06)))
+        .card()
     }
 }

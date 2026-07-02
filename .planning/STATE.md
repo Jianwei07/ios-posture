@@ -2,7 +2,7 @@
 
 ## Current: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
 
-## Status: Session 13 all leaves executed and verified (mac build + iOS build + 32/32 native tests) on `feat/macos-pivot`. Leaf 04 (Fable): Monstera Bézier blade + eoFill fenestrations + progressive t-weighted droop, Cactus rigid-body lean about pot top, Plant protocol made Animatable (poses now tween instead of snapping — all 3 plants).
+## Status: Session 13 all leaves + bug sweep done on `feat/macos-pivot`; PR #2 open to main (https://github.com/Jianwei07/ios-posture/pull/2). Bug sweep fixed: motion-source threading (off-main @Observable/SwiftData writes), session start flap (4s spin-up grace), sunlight nextNudge display, SolarCalculator continuation race.
 
 ## Next
 - Manual on-device QA: menu bar glyph transitions (minimized, sustained slouch ≥30s), water notification "Log 250 ml" action end-to-end, plant pose animation feel with live bend stream

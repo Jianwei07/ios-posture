@@ -17,6 +17,9 @@ final class AppModel {
     private var started = false
     private let settings: UserSettings
 
+    private(set) var menuBarState: MenuBarState = .idle
+    private var menuBarReducer = MenuBarReducer()
+
     init(settings: UserSettings) {
         self.settings = settings
         let source: MotionSource
@@ -51,6 +54,9 @@ final class AppModel {
         guard !started else { return }
         started = true
         session.configure(modelContext: modelContext)
+        session.onHeartbeat = { [weak self] sessionState, postureState in
+            self?.updateMenuBarState(sessionState: sessionState, postureState: postureState)
+        }
         session.begin()
         wireWaterSeams(modelContext: modelContext)
         Task {
@@ -82,6 +88,24 @@ final class AppModel {
     // Push the latest settings into the live engine/scheduler.
     func applySettings(_ settings: UserSettings) {
         engine.classifier.threshold = settings.sensitivity.degrees
+    }
+
+    // Only assigns on a real transition — the reducer runs every heartbeat
+    // second, but @Observable should only re-render the menu bar label when
+    // the glyph actually needs to change.
+    private func updateMenuBarState(sessionState: SessionState, postureState: PostureState) {
+        let newState = menuBarReducer.reduce(sessionState: sessionState, postureState: postureState, now: .now)
+        if newState != menuBarState { menuBarState = newState }
+    }
+
+    // Short status line for the MenuBarExtra dropdown.
+    var menuBarStatusLine: String {
+        switch menuBarState {
+        case .idle:    return isConnected ? "Not tracking" : "AirPods not connected"
+        case .aligned: return "Aligned · \(Int(session.activeSessionSeconds / 60)) min upright"
+        case .drift:   return "Drifting — sit tall"
+        case .wilt:    return "Slouching a while now"
+        }
     }
 
     // True when compatible AirPods motion is connected/streaming (drives the Disconnected gate).

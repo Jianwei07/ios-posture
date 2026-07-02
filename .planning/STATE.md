@@ -1,15 +1,13 @@
 # State
 
-## Current: macOS polish round (spec session 13) — executing
+## Current: macOS polish round (spec session 13) — leaves 01-03 DONE, leaf 04 reserved for Fable
 
-## Status: Session 12 (macOS-first pivot) DONE, all 5 leaves verified. Session 13 (polish) spec tree written, leaves 01-03 execution gate open (Sonnet), leaf 04 (plant redesign) reserved closed for Fable.
+## Status: Session 12 (macOS-first pivot) DONE, all 5 leaves verified. Session 13 leaves 01-03 executed, verified (mac build + iOS build + 32/32 native tests), and committed on `feat/macos-pivot`. Leaf 04 (plant redesign) untouched — reserved for a Fable session per user instruction.
 
 ## Next
-- Execute `.planning/specs/13-macos-polish/01-plumbing-and-bug-fixes.md`
-- Execute `.planning/specs/13-macos-polish/02-notification-tiering-and-reminders.md`
-- Execute `.planning/specs/13-macos-polish/03-appmodel-lift-and-menubar-icon.md`
-- Commit + push after each verified leaf
-- Hand `.planning/specs/13-macos-polish/04-plant-redesign.md` to Fable session
+- Push `feat/macos-pivot` to remote
+- Hand `.planning/specs/13-macos-polish/04-plant-redesign.md` to a Fable session (Monstera/Cactus geometry — a taste call)
+- Manual on-device QA still open: minimized-window menu bar glyph transitions, water notification "Log 250 ml" action end-to-end (see HANDOFF leaf 03/02 checkpoints)
 
 ## Previous: macOS-first pivot — DONE (session 12)
 

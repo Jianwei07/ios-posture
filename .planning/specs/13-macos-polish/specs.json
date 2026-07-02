@@ -16,7 +16,7 @@
       "id": "03",
       "title": "AppModel lift and menu bar icon",
       "spec": ".planning/specs/13-macos-polish/03-appmodel-lift-and-menubar-icon.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "04",

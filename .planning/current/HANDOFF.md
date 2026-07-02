@@ -16,7 +16,7 @@ Quality Gates: READY
 Check result: PASS (validate_specs.py: spec tree valid)
 Spec Tree: READY
 Execution gate: OPENED_FOR_APPROVED_EXECUTION — leaves 01-03 only. Leaf 04 stays closed for a Fable session.
-Next: execute leaf 03; checkpoint + commit after each verified leaf; push when 01-03 done; leaf 04 handed to Fable separately.
+Next: leaves 01-03 all done and committed. Push to remote, then hand leaf 04 to a Fable session.
 
 Skills used: grilling (targeted AskUserQuestion, not full /grilling session — no first-slice ambiguity), jayden-workflow (this spec session).
 
@@ -41,6 +41,17 @@ Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme S
 - New `Tests/ReminderTests/ReminderSchedulerTests.swift` (11 tests) — water interval/defer/target-met, walk interval + `noteBreakTaken`, posture escalation/cooldown/interruption-reset/toggle-off, all via injected `fire`+`now` closures (no real notification center, no 6-minute sleeps).
 
 Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` ✓, `xcodebuild -scheme SynthesisMac test` ✓ 26/26 tests native (0.02s). Manual water-notification-action → SwiftData → live chip update not verified end-to-end interactively in this session (no running app instance) — code path is structurally correct (shared container, `@MainActor` insert+save) and should be spot-checked with real AirPods/notifications before shipping.
+
+### Leaf 03 checkpoint — DONE (2026-07-02)
+- `AppModel` construction lifted from `ContentView`'s lazy `.task` into `SynthesisApp.init()`: builds the `ModelContainer` (from leaf 02), fetch-or-inserts the singleton `UserSettings` synchronously via `container.mainContext`, constructs `AppModel(settings:)` into `@State private var appModel`. Both the `WindowGroup` and `MenuBarExtra` scenes get `.environment(appModel)` + `.modelContainer(container)` as **Scene**-level modifiers (SwiftData/SwiftUI support this — confirmed by a clean build) — necessary because MenuBarExtra is a sibling scene, not a descendant view, so it couldn't see an `AppModel` built inside ContentView.
+- `ContentView` now reads `@Environment(AppModel.self) private var app` (non-optional) instead of `@State private var app: AppModel?`; dropped the `setup()` settings-insert (moved to `SynthesisApp.init`) and all the `if let app` unwrapping. Also dropped now-redundant `.environment(app)` calls on `MainShell`/`OnboardingFlow`/`CalibrateView` — they already inherit it from the scene-level injection.
+- New `Sources/App/MenuBarState.swift`: `MenuBarState` enum (idle/aligned/drift/wilt → SF Symbol per case) + pure `MenuBarReducer` struct (session+posture+wall-clock time → state, 30s slouch-sustain window — deliberately shorter than the 360s notification escalation since the glyph is an ambient early signal, not a duplicate alert). `SessionManager` gained `onHeartbeat: ((SessionState, PostureState) -> Void)?`, invoked at the end of the existing 1Hz `evaluate()` — no new timer. `AppModel.updateMenuBarState` only assigns `menuBarState` when the reducer's output actually changes, so the `@Observable` label re-renders on transitions only, not every heartbeat second.
+- `MenuBarExtra` now shows `appModel.menuBarState.symbolName` as its icon and `appModel.menuBarStatusLine` in the dropdown ("Aligned · 32 min upright", etc.) — this is the "minimized" posture alert channel the user asked for: ambient, ties to a live SF Symbol, no sound/interruption. **Glyph mapping is a taste call, flagged for visual review**: idle→airpodspro, aligned→leaf.fill, drift→leaf, wilt→leaf.arrow.circlepath.
+- New `Tests/AppTests/MenuBarStateTests.swift` (6 tests) — pure reducer tests: sub-threshold slouch stays drift, sustained (≥30s) becomes wilt, recovery is immediate, paused session forces idle, interruption resets the sustain clock, and a 40-tick sweep confirms exactly 2 state changes (no redundant re-publishes).
+
+Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` ✓ (MenuBarExtra code stays inside the existing `#if os(macOS)` guard — iOS unaffected), `xcodebuild -scheme SynthesisMac test` ✓ 32/32 tests native. Manual on-device check (minimize window, sustain real slouch ≥30s, confirm glyph changes without any window visible) not performed this session — no real AirPods attached; flag for a hands-on pass before shipping.
+
+**All of spec session 13 leaves 01-03 are done and committed on `feat/macos-pivot`. Leaf 04 (plant redesign) remains untouched, reserved for a Fable session per user instruction.**
 
 ---
 

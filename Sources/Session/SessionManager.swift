@@ -22,6 +22,10 @@ final class SessionManager {
     // got up and walked" — resets the walk reminder interval on resume.
     private let breakResetsWalkSeconds: TimeInterval = 300
 
+    // Piggybacks the existing 1Hz heartbeat — no separate timer. AppModel
+    // uses this to drive the ambient menu bar glyph.
+    var onHeartbeat: ((SessionState, PostureState) -> Void)?
+
     // Running accumulators → accurate score without storing every second.
     private var pitchSum = 0.0
     private var sampleCount = 0
@@ -80,6 +84,8 @@ final class SessionManager {
         }
 
         if !available { endedManually = false }  // AirPods removed → allow auto-start again
+
+        onHeartbeat?(state, engine.postureState)
     }
 
     private func startSession() {

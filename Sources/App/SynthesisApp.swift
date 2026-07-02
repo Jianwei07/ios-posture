@@ -15,10 +15,25 @@ struct SynthesisApp: App {
     // observes — the "Log 250 ml" notification action writes here.
     private let container: ModelContainer
 
+    // Built once at launch (not lazily inside ContentView) so the
+    // MenuBarExtra scene — a sibling of the main window, not a descendant —
+    // can also observe live posture state for its glyph.
+    @State private var appModel: AppModel
+
     init() {
         let container = try! ModelContainer(for: PostureSession.self, UserSettings.self, WaterEntry.self)
         NotificationModule.shared.configure(container: container)
+
+        let context = container.mainContext
+        let settings = (try? context.fetch(FetchDescriptor<UserSettings>()))?.first ?? {
+            let s = UserSettings()
+            context.insert(s)
+            try? context.save()
+            return s
+        }()
+
         self.container = container
+        _appModel = State(initialValue: AppModel(settings: settings))
     }
 
     var body: some Scene {
@@ -29,9 +44,11 @@ struct SynthesisApp: App {
                        minHeight: 640, idealHeight: 720, maxHeight: .infinity)
         }
         .windowResizability(.contentSize)
+        .environment(appModel)
+        .modelContainer(container)
 
-        MenuBarExtra("Synthesis", systemImage: "airpodspro") {
-            Text("Synthesis")
+        MenuBarExtra("Synthesis", systemImage: appModel.menuBarState.symbolName) {
+            Text(appModel.menuBarStatusLine)
                 .font(.headline)
             Button("Open App") { openWindow(id: "main") }
             Button("Recalibrate") {
@@ -41,16 +58,19 @@ struct SynthesisApp: App {
             Divider()
             Button("Quit") { NSApplication.shared.terminate(nil) }
         }
+        .environment(appModel)
+        .modelContainer(container)
         #else
         WindowGroup {
             appContent
         }
+        .environment(appModel)
+        .modelContainer(container)
         #endif
     }
 
     private var appContent: some View {
         ContentView()
-            .modelContainer(container)
     }
 }
 

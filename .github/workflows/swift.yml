@@ -31,7 +31,11 @@ jobs:
     - name: Generate project
       run: xcodegen generate
     - name: Check generated project is committed
-      run: git diff --exit-code Synthesis.xcodeproj
+      run: |
+        if [ -n "$(git status --porcelain --untracked-files=all Synthesis.xcodeproj)" ]; then
+          git status --short --untracked-files=all Synthesis.xcodeproj
+          exit 1
+        fi
     - name: Build (macOS)
       run: xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' build
     - name: Test (macOS, native)

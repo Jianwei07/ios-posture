@@ -71,7 +71,18 @@ Also: fixed the `var stable written but never read` test warning in MotionFilter
 
 Verification: mac build ✓ (one pre-existing-class Sendable warning in SolarCalculator, Swift 6 audit explicitly out of scope), iOS Simulator build ✓, 32/32 native tests ✓.
 
-**Spec session 13 complete: all 4 leaves + bug sweep done on `feat/macos-pivot`, PR opened to main. Remaining before ship: manual on-device QA (menu bar glyph, water notification action, plant animation feel).**
+### PR review fix — DONE (2026-07-02)
+[HIGH] finding from PR #2 review (github.com/Jianwei07/ios-posture/pull/2#issuecomment-4867532637): connected-but-stalled AirPods stream (isConnected stays true, samples just stop — no disconnect event) could loop `.paused` → `.active` on every heartbeat via `startSession()`, and `PostureEngine.isReceiving()` reports true during each post-`start()` spin-up grace (added in the earlier bug sweep) even with zero real samples — so `tickActive()` ran and counted stale `currentPitch`/`postureState` as active time + fed it to the reminder scheduler, indefinitely, while the stream stayed dead.
+
+Fix: `SessionManager.tickActive()` now also requires `engine.lastSampleAt != nil` (cleared by `PostureEngine.start()`, set only by a genuine incoming sample) before counting anything. The grace window still prevents the *pause* flap (no immediate re-pause after a legitimate start), but ticking itself is a no-op until a real sample proves the stream is actually alive — no more stale-data accumulation during a stall.
+
+New `Tests/SessionTests/SessionManagerStallTests.swift` — `resumingWithoutARealSampleDoesNotCountATick()`: drives `SessionManager.evaluate()` via the same `source.onAvailabilityChanged?()` seam the existing calibration test suite uses (no new access-level changes needed). Confirmed the test reproduces the exact reported defect: reverting the fix locally made it fail (`activeSessionSeconds` incrementing to 1 then 2 with zero real samples emitted); restored, it passes.
+
+[LOW] SolarCalculator non-Sendable capture warning — left as-is per the reviewer's own note (non-blocking under current Swift 5.9 config; same pre-existing class of warning flagged and deliberately deferred earlier this session, out of scope for a full Swift 6 concurrency audit).
+
+Verification: `xcodebuild -scheme SynthesisMac build` ✓, iOS Simulator build ✓, `xcodebuild -scheme SynthesisMac test` ✓ 33/33 (32 + 1 new).
+
+**Spec session 13 complete: all 4 leaves + bug sweep + PR review fix done on `feat/macos-pivot`. Remaining before ship: manual on-device QA (menu bar glyph, water notification action, plant animation feel, real AirPods stall scenario).**
 
 ---
 

@@ -110,8 +110,17 @@ final class SessionManager {
     }
 
     private func tickActive() {
-        // Don't count time / score until calibrated.
-        guard engine.neutralPitch != nil else { return }
+        // Don't count time / score until calibrated, and don't count it on
+        // the strength of the post-start() spin-up grace alone: if the
+        // stream is connected but stalled (no disconnect event, samples just
+        // stopped), evaluate() resumes .paused -> .active via startSession(),
+        // and isReceiving() reports true for up to spinUpGraceSeconds even
+        // though nothing has actually arrived yet. Requiring a real sample
+        // (engine.lastSampleAt != nil, which start() clears) means this tick
+        // is a no-op until the stream proves it's actually alive again —
+        // stale currentPitch/postureState from before the stall never gets
+        // counted as active time or fed to the reminder scheduler.
+        guard engine.neutralPitch != nil, engine.lastSampleAt != nil else { return }
 
         activeSessionSeconds += 1
         pitchSum += engine.currentPitch

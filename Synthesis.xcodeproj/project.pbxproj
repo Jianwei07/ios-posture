@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		010EE8D52173E974588740D1 /* ReminderSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E39315C4FCF860A18724C /* ReminderSchedulerTests.swift */; };
 		06D36290CE50FCF249BFA5A9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CB4F6112A86304628E4F36 /* SessionManager.swift */; };
 		079C0D2FDE34812FE63A56B3 /* DisconnectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3059E70F032DE7AA10838 /* DisconnectedView.swift */; };
 		0BDF1C62183436922C956DDC /* SunlightScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */; };
 		0C65869519AC994D2123C089 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90D94EC04E4B75FF0C33D0 /* AppModel.swift */; };
+		1551EAE6AEF0C587C8FB192E /* ReminderSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E39315C4FCF860A18724C /* ReminderSchedulerTests.swift */; };
 		16E5C1DD3C06616C1E03D97C /* NotificationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969966FA7A6F091E9D9BC4CC /* NotificationModule.swift */; };
 		1997F2A48CF21B0E8E3063C1 /* MotionFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A7257CD4CF570D0B24716E /* MotionFilter.swift */; };
 		19E02739240AAECA9110F0C9 /* MotionFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0974D445CBC729D74A799425 /* MotionFilterTests.swift */; };
@@ -125,6 +127,7 @@
 		969966FA7A6F091E9D9BC4CC /* NotificationModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModule.swift; sourceTree = "<group>"; };
 		96CB4F6112A86304628E4F36 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		A3CAF54E676B437C3870AAF9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B04E39315C4FCF860A18724C /* ReminderSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderSchedulerTests.swift; sourceTree = "<group>"; };
 		B13C3C6AB2470CB4ABBE69E0 /* Cactus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cactus.swift; sourceTree = "<group>"; };
 		B25C75BA2813E3FA774DA720 /* StepReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepReader.swift; sourceTree = "<group>"; };
 		B26D1CF9110B5B14C2040D56 /* PostureState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureState.swift; sourceTree = "<group>"; };
@@ -280,6 +283,7 @@
 			isa = PBXGroup;
 			children = (
 				0974D445CBC729D74A799425 /* MotionFilterTests.swift */,
+				B04E39315C4FCF860A18724C /* ReminderSchedulerTests.swift */,
 			);
 			path = ReminderTests;
 			sourceTree = "<group>";
@@ -504,6 +508,7 @@
 				79FB3DFB13EE5E4C41007C03 /* MotionFilterTests.swift in Sources */,
 				727CB4C45F691161D9996439 /* PostureClassifierTests.swift in Sources */,
 				6AC6069A418476449C9F94D1 /* PostureEngineCalibrationTests.swift in Sources */,
+				1551EAE6AEF0C587C8FB192E /* ReminderSchedulerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,6 +559,7 @@
 				19E02739240AAECA9110F0C9 /* MotionFilterTests.swift in Sources */,
 				885A5348A74F1E1F6F88B59B /* PostureClassifierTests.swift in Sources */,
 				530C2E6C338A617104173E4D /* PostureEngineCalibrationTests.swift in Sources */,
+				010EE8D52173E974588740D1 /* ReminderSchedulerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

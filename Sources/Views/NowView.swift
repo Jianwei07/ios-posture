@@ -149,11 +149,17 @@ struct NowView: View {
     }
 
     private var walkDisplay: String {
+        #if os(macOS)
+        // Step counts are structurally unavailable on macOS (no HealthKit),
+        // not zero — show a placeholder instead of a misleading "0".
+        return "—"
+        #else
         let steps = app.stepReader.todaySteps
         if steps >= 1000 {
             return String(format: "%.1fk", Double(steps) / 1000)
         }
         return "\(steps)"
+        #endif
     }
 
     private var walkProgress: Double {

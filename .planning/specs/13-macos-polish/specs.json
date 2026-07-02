@@ -10,7 +10,7 @@
       "id": "02",
       "title": "Notification tiering and reminders",
       "spec": ".planning/specs/13-macos-polish/02-notification-tiering-and-reminders.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "03",

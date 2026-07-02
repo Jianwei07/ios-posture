@@ -16,7 +16,7 @@ Quality Gates: READY
 Check result: PASS (validate_specs.py: spec tree valid)
 Spec Tree: READY
 Execution gate: OPENED_FOR_APPROVED_EXECUTION — leaves 01-03 only. Leaf 04 stays closed for a Fable session.
-Next: execute leaves 02, 03; checkpoint + commit after each verified leaf; push when 01-03 done; leaf 04 handed to Fable separately.
+Next: execute leaf 03; checkpoint + commit after each verified leaf; push when 01-03 done; leaf 04 handed to Fable separately.
 
 Skills used: grilling (targeted AskUserQuestion, not full /grilling session — no first-slice ambiguity), jayden-workflow (this spec session).
 
@@ -30,6 +30,17 @@ Skills used: grilling (targeted AskUserQuestion, not full /grilling session — 
 - `project.yml`: added `SynthesisMacTests` target + `SynthesisMac` scheme with test action; had to explicitly override `TEST_HOST`/`BUNDLE_LOADER` (auto-derived path assumed `SynthesisMac.app` but `PRODUCT_NAME` is overridden to `Synthesis`). Added mac `NSMotionUsageDescription`/`NSLocationWhenInUseUsageDescription`/`LSApplicationCategoryType` Info.plist keys — confirmed present in built app via `plutil`.
 
 Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` ✓ (generic/platform=iOS fails on unrelated signing/provisioning, not code — pre-existing, unrelated to this leaf), `xcodebuild -scheme SynthesisMac test` ✓ 15/15 tests native (1.9s, no simulator).
+
+### Leaf 02 checkpoint — DONE (2026-07-02)
+- `NotificationModule` rewritten: `ReminderType.isPriority` (posture only) drives sound/interruptionLevel tiering (priority: `.default` sound + `.active`; soft: silent + `.passive`). Now `NSObject, UNUserNotificationCenterDelegate` — `configure(container:)` sets the delegate + registers a water category with a "Log 250 ml" `UNNotificationAction`, called from `SynthesisApp.init()` (must be launch-time, not deferred, or action taps from a terminated-app launch get dropped). `willPresent` checks `content.interruptionLevel == .active` directly (not fragile identifier-string parsing) to decide `[.banner,.sound]` vs `[.banner]`. `didReceive` inserts a `WaterEntry()` into the shared container's `mainContext` on the water-log action.
+- `SynthesisApp` now builds one explicit `ModelContainer` in `init()` (was the `.modelContainer(for:)` convenience form) so `NotificationModule` and the UI observe the same store — this is a prerequisite for leaf 03's full AppModel lift, not a duplicate of it.
+- `SunlightScheduler` routes through the shared `content(for:detail:)` builder instead of hand-building `UNMutableNotificationContent` with a hardcoded `.default` sound — sunlight nudges are soft now too.
+- `ReminderScheduler` rewritten with injectable seams: `fire`/`cancelAll`/`now` closures (default to real `NotificationModule`/`Date()`) make it unit-testable without touching `UNUserNotificationCenter` or waiting real wall-clock minutes. Water: defers if `lastWaterLogAt()` (wired by `AppModel` via a `FetchDescriptor<WaterEntry>` against the shared context) is within the interval, skips if `waterProgress()` shows target met, else fires with progress-softened copy. Walk: dropped the dead HealthKit pace-check branch (always blind-fired on macOS anyway since `StepReader.todaySteps` is `#if os(iOS)`-gated to 0); added `noteBreakTaken(sessionSeconds:)`.
+- `SessionManager`: tracks `pausedAt`; on resume after a ≥300s AirPods-out gap, calls `scheduler.noteBreakTaken()` (assumes the user walked during the break) before resuming. Removed the `stepReader` param and the dead `scheduler.currentStepCount` feed from `tickActive()`.
+- `NowView` walk chip shows "—" on macOS instead of a misleading "0" (steps are structurally unavailable there, not zero).
+- New `Tests/ReminderTests/ReminderSchedulerTests.swift` (11 tests) — water interval/defer/target-met, walk interval + `noteBreakTaken`, posture escalation/cooldown/interruption-reset/toggle-off, all via injected `fire`+`now` closures (no real notification center, no 6-minute sleeps).
+
+Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme Synthesis -destination 'generic/platform=iOS Simulator' build` ✓, `xcodebuild -scheme SynthesisMac test` ✓ 26/26 tests native (0.02s). Manual water-notification-action → SwiftData → live chip update not verified end-to-end interactively in this session (no running app instance) — code path is structurally correct (shared container, `@MainActor` insert+save) and should be spot-checked with real AirPods/notifications before shipping.
 
 ---
 

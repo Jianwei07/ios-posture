@@ -11,12 +11,16 @@ final class SessionManager {
 
     let engine: PostureEngine
     private let scheduler: ReminderScheduler
-    private let stepReader: StepReader?
     private var modelContext: ModelContext?
 
     private var currentSession: PostureSession?
     private var heartbeat: Timer?
     private var endedManually = false
+    private var pausedAt: Date?
+
+    // A break of at least this long (AirPods out) is treated as "the user
+    // got up and walked" — resets the walk reminder interval on resume.
+    private let breakResetsWalkSeconds: TimeInterval = 300
 
     // Running accumulators → accurate score without storing every second.
     private var pitchSum = 0.0
@@ -25,10 +29,9 @@ final class SessionManager {
     private var secondsSinceRecord = 0
     private let recordEverySeconds = 30   // downsample persisted readings
 
-    init(engine: PostureEngine, scheduler: ReminderScheduler, stepReader: StepReader? = nil) {
+    init(engine: PostureEngine, scheduler: ReminderScheduler) {
         self.engine = engine
         self.scheduler = scheduler
-        self.stepReader = stepReader
     }
 
     func configure(modelContext: ModelContext) {
@@ -52,6 +55,7 @@ final class SessionManager {
         state = .idle
         activeSessionSeconds = 0
         endedManually = true
+        pausedAt = nil
         scheduler.reset()
     }
 
@@ -79,6 +83,11 @@ final class SessionManager {
     }
 
     private func startSession() {
+        if let pausedAt, Date.now.timeIntervalSince(pausedAt) >= breakResetsWalkSeconds {
+            scheduler.noteBreakTaken(sessionSeconds: activeSessionSeconds)
+        }
+        pausedAt = nil
+
         if currentSession == nil {
             let s = PostureSession()
             modelContext?.insert(s)
@@ -90,6 +99,7 @@ final class SessionManager {
 
     private func pauseSession() {
         state = .paused
+        pausedAt = .now
         engine.stop()
     }
 
@@ -98,7 +108,6 @@ final class SessionManager {
         guard engine.neutralPitch != nil else { return }
 
         activeSessionSeconds += 1
-        scheduler.currentStepCount = stepReader?.todaySteps ?? 0
         pitchSum += engine.currentPitch
         sampleCount += 1
         if engine.postureState == .slouch { poorCount += 1 }

@@ -1,4 +1,5 @@
 import UserNotifications
+import SwiftData
 import Foundation
 
 enum ReminderType {
@@ -23,24 +24,45 @@ enum ReminderType {
     }
 
     var identifier: String { "posture.\(self)" }
+
+    // Posture is the only priority alert (sound + system banner even when
+    // active); water/walk/sunlight are soft — silent, banner-only nudges.
+    var isPriority: Bool { self == .posture }
 }
 
-final class NotificationModule {
+final class NotificationModule: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationModule()
     static let overlayNotification = Notification.Name("posture.overlay")
+    static let waterCategoryId = "synthesis.water"
+    static let waterLogActionId = "synthesis.water.log"
 
-    private init() {}
+    private var container: ModelContainer?
+
+    private override init() { super.init() }
+
+    // Wires the shared ModelContainer so the water "Log 250 ml" notification
+    // action can write a WaterEntry, and installs this as the notification
+    // center delegate. Must be called at app-launch time — if it's deferred
+    // (e.g. behind a lazy .task), action taps that (re)launch the app from a
+    // terminated state get dropped before the delegate is ever set.
+    func configure(container: ModelContainer) {
+        self.container = container
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        let logAction = UNNotificationAction(identifier: Self.waterLogActionId, title: "Log 250 ml")
+        let waterCategory = UNNotificationCategory(
+            identifier: Self.waterCategoryId, actions: [logAction], intentIdentifiers: []
+        )
+        center.setNotificationCategories([waterCategory])
+    }
 
     func requestPermission() async {
         _ = try? await UNUserNotificationCenter.current()
             .requestAuthorization(options: [.alert, .sound, .badge])
     }
 
-    func fire(_ type: ReminderType) {
-        let content = UNMutableNotificationContent()
-        content.title = type.title
-        content.body = type.body
-        content.sound = .default
+    func fire(_ type: ReminderType, detail: String? = nil) {
+        let content = content(for: type, detail: detail)
 
         let request = UNNotificationRequest(
             identifier: "\(type.identifier).\(Date().timeIntervalSince1970)",
@@ -58,15 +80,10 @@ final class NotificationModule {
     }
 
     func schedule(_ type: ReminderType, inSeconds seconds: Double) {
-        let content = UNMutableNotificationContent()
-        content.title = type.title
-        content.body = type.body
-        content.sound = .default
-
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, seconds), repeats: false)
         let request = UNNotificationRequest(
             identifier: type.identifier,
-            content: content,
+            content: content(for: type, detail: nil),
             trigger: trigger
         )
 
@@ -80,5 +97,43 @@ final class NotificationModule {
 
     func cancelAll() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+
+    // Shared content builder — tiers priority (posture: sound + active) vs
+    // soft (water/walk/sunlight: silent + passive) notifications.
+    func content(for type: ReminderType, detail: String?) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = type.title
+        content.body = detail.map { "\(type.body) \($0)" } ?? type.body
+        if type.isPriority {
+            content.sound = .default
+            content.interruptionLevel = .active
+        } else {
+            content.sound = nil
+            content.interruptionLevel = .passive
+        }
+        if type == .water {
+            content.categoryIdentifier = Self.waterCategoryId
+        }
+        return content
+    }
+
+    // MARK: - UNUserNotificationCenterDelegate
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                 willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        let isPriority = notification.request.content.interruptionLevel == .active
+        return isPriority ? [.banner, .sound] : [.banner]
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                 didReceive response: UNNotificationResponse) async {
+        guard response.actionIdentifier == Self.waterLogActionId,
+              let container else { return }
+        await MainActor.run {
+            let context = container.mainContext
+            context.insert(WaterEntry())
+            try? context.save()
+        }
     }
 }

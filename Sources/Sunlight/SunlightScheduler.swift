@@ -32,11 +32,7 @@ final class SunlightScheduler {
         let interval = date.timeIntervalSinceNow
         guard interval > 60 else { return }  // skip if already past or <1min away
 
-        let content = UNMutableNotificationContent()
-        content.title = ReminderType.sunlight.title
-        content.body = ReminderType.sunlight.body
-        content.sound = .default
-
+        let content = notifications.content(for: .sunlight, detail: nil)
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request)

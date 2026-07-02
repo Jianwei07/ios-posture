@@ -10,6 +10,17 @@ struct SynthesisApp: App {
     @Environment(\.openWindow) private var openWindow
     #endif
 
+    // One explicit container (rather than the `.modelContainer(for:)`
+    // convenience) so NotificationModule can share the same store the UI
+    // observes — the "Log 250 ml" notification action writes here.
+    private let container: ModelContainer
+
+    init() {
+        let container = try! ModelContainer(for: PostureSession.self, UserSettings.self, WaterEntry.self)
+        NotificationModule.shared.configure(container: container)
+        self.container = container
+    }
+
     var body: some Scene {
         #if os(macOS)
         WindowGroup(id: "main") {
@@ -39,7 +50,7 @@ struct SynthesisApp: App {
 
     private var appContent: some View {
         ContentView()
-            .modelContainer(for: [PostureSession.self, UserSettings.self, WaterEntry.self])
+            .modelContainer(container)
     }
 }
 

@@ -1,6 +1,6 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
+# Repo is XcodeGen-managed (project.yml -> Synthesis.xcodeproj), not an SPM
+# package — there is no Package.swift, so `swift build`/`swift test` can
+# never work here. Generate the project, then build/test with xcodebuild.
 name: Swift
 
 on:
@@ -11,12 +11,19 @@ on:
 
 jobs:
   build:
-
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_16.app
+    - name: Install XcodeGen
+      run: brew install xcodegen
+    - name: Generate project
+      run: xcodegen generate
+    - name: Build (macOS)
+      run: xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' build
+    - name: Test (macOS, native)
+      run: xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' test
+    - name: Build (iOS Simulator)
+      run: xcodebuild -project Synthesis.xcodeproj -scheme Synthesis -destination 'generic/platform=iOS Simulator' build

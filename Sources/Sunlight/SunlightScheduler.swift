@@ -18,7 +18,12 @@ final class SunlightScheduler {
     func scheduleForToday() async {
         guard settings.sunlightEnabled else { return }
         let windows = await calculator.compute()
-        nextNudge = windows.morningNudge
+        // Next *upcoming* window — always storing the morning nudge made the
+        // Now chip say "done today" all afternoon while the afternoon nudge
+        // was still pending. Nil both passed → chip shows "done today".
+        nextNudge = [windows.morningNudge, windows.afternoonNudge]
+            .filter { $0 > .now }
+            .min() ?? windows.afternoonNudge
         scheduleIfFuture(windows.morningNudge, id: "sunlight.morning")
         scheduleIfFuture(windows.afternoonNudge, id: "sunlight.afternoon")
     }

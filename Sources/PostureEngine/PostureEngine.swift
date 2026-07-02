@@ -40,12 +40,9 @@ final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionMana
 
     func start(onSample: @escaping (Double) -> Void) {
         guard manager.isDeviceMotionAvailable else { return }
-        manager.startDeviceMotionUpdates(to: queue) { motion, error in
-            guard let motion, error == nil else { return }
-            if !self.connected {
-                self.connected = true
-                self.onAvailabilityChanged?(true)
-            }
+        manager.startDeviceMotionUpdates(to: queue) { [weak self] motion, error in
+            guard let self, let motion, error == nil else { return }
+            if !self.connected { self.setConnected(true) }
             onSample(motion.attitude.pitch * 180 / .pi)
         }
     }
@@ -54,14 +51,24 @@ final class HeadphoneMotionSource: NSObject, MotionSource, CMHeadphoneMotionMana
         manager.stopDeviceMotionUpdates()
     }
 
+    // `connected` + onAvailabilityChanged drive SessionManager.evaluate(),
+    // which mutates @Observable state and writes SwiftData — main-thread only.
+    // Sources of these events (the motion queue, CoreMotion delegate callbacks)
+    // make no threading guarantee, so funnel every change through main.
+    private func setConnected(_ value: Bool) {
+        DispatchQueue.main.async {
+            guard self.connected != value else { return }
+            self.connected = value
+            self.onAvailabilityChanged?(value)
+        }
+    }
+
     // Delegate push — AirPods connected / removed.
     func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
-        connected = true
-        onAvailabilityChanged?(true)
+        setConnected(true)
     }
     func headphoneMotionManagerDidDisconnect(_ manager: CMHeadphoneMotionManager) {
-        connected = false
-        onAvailabilityChanged?(false)
+        setConnected(false)
     }
 }
 
@@ -82,6 +89,8 @@ final class PostureEngine {
 
     let source: MotionSource
     private var pitchFilter = MotionFilter()
+    private var startedAt: Date?
+    private let spinUpGraceSeconds: TimeInterval = 4
 
     // Calibration only runs after recalibrate() — never silently on start().
     private var calibrationSamples: [Double] = []
@@ -129,6 +138,7 @@ final class PostureEngine {
         guard source.isAvailable else { return }
         pitchFilter.reset()
         lastSampleAt = nil
+        startedAt = Date()
         source.start { [weak self] pitch in self?.process(pitch: pitch) }
     }
 
@@ -137,9 +147,16 @@ final class PostureEngine {
     }
 
     // True while samples are arriving (AirPods in ear and streaming).
+    // Before the first sample, a spin-up grace window counts as receiving —
+    // AirPods motion takes a couple of seconds to start streaming after
+    // start(), and without the grace the 1Hz heartbeat sees "stale" and
+    // flaps the session active↔paused until the first sample lands.
     func isReceiving(timeout: TimeInterval = 1.5) -> Bool {
-        guard let last = lastSampleAt else { return false }
-        return Date().timeIntervalSince(last) < timeout
+        if let last = lastSampleAt {
+            return Date().timeIntervalSince(last) < timeout
+        }
+        guard let started = startedAt else { return false }
+        return Date().timeIntervalSince(started) < spinUpGraceSeconds
     }
 
     // Runs on the motion source's queue. Only the filter (single-owner there)

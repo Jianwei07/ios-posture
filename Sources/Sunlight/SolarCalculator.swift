@@ -34,15 +34,24 @@ final class SolarCalculator: NSObject, CLLocationManagerDelegate {
             return fallback
         }
         return await withCheckedContinuation { cont in
-            self.continuation = cont
-            manager.requestWhenInUseAuthorization()
-            manager.requestLocation()
-            // 3s timeout — if location fails to resolve, use fallback.
-            // Routed through main so it can never race the delegate's finish
-            // call (both now touch `continuation` only from main).
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                guard let self, self.continuation != nil else { return }
-                self.finish(fallback)
+            // Everything that touches `continuation` runs on main — the
+            // delegate/timeout finish paths already do; this hop closes the
+            // race where compute()'s caller executor assigned it concurrently.
+            DispatchQueue.main.async { [weak self] in
+                // A second overlapping compute() must not silently overwrite
+                // (and thereby leak/hang) the first continuation.
+                guard let self, self.continuation == nil else {
+                    cont.resume(returning: fallback)
+                    return
+                }
+                self.continuation = cont
+                self.manager.requestWhenInUseAuthorization()
+                self.manager.requestLocation()
+                // 3s timeout — if location fails to resolve, use fallback.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                    guard let self, self.continuation != nil else { return }
+                    self.finish(fallback)
+                }
             }
         }
     }

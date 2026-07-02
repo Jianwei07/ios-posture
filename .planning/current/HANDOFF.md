@@ -61,7 +61,17 @@ Verification: `xcodebuild -scheme SynthesisMac build` ✓, `xcodebuild -scheme S
 
 Verification: offscreen `ImageRenderer` sweep (scratchpad script compiling the 5 DesignSystem files standalone) rendered bend 0/0.3/0.6/1.0 at 200pt across all 3 state colors + 64pt thumbnail — visually inspected 2 iterations (initial + droop-coefficient tune). `xcodebuild -scheme SynthesisMac build` ✓, iOS Simulator build ✓, `xcodebuild -scheme SynthesisMac test` ✓ 32/32. Live in-app animation feel (spring interpolation at 200pt with real bend stream) still worth a hands-on look.
 
-**Spec session 13 complete: all 4 leaves done on `feat/macos-pivot`. Remaining before ship: manual on-device QA (menu bar glyph, water notification action, plant animation feel).**
+### Post-session bug sweep — DONE (2026-07-02, Fable)
+User asked for a bug hunt after leaf 04. Four real bugs found and fixed:
+- `HeadphoneMotionSource`: motion-update closure captured `self` strongly (retain cycle via manager→closure→self→manager) and fired `onAvailabilityChanged` from the motion queue — `SessionManager.evaluate()` then mutated `@Observable` state and inserted SwiftData models off-main. CoreMotion delegate callbacks have no main-thread guarantee either. All connect-state changes now funnel through `setConnected(_:)` which hops to main and de-dupes.
+- `PostureEngine.isReceiving()`: `start()` resets `lastSampleAt = nil`, but AirPods motion takes ~1-2s to begin streaming — the next 1Hz heartbeat saw "not receiving" and flapped the session active↔paused (engine start/stop churn) until the first sample landed. Added a 4s spin-up grace window (`startedAt`) that counts as receiving until the first sample.
+- `SunlightScheduler.nextNudge`: always stored the *morning* nudge, so the Now chip said "done today" all afternoon while the afternoon nudge was still pending. Now picks the next upcoming window.
+- `SolarCalculator.compute()`: `continuation` was assigned from the caller's executor while the timeout/delegate finish paths ran on main (race), and a second overlapping `compute()` would overwrite and leak the first continuation (hung task forever). All continuation access now hops to main; an overlapping call resolves immediately with the fallback.
+Also: fixed the `var stable written but never read` test warning in MotionFilterTests (asserts the settled baseline now).
+
+Verification: mac build ✓ (one pre-existing-class Sendable warning in SolarCalculator, Swift 6 audit explicitly out of scope), iOS Simulator build ✓, 32/32 native tests ✓.
+
+**Spec session 13 complete: all 4 leaves + bug sweep done on `feat/macos-pivot`, PR opened to main. Remaining before ship: manual on-device QA (menu bar glyph, water notification action, plant animation feel).**
 
 ---
 

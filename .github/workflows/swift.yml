@@ -4,14 +4,23 @@
 name: Swift
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: macos-15
+    timeout-minutes: 30
 
     steps:
     - uses: actions/checkout@v4
@@ -21,6 +30,8 @@ jobs:
       run: brew install xcodegen
     - name: Generate project
       run: xcodegen generate
+    - name: Check generated project is committed
+      run: git diff --exit-code Synthesis.xcodeproj
     - name: Build (macOS)
       run: xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac -destination 'platform=macOS' build
     - name: Test (macOS, native)

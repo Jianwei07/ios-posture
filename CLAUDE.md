@@ -29,7 +29,7 @@ Session/          ← SessionManager: ONE 1Hz heartbeat (connect/pause/clock/rec
 Models/           ← SwiftData: PostureSession, PostureReading (downsampled), UserSettings, WaterEntry
 Reminders/        ← ReminderScheduler: escalation banner (sustained slouch) + water/walk intervals
 Notifications/    ← UNNotification + in-app overlay
-DesignSystem/     ← Theme (Sage tokens), SpineIcon (procedural spine+head, 3 poses, angle-driven)
+DesignSystem/     ← Theme (Sage tokens), Plants (procedural Canvas mascots, bend-driven: Sunflower/Monstera)
 Views/            ← SwiftUI: NowView, TrendsView, SettingsView, OnboardingFlow, CalibrateView, DisconnectedView
 ```
 

@@ -54,11 +54,10 @@ convention — ship with SF Pro.
 Procedural SwiftUI Canvas — zero image assets. Each plant maps `bend` (0=aligned, 1=slouch)
 to its own visual: stem tilts, leaves/petals droop, color warms sage→clay→terracotta.
 
-Three plants (user-selectable in Settings → Plant mascot):
+Two plants (user-selectable in Settings → Plant mascot):
 
 - **Sunflower** 🌻 — stem + round head + petals. Head bows forward as you slouch.
-- **Cactus** 🌵 — rounded body + arms. Body leans, arms sag with bend.
-- **Monstera** 🪴 — stem + split leaves. Leaves droop forward as bend grows.
+- **Monstera** 🪴 — stems + split leaves. Stems tilt forward and leaves follow as bend grows.
 
 Each plant: `bend=0` = tall/happy (sage), `bend=1` = drooped/warm (terracotta).
 Spring between poses (response 0.5, bounce 0.2). Reduced Motion drops the animation.

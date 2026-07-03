@@ -20,6 +20,12 @@ final class AppModel {
     private(set) var menuBarState: MenuBarState = .idle
     private var menuBarReducer = MenuBarReducer()
 
+    // Was a computed pass-through to `engine.isHeadphoneMotionConnected`
+    // (a plain, non-observable Bool) — the connection chip only looked live
+    // because the old per-sample engine writes constantly re-rendered it.
+    // Now a transition-gated stored property, updated on the 1Hz heartbeat.
+    private(set) var isConnected: Bool = false
+
     init(settings: UserSettings) {
         self.settings = settings
         let source: MotionSource
@@ -47,6 +53,7 @@ final class AppModel {
         #if targetEnvironment(simulator)
         self.simSource = sim
         #endif
+        self.isConnected = eng.isHeadphoneMotionConnected
     }
 
     // Begin the single 1Hz heartbeat (connect/pause/clock/record/remind).
@@ -90,12 +97,17 @@ final class AppModel {
         engine.classifier.threshold = settings.sensitivity.degrees
     }
 
-    // Only assigns on a real transition — the reducer runs every heartbeat
-    // second, but @Observable should only re-render the menu bar label when
-    // the glyph actually needs to change.
+    // Runs on every heartbeat (1Hz timer + immediate on connect/disconnect
+    // push, since `SessionManager.begin()` wires `onAvailabilityChanged` to
+    // call `evaluate()` too) — but only assigns `menuBarState`/`isConnected`
+    // on a real transition, so @Observable only re-renders their readers
+    // when something actually changed.
     private func updateMenuBarState(sessionState: SessionState, postureState: PostureState) {
         let newState = menuBarReducer.reduce(sessionState: sessionState, postureState: postureState, now: .now)
         if newState != menuBarState { menuBarState = newState }
+
+        let connected = engine.isHeadphoneMotionConnected
+        if connected != isConnected { isConnected = connected }
     }
 
     // Short status line for the MenuBarExtra dropdown.
@@ -108,10 +120,7 @@ final class AppModel {
         }
     }
 
-    // True when compatible AirPods motion is connected/streaming (drives the Disconnected gate).
-    var isConnected: Bool { engine.isHeadphoneMotionConnected }
-
-    // Live bend for the Home spine mirror.
+    // Live bend for the Home plant mascot.
     var liveBend: Double {
         guard engine.neutralPitch != nil else { return 0 }
         let span = (engine.classifier.threshold + engine.classifier.slouchGap) + 4

@@ -80,7 +80,9 @@ final class PostureEngine {
     private(set) var postureState: PostureState = .aligned
     private(set) var calibrationProgress: Double = 0
     private(set) var neutralPitch: Double?
-    private(set) var lastSampleAt: Date?
+    // Polled by isReceiving()/SessionManager at 1Hz, never rendered —
+    // observation-ignored so the per-sample Date() write can't invalidate views.
+    @ObservationIgnored private(set) var lastSampleAt: Date?
     private(set) var calibrationSpread: Double = 0
 
     var classifier: PostureClassifier
@@ -97,6 +99,12 @@ final class PostureEngine {
     private let calibrationTarget = 100   // ~5s @ 20Hz
     private let maxCalibrationSpread: Double = 4.0  // degrees; reject if head moved too much
     private var isCalibrating = false
+
+    // @Observable notifies on every set, even to an equal value — so a
+    // resting head (sub-quantum sensor jitter) would otherwise still
+    // invalidate every observing view ~20x/s. 0.25° is well under what
+    // liveBend's ~18°+ span or the Int-degree display can show.
+    private let pitchQuantum: Double = 0.25
 
     init(classifier: PostureClassifier = PostureClassifier(), source: MotionSource) {
         self.classifier = classifier
@@ -186,8 +194,9 @@ final class PostureEngine {
         let state = classifier.classify(filteredPitch: smoothPitch, neutralPitch: neutralPitch)
 
         lastSampleAt = Date()
-        currentPitch = smoothPitch
-        postureState = state
-        calibrationProgress = min(1, Double(calibrationSamples.count) / Double(calibrationTarget))
+        if abs(smoothPitch - currentPitch) >= pitchQuantum { currentPitch = smoothPitch }
+        if state != postureState { postureState = state }
+        let progress = min(1, Double(calibrationSamples.count) / Double(calibrationTarget))
+        if progress != calibrationProgress { calibrationProgress = progress }
     }
 }

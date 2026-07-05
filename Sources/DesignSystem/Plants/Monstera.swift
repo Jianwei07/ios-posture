@@ -1,7 +1,8 @@
 import SwiftUI
 
 // Monstera — terracotta pot + 2 stems fanning into split-leaf canopy.
-// bend=0: upright fanned canopy. bend=1: stems curve forward, leaves droop.
+// bend=0: upright fanned canopy. bend=1: stems rotate down and outward,
+// leaves follow the stem they're attached to instead of swinging on their own.
 struct Monstera: Plant {
     var bend: Double
     var color: Color
@@ -48,24 +49,31 @@ struct Monstera: Plant {
                                              width: (potTopW - w * 0.02) * 2, height: h * 0.035)),
                      with: .color(soilColor))
 
-            // Stems fan from pot; droop right + down as bend grows.
+            // Stems fan from the pot. Bend rotates each stem's own emission
+            // angle further away from vertical (signed by which side it
+            // already leans), so the stem itself visibly droops down and
+            // outward — not just its tip nudged a few points sideways.
             let baseY = potTop
-            let droopX = b * w * 0.10
-            let droopY = b * h * 0.08
+            let bendAngle = b * 0.45          // rad of extra lean at full slouch (~26°)
+            let ctrlBendFrac = 0.35           // fraction of that lean the mid-stem control point picks up
 
-            let stems: [(angle: Double, len: Double)] = [
-                (-0.38, 0.52),
-                ( 0.28, 0.56),
+            let stems: [(angle: Double, len: Double, bendScale: Double)] = [
+                (-0.38, 0.52, 1.1),
+                ( 0.28, 0.56, 1.0),
             ]
             let showHoles = size.width >= 80  // holes alias into noise at thumbnail scale
 
             for (i, stem) in stems.enumerated() {
                 let isBack = i == 0
                 let alpha = isBack ? 0.82 : 1.0
-                let tipX = cx + sin(stem.angle) * stem.len * w + droopX
-                let tipY = baseY - cos(stem.angle) * stem.len * h + droopY
-                let ctrlX = cx + sin(stem.angle) * stem.len * w * 0.45 + droopX * 0.3
-                let ctrlY = baseY - cos(stem.angle) * stem.len * h * 0.5 + droopY * 0.2
+                let sign: Double = stem.angle < 0 ? -1 : 1
+                let stemBend = sign * bendAngle * stem.bendScale
+                let tipA = stem.angle + stemBend
+                let tipX = cx + sin(tipA) * stem.len * w
+                let tipY = baseY - cos(tipA) * stem.len * h
+                let ctrlA = stem.angle + stemBend * ctrlBendFrac
+                let ctrlX = cx + sin(ctrlA) * stem.len * w * 0.45
+                let ctrlY = baseY - cos(ctrlA) * stem.len * h * 0.5
                 var sPath = Path()
                 sPath.move(to: CGPoint(x: cx, y: baseY))
                 sPath.addQuadCurve(to: CGPoint(x: tipX, y: tipY),
@@ -75,7 +83,10 @@ struct Monstera: Plant {
                                               lineCap: .round))
 
                 // Leaves along stem, base→tip so upper leaves overlap lower.
-                // Droop is t-weighted: leaves farther from base rotate more.
+                // Leaf rotation follows the stem's own local bend at that t
+                // (more of it near the tip) plus a small residual per-leaf
+                // droop, so the canopy rides the stem instead of swinging
+                // on its own.
                 let leafSizes: [(t: Double, len: Double, off: Double)] = [
                     (0.50, 0.20, -0.6),
                     (0.72, 0.24,  0.5),
@@ -85,7 +96,8 @@ struct Monstera: Plant {
                     let u = 1 - ll.t
                     let lx = u*u*cx + 2*u*ll.t*ctrlX + ll.t*ll.t*tipX
                     let ly = u*u*baseY + 2*u*ll.t*ctrlY + ll.t*ll.t*tipY
-                    let leafAngle = stem.angle + ll.off + b * (0.30 + 0.45 * ll.t)
+                    let follow = stemBend * (ctrlBendFrac + (1 - ctrlBendFrac) * ll.t)
+                    let leafAngle = stem.angle + ll.off + follow + sign * b * 0.10 * ll.t
                     drawLeaf(ctx: ctx, base: CGPoint(x: lx, y: ly),
                              angle: leafAngle, length: ll.len * w,
                              w: w, fill: color.opacity(alpha),

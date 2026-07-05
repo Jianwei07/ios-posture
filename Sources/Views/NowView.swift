@@ -1,8 +1,8 @@
 import SwiftUI
 import SwiftData
 
-// Home · Now — the live hero. Spine mirrors posture; word + colour + angle move
-// together. Water/walk are secondary chips. See design.md.
+// Home · Now — the live hero. Plant mascot mirrors posture; word + colour +
+// angle move together. Water/walk are secondary chips. See design.md.
 struct NowView: View {
     @Environment(AppModel.self) private var app
     @Environment(\.modelContext) private var modelContext
@@ -211,28 +211,35 @@ private struct HabitChip: View {
     var action: (() -> Void)?
 
     var body: some View {
-        Button { action?() } label: {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(label).font(Theme.Font.caption()).foregroundStyle(Theme.Palette.inkFaint)
-                    Spacer()
-                    Text(value).font(Theme.Font.number(15)).foregroundStyle(Theme.Palette.ink)
-                }
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Capsule().fill(Theme.Palette.inkFaint.opacity(0.18))
-                        Capsule().fill(tint)
-                            .frame(width: geo.size.width * max(0, min(1, progress)))
-                    }
-                }
-                .frame(height: 5)
-            }
-            .padding(12)
-            .frame(maxWidth: .infinity)
-            .card()
+        // Only wrap in a Button when there's an action to run — a disabled
+        // Button still looks pressable and gives a tap zero feedback, which
+        // reads as an unresponsive control rather than a non-interactive one.
+        if let action {
+            Button(action: action) { chipContent }.pressable()
+        } else {
+            chipContent
         }
-        .pressable()
-        .disabled(action == nil)
+    }
+
+    private var chipContent: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(label).font(Theme.Font.caption()).foregroundStyle(Theme.Palette.inkFaint)
+                Spacer()
+                Text(value).font(Theme.Font.number(15)).foregroundStyle(Theme.Palette.ink)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Theme.Palette.inkFaint.opacity(0.18))
+                    Capsule().fill(tint)
+                        .frame(width: geo.size.width * max(0, min(1, progress)))
+                }
+            }
+            .frame(height: 5)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity)
+        .card()
     }
 }
 

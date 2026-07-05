@@ -79,22 +79,6 @@ final class NotificationModule: NSObject, UNUserNotificationCenterDelegate {
         )
     }
 
-    func schedule(_ type: ReminderType, inSeconds seconds: Double) {
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, seconds), repeats: false)
-        let request = UNNotificationRequest(
-            identifier: type.identifier,
-            content: content(for: type, detail: nil),
-            trigger: trigger
-        )
-
-        UNUserNotificationCenter.current().add(request)
-    }
-
-    func cancel(_ type: ReminderType) {
-        UNUserNotificationCenter.current()
-            .removePendingNotificationRequests(withIdentifiers: [type.identifier])
-    }
-
     func cancelAll() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }

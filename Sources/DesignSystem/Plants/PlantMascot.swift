@@ -1,26 +1,17 @@
 import SwiftUI
 
 // Plant mascot system — each plant maps `bend` (0=aligned, 1=slouch) to its own visual.
-// Add a new plant: conform to Plant, add to PlantKind enum, register in PlantFactory.
-// See design.md — the spine icon is replaced by a plant that mirrors posture.
+// Add a new plant: conform to Plant, add to PlantKind enum, register in the switch below.
+// See design.md — a plant mirrors live posture instead of an abstract icon.
 
 enum PlantKind: String, CaseIterable, Identifiable {
-    case sunflower, cactus, monstera
+    case sunflower, monstera
     var id: String { rawValue }
 
     var label: String {
         switch self {
         case .sunflower: return "Sunflower"
-        case .cactus:    return "Cactus"
         case .monstera:  return "Monstera"
-        }
-    }
-
-    var emoji: String {
-        switch self {
-        case .sunflower: return "🌻"
-        case .cactus:    return "🌵"
-        case .monstera:  return "🪴"
         }
     }
 }
@@ -49,7 +40,6 @@ struct PlantMascot: View {
         Group {
             switch kind {
             case .sunflower: Sunflower(bend: bend, color: color)
-            case .cactus:    Cactus(bend: bend, color: color)
             case .monstera:  Monstera(bend: bend, color: color)
             }
         }

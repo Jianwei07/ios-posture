@@ -91,6 +91,66 @@ struct PostureEngineCalibrationTests {
         engine.stop()
     }
 
+    // `@Observable` notifies on every set, even to an equal value, so
+    // `ingest()` compares before writing `currentPitch`/`postureState`/
+    // `calibrationProgress` — these pin that gating without breaking real
+    // updates. (Root cause of the button-responsiveness fix: a resting head
+    // was re-triggering every observing view ~20x/s via `lastSampleAt`
+    // alone, compounded by these three re-publishing an unchanged value on
+    // every sample.)
+    @Test func subQuantumJitterDoesNotMoveCurrentPitch() async {
+        let source = FakeMotionSource()
+        let engine = PostureEngine(source: source)
+        var expectedFilter = MotionFilter()
+        let initialPitch = expectedFilter.filter(-10.0)
+        engine.start()
+        source.emit(-10.0)
+        await drainMain()
+        #expect(abs(engine.currentPitch - initialPitch) < 0.001)
+
+        let jitterPitch = -10.0 + (0.20 / expectedFilter.alpha)
+        let ignoredPitch = expectedFilter.filter(jitterPitch)
+        #expect(abs(ignoredPitch - initialPitch) < 0.25)
+        source.emit(jitterPitch)
+        await drainMain()
+        #expect(abs(engine.currentPitch - initialPitch) < 0.001)
+        engine.stop()
+    }
+
+    @Test func realMotionStillUpdatesCurrentPitch() async {
+        let source = FakeMotionSource()
+        let engine = PostureEngine(source: source)
+        var expectedFilter = MotionFilter()
+        let initialPitch = expectedFilter.filter(-10.0)
+        engine.start()
+        source.emit(-10.0)
+        await drainMain()
+        #expect(abs(engine.currentPitch - initialPitch) < 0.001)
+
+        let movedRawPitch = -10.0 + (0.30 / expectedFilter.alpha)
+        let expectedPitch = expectedFilter.filter(movedRawPitch)
+        #expect(abs(expectedPitch - initialPitch) >= 0.25)
+        source.emit(movedRawPitch)
+        await drainMain()
+        #expect(abs(engine.currentPitch - expectedPitch) < 0.001)
+        engine.stop()
+    }
+
+    @Test func postureStateTransitionsStillPropagate() async {
+        let source = FakeMotionSource()
+        let engine = PostureEngine(source: source)
+        engine.seedBaseline(0)
+        engine.start()
+        for _ in 0..<100 { source.emit(0) }
+        await drainMain()
+        #expect(engine.postureState == .aligned)
+
+        for _ in 0..<100 { source.emit(-30) }
+        await drainMain()
+        #expect(engine.postureState == .slouch)
+        engine.stop()
+    }
+
     @Test func sessionDoesNotStartFromCapabilityOnly() {
         let source = FakeMotionSource()
         source.isAvailable = true

@@ -29,13 +29,13 @@ Session/          ← SessionManager: ONE 1Hz heartbeat (connect/pause/clock/rec
 Models/           ← SwiftData: PostureSession, PostureReading (downsampled), UserSettings, WaterEntry
 Reminders/        ← ReminderScheduler: escalation banner (sustained slouch) + water/walk intervals
 Notifications/    ← UNNotification + in-app overlay
-DesignSystem/     ← Theme (Sage tokens), SpineIcon (procedural spine+head, 3 poses, angle-driven)
+DesignSystem/     ← Theme (Sage tokens), Plants (procedural Canvas mascots, bend-driven: Sunflower/Monstera)
 Views/            ← SwiftUI: NowView, TrendsView, SettingsView, OnboardingFlow, CalibrateView, DisconnectedView
 ```
 
 Data flow: `PostureEngine → SessionManager → ReminderScheduler → NotificationModule`.
 Connectivity: `CMHeadphoneMotionManagerDelegate` (connect/disconnect push) + 1Hz availability/staleness check. NO separate watchdog/polling timers.
-SwiftData: new non-optional `@Model` fields MUST have inline defaults (lightweight migration).
+SwiftData: new non-optional `@Model` fields MUST have inline defaults (lightweight migration). Do not delete/rename persisted fields without a migration plan; keep unused fields if local stores may exist.
 
 ## Constraints
 

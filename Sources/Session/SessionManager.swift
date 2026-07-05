@@ -27,6 +27,7 @@ final class SessionManager {
     var onHeartbeat: ((SessionState, PostureState) -> Void)?
 
     // Running accumulators → accurate score without storing every second.
+    private var pitchSum = 0.0
     private var sampleCount = 0
     private var poorCount = 0
     private var secondsSinceRecord = 0
@@ -122,6 +123,7 @@ final class SessionManager {
         guard engine.neutralPitch != nil, engine.lastSampleAt != nil else { return }
 
         activeSessionSeconds += 1
+        pitchSum += engine.currentPitch
         sampleCount += 1
         if engine.postureState == .slouch { poorCount += 1 }
 
@@ -140,11 +142,12 @@ final class SessionManager {
         guard let session = currentSession else { return }
         session.endTime = .now
         if sampleCount > 0 {
+            session.avgPitch = pitchSum / Double(sampleCount)
             session.poorPosturePct = Double(poorCount) / Double(sampleCount)
             session.score = max(0, 100 - Int(session.poorPosturePct * 100))
         }
         try? modelContext?.save()
         currentSession = nil
-        sampleCount = 0; poorCount = 0; secondsSinceRecord = 0
+        pitchSum = 0; sampleCount = 0; poorCount = 0; secondsSinceRecord = 0
     }
 }

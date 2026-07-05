@@ -101,34 +101,38 @@ struct PostureEngineCalibrationTests {
     @Test func subQuantumJitterDoesNotMoveCurrentPitch() async {
         let source = FakeMotionSource()
         let engine = PostureEngine(source: source)
+        var expectedFilter = MotionFilter()
+        let initialPitch = expectedFilter.filter(-10.0)
         engine.start()
         source.emit(-10.0)
         await drainMain()
-        #expect(abs(engine.currentPitch - (-10.0)) < 0.001)
+        #expect(abs(engine.currentPitch - initialPitch) < 0.001)
 
-        // Filtered result for -9.0 after settling at -10.0:
-        // 0.15*(-9) + 0.85*(-10) = -9.85 — a 0.15° delta, under the 0.25°
-        // quantum, so the observable shouldn't move.
-        source.emit(-9.0)
+        let jitterPitch = -10.0 + (0.20 / expectedFilter.alpha)
+        let ignoredPitch = expectedFilter.filter(jitterPitch)
+        #expect(abs(ignoredPitch - initialPitch) < 0.25)
+        source.emit(jitterPitch)
         await drainMain()
-        #expect(abs(engine.currentPitch - (-10.0)) < 0.001)
+        #expect(abs(engine.currentPitch - initialPitch) < 0.001)
         engine.stop()
     }
 
     @Test func realMotionStillUpdatesCurrentPitch() async {
         let source = FakeMotionSource()
         let engine = PostureEngine(source: source)
+        var expectedFilter = MotionFilter()
+        let initialPitch = expectedFilter.filter(-10.0)
         engine.start()
         source.emit(-10.0)
         await drainMain()
-        #expect(abs(engine.currentPitch - (-10.0)) < 0.001)
+        #expect(abs(engine.currentPitch - initialPitch) < 0.001)
 
-        // Filtered result for -8.0 after settling at -10.0:
-        // 0.15*(-8) + 0.85*(-10) = -9.7 — a 0.3° delta, over the quantum,
-        // so the observable should move.
-        source.emit(-8.0)
+        let movedRawPitch = -10.0 + (0.30 / expectedFilter.alpha)
+        let expectedPitch = expectedFilter.filter(movedRawPitch)
+        #expect(abs(expectedPitch - initialPitch) >= 0.25)
+        source.emit(movedRawPitch)
         await drainMain()
-        #expect(abs(engine.currentPitch - (-9.7)) < 0.001)
+        #expect(abs(engine.currentPitch - expectedPitch) < 0.001)
         engine.stop()
     }
 

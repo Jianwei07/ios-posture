@@ -5,8 +5,12 @@ import SwiftUI
 // See design.md — a plant mirrors live posture instead of an abstract icon.
 
 enum PlantKind: String, CaseIterable, Identifiable {
-    case sunflower, monstera
+    // Declaration order = picker order: Sunflower default first, the
+    // national-flower roster, then cosmetic-only Monstera last.
+    case sunflower
     case vandaOrchid, hibiscus, melatiJasmine, sampaguita, lotus
+    case goldenShower, dokChampa, rumduol, padauk, rose
+    case monstera
     var id: String { rawValue }
 
     var label: String {
@@ -18,6 +22,11 @@ enum PlantKind: String, CaseIterable, Identifiable {
         case .melatiJasmine: return "Melati jasmine"
         case .sampaguita:    return "Sampaguita"
         case .lotus:         return "Lotus"
+        case .goldenShower:  return "Golden shower"
+        case .dokChampa:     return "Dok Champa"
+        case .rumduol:       return "Rumduol"
+        case .padauk:        return "Padauk"
+        case .rose:          return "Rose"
         }
     }
 
@@ -31,6 +40,11 @@ enum PlantKind: String, CaseIterable, Identifiable {
         case .melatiJasmine: return "Indonesia"
         case .sampaguita:    return "Philippines"
         case .lotus:         return "Vietnam"
+        case .goldenShower:  return "Thailand"
+        case .dokChampa:     return "Laos"
+        case .rumduol:       return "Cambodia"
+        case .padauk:        return "Myanmar"
+        case .rose:          return "USA"
         }
     }
 }
@@ -65,6 +79,11 @@ struct PlantMascot: View {
             case .melatiJasmine: MelatiJasmine(bend: bend, color: color)
             case .sampaguita:    Sampaguita(bend: bend, color: color)
             case .lotus:         Lotus(bend: bend, color: color)
+            case .goldenShower:  GoldenShower(bend: bend, color: color)
+            case .dokChampa:     DokChampa(bend: bend, color: color)
+            case .rumduol:       Rumduol(bend: bend, color: color)
+            case .padauk:        Padauk(bend: bend, color: color)
+            case .rose:          Rose(bend: bend, color: color)
             }
         }
         .animation(Theme.Motion.pose, value: bend)

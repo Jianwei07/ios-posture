@@ -28,6 +28,7 @@
 		2CE60710E86BAE018AE59ABF /* Monstera.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69593EB47D66F038545CAF0 /* Monstera.swift */; };
 		2D54E31D8EB6E4E4E1CD4B6E /* Sunflower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1288F1A5E07F1598670506 /* Sunflower.swift */; };
 		303776DC368381B11986E591 /* MenuBarStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC359FB08AB5D6B42D1D14EA /* MenuBarStateTests.swift */; };
+		306CA8714F123456D1192B5A /* Rumduol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56315FA3F6A54333F14AEE79 /* Rumduol.swift */; };
 		34E6ED75CD9031D1E91FE9E6 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CB4F6112A86304628E4F36 /* SessionManager.swift */; };
 		377D85C9B5A7A5C731204902 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CAF54E676B437C3870AAF9 /* ContentView.swift */; };
 		3970A8D1ED711E47BFCF1C1E /* MenuBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC02BB88CF1E7E5C7762B01 /* MenuBarState.swift */; };
@@ -42,12 +43,15 @@
 		4FB3428AA9FE063F94E34DE4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E93BDDC49F4CAB11E49BAB /* Theme.swift */; };
 		50D3BB0F28CF7CA177D4D341 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE96556B7C778F797B1D0CA /* SessionState.swift */; };
 		50DE7F6E13F9D252923B5184 /* VandaOrchid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0002BD60B2AE26A044F70AA0 /* VandaOrchid.swift */; };
+		510D9E59B00BCB10E8BBF33E /* Rose.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC194A7CA49AEFAF9544E5F7 /* Rose.swift */; };
 		51164376F9C462A35B2098E0 /* Lotus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8824413888A97E294A823A42 /* Lotus.swift */; };
 		530C2E6C338A617104173E4D /* PostureEngineCalibrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0146062510D6296BEAD5EC07 /* PostureEngineCalibrationTests.swift */; };
 		54B8C221572CBEB299671501 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E93BDDC49F4CAB11E49BAB /* Theme.swift */; };
+		579BCEA6D1BEC4C89CC731CF /* DokChampa.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2EE4AFBE6C9EEF602513 /* DokChampa.swift */; };
 		5AB33C7117C54A05021155C7 /* SynthesisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C1349A6E6426322435F153 /* SynthesisApp.swift */; };
 		5AEBA15F00E2287444F759C7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6041CD6092FFA063455AA /* SettingsView.swift */; };
 		5C1A212125A2196556065E5B /* MenuBarStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC359FB08AB5D6B42D1D14EA /* MenuBarStateTests.swift */; };
+		5F004DB0BDB26DC53C3417BD /* Padauk.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E12F48F77B252593EBCEC /* Padauk.swift */; };
 		60E0CFC79E5488961AD61C3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CAF54E676B437C3870AAF9 /* ContentView.swift */; };
 		637B28C8ADB826A125857493 /* PostureReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C175572A062064D96E4747 /* PostureReading.swift */; };
 		64531A6A05F6EA7281A6C9A5 /* WaterLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE114FE2B5ACFFF0589D292 /* WaterLog.swift */; };
@@ -63,12 +67,15 @@
 		82F0A73B3E6344D03A11F8D9 /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD374C070DDFE84E6D124F77 /* CardStyle.swift */; };
 		83CEBAF15B3E0E991E4EE3C9 /* SimulatedMotionSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612354F2ADC3F0BCEBB31E80 /* SimulatedMotionSource.swift */; };
 		86F2329D22752B521D75D3D2 /* MenuBarGlyph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B86B3CDD36F74B6217168B /* MenuBarGlyph.swift */; };
+		873B672FBFF9B45F20D81E78 /* Rumduol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56315FA3F6A54333F14AEE79 /* Rumduol.swift */; };
 		885A5348A74F1E1F6F88B59B /* PostureClassifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28C3204DC6B6631DE317362 /* PostureClassifierTests.swift */; };
 		8AB9951181973A726088271E /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */; };
 		8C034AE3F2659832204687A0 /* DisconnectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3059E70F032DE7AA10838 /* DisconnectedView.swift */; };
+		8E24737D0BC931FE7F0E3FF4 /* GoldenShower.swift in Sources */ = {isa = PBXBuildFile; fileRef = A847473AA284766C50F16084 /* GoldenShower.swift */; };
 		8FA4D9F2E468231A95620D17 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC556E9AF90B026FB2792C0 /* TrendsView.swift */; };
 		934ECFDCDA77906D86C94EBF /* PlantPot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC6B6E11BB209856218C5A8 /* PlantPot.swift */; };
 		93753189FDB0AC14E0D54AEB /* Sampaguita.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7174D6357461586A69EC51E5 /* Sampaguita.swift */; };
+		94490309E35FD13D11263115 /* DokChampa.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2EE4AFBE6C9EEF602513 /* DokChampa.swift */; };
 		94A2D8B68AC69E6FC7D38E26 /* PostureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956441B48F69F52F11EFBD35 /* PostureEngine.swift */; };
 		969BC0911578329B6A24A48A /* VandaOrchid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0002BD60B2AE26A044F70AA0 /* VandaOrchid.swift */; };
 		9AEA6FD2FC56D62D15A98C1A /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD374C070DDFE84E6D124F77 /* CardStyle.swift */; };
@@ -94,10 +101,13 @@
 		DAC6814A2CC9E95B4EB61FE8 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */; };
 		DEFD0E94C8FE8E7E7524A713 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2843195070E290EA13E24 /* UserSettings.swift */; };
 		E0469B58D549F9F513C08ED0 /* StepReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25C75BA2813E3FA774DA720 /* StepReader.swift */; };
+		E0A95CA823AAAF34DCBDE180 /* Rose.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC194A7CA49AEFAF9544E5F7 /* Rose.swift */; };
 		E4531133CCD5613C413B90AB /* PlantPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B0BE979AD5A2731FEA9A96 /* PlantPicker.swift */; };
 		EE112D97A3BEA328F5157E45 /* SimulatedMotionSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612354F2ADC3F0BCEBB31E80 /* SimulatedMotionSource.swift */; };
 		F0B126BEB07BCBCCCDBBAF89 /* WaterLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE114FE2B5ACFFF0589D292 /* WaterLog.swift */; };
+		F51AC5D8124AF85D70D05C89 /* GoldenShower.swift in Sources */ = {isa = PBXBuildFile; fileRef = A847473AA284766C50F16084 /* GoldenShower.swift */; };
 		F7956DAA1C62AA43E95277B9 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90D94EC04E4B75FF0C33D0 /* AppModel.swift */; };
+		F9F8AC12697AB6BB25D47E29 /* Padauk.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E12F48F77B252593EBCEC /* Padauk.swift */; };
 		F9FCA8604220B30A98C1343D /* Sunflower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1288F1A5E07F1598670506 /* Sunflower.swift */; };
 		FD6289CFE93A4796E766C41B /* PostureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956441B48F69F52F11EFBD35 /* PostureEngine.swift */; };
 		FDCD8C94DACB52999FA0F31A /* NowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931605AAAE63A5861811287 /* NowView.swift */; };
@@ -134,6 +144,7 @@
 		37B86B3CDD36F74B6217168B /* MenuBarGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarGlyph.swift; sourceTree = "<group>"; };
 		3A35A49A207BE7094D1CB51E /* MelatiJasmine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MelatiJasmine.swift; sourceTree = "<group>"; };
 		4936AC11A4E0CDE792094471 /* PostureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureSession.swift; sourceTree = "<group>"; };
+		56315FA3F6A54333F14AEE79 /* Rumduol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rumduol.swift; sourceTree = "<group>"; };
 		5DE114FE2B5ACFFF0589D292 /* WaterLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterLog.swift; sourceTree = "<group>"; };
 		612354F2ADC3F0BCEBB31E80 /* SimulatedMotionSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedMotionSource.swift; sourceTree = "<group>"; };
 		68960274C4B382BE2E7E9879 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
@@ -155,6 +166,7 @@
 		96CB4F6112A86304628E4F36 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		9731C9D8D49ED566942C392B /* Hibiscus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hibiscus.swift; sourceTree = "<group>"; };
 		A3CAF54E676B437C3870AAF9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A847473AA284766C50F16084 /* GoldenShower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldenShower.swift; sourceTree = "<group>"; };
 		B04E39315C4FCF860A18724C /* ReminderSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderSchedulerTests.swift; sourceTree = "<group>"; };
 		B25C75BA2813E3FA774DA720 /* StepReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepReader.swift; sourceTree = "<group>"; };
 		B26D1CF9110B5B14C2040D56 /* PostureState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureState.swift; sourceTree = "<group>"; };
@@ -164,12 +176,15 @@
 		C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
 		C871C272669551031585FFFF /* SynthesisMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SynthesisMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB12B512D469835052AE3E60 /* SynthesisTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SynthesisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC194A7CA49AEFAF9544E5F7 /* Rose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rose.swift; sourceTree = "<group>"; };
 		CDC556E9AF90B026FB2792C0 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
 		D3C175572A062064D96E4747 /* PostureReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureReading.swift; sourceTree = "<group>"; };
 		DC359FB08AB5D6B42D1D14EA /* MenuBarStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarStateTests.swift; sourceTree = "<group>"; };
 		DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunlightScheduler.swift; sourceTree = "<group>"; };
 		DF4EFC390FDBAE7AF14BFFFD /* SessionManagerStallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerStallTests.swift; sourceTree = "<group>"; };
+		E79C2EE4AFBE6C9EEF602513 /* DokChampa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokChampa.swift; sourceTree = "<group>"; };
 		E83B2D9423D94A902FE85400 /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
+		E94E12F48F77B252593EBCEC /* Padauk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Padauk.swift; sourceTree = "<group>"; };
 		EB90D94EC04E4B75FF0C33D0 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		ECA77A4EEDEE0DC4C3A0CBC7 /* PlantMascot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantMascot.swift; sourceTree = "<group>"; };
 		FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
@@ -236,12 +251,17 @@
 		34EEFB6B4E2591ED87AD843D /* Plants */ = {
 			isa = PBXGroup;
 			children = (
+				E79C2EE4AFBE6C9EEF602513 /* DokChampa.swift */,
+				A847473AA284766C50F16084 /* GoldenShower.swift */,
 				9731C9D8D49ED566942C392B /* Hibiscus.swift */,
 				8824413888A97E294A823A42 /* Lotus.swift */,
 				3A35A49A207BE7094D1CB51E /* MelatiJasmine.swift */,
 				B69593EB47D66F038545CAF0 /* Monstera.swift */,
+				E94E12F48F77B252593EBCEC /* Padauk.swift */,
 				ECA77A4EEDEE0DC4C3A0CBC7 /* PlantMascot.swift */,
 				7DC6B6E11BB209856218C5A8 /* PlantPot.swift */,
+				CC194A7CA49AEFAF9544E5F7 /* Rose.swift */,
+				56315FA3F6A54333F14AEE79 /* Rumduol.swift */,
 				7174D6357461586A69EC51E5 /* Sampaguita.swift */,
 				0E1288F1A5E07F1598670506 /* Sunflower.swift */,
 				0002BD60B2AE26A044F70AA0 /* VandaOrchid.swift */,
@@ -526,6 +546,8 @@
 				9AEA6FD2FC56D62D15A98C1A /* CardStyle.swift in Sources */,
 				377D85C9B5A7A5C731204902 /* ContentView.swift in Sources */,
 				8C034AE3F2659832204687A0 /* DisconnectedView.swift in Sources */,
+				94490309E35FD13D11263115 /* DokChampa.swift in Sources */,
+				8E24737D0BC931FE7F0E3FF4 /* GoldenShower.swift in Sources */,
 				D5822822A2C590041677E4DC /* Hibiscus.swift in Sources */,
 				BD9DE570F558FD41F3344608 /* Lotus.swift in Sources */,
 				A88E17A78671D4DAE291880F /* MelatiJasmine.swift in Sources */,
@@ -537,6 +559,7 @@
 				16E5C1DD3C06616C1E03D97C /* NotificationModule.swift in Sources */,
 				6655EAF276097DE8AE8A8E5B /* NowView.swift in Sources */,
 				8AB9951181973A726088271E /* OnboardingFlow.swift in Sources */,
+				F9F8AC12697AB6BB25D47E29 /* Padauk.swift in Sources */,
 				23D75DDA45F8BDC1BF88B5D6 /* PlantMascot.swift in Sources */,
 				E4531133CCD5613C413B90AB /* PlantPicker.swift in Sources */,
 				B23090691198429899B5A831 /* PlantPot.swift in Sources */,
@@ -546,6 +569,8 @@
 				B460887B66902164F26D77CE /* PostureSession.swift in Sources */,
 				C48B7AAEE1D65EA5612CEE1E /* PostureState.swift in Sources */,
 				DAC6814A2CC9E95B4EB61FE8 /* ReminderScheduler.swift in Sources */,
+				510D9E59B00BCB10E8BBF33E /* Rose.swift in Sources */,
+				873B672FBFF9B45F20D81E78 /* Rumduol.swift in Sources */,
 				4199D8364B799D6643E5539C /* Sampaguita.swift in Sources */,
 				06D36290CE50FCF249BFA5A9 /* SessionManager.swift in Sources */,
 				50D3BB0F28CF7CA177D4D341 /* SessionState.swift in Sources */,
@@ -587,6 +612,8 @@
 				82F0A73B3E6344D03A11F8D9 /* CardStyle.swift in Sources */,
 				60E0CFC79E5488961AD61C3C /* ContentView.swift in Sources */,
 				079C0D2FDE34812FE63A56B3 /* DisconnectedView.swift in Sources */,
+				579BCEA6D1BEC4C89CC731CF /* DokChampa.swift in Sources */,
+				F51AC5D8124AF85D70D05C89 /* GoldenShower.swift in Sources */,
 				BA8B38C21ACFA733916C0CE9 /* Hibiscus.swift in Sources */,
 				51164376F9C462A35B2098E0 /* Lotus.swift in Sources */,
 				4CA18A87FBCE3625B5BACD43 /* MelatiJasmine.swift in Sources */,
@@ -598,6 +625,7 @@
 				C550CFB16A6E39CE8A3764F0 /* NotificationModule.swift in Sources */,
 				FDCD8C94DACB52999FA0F31A /* NowView.swift in Sources */,
 				B24BCD6752658463092BAA5E /* OnboardingFlow.swift in Sources */,
+				5F004DB0BDB26DC53C3417BD /* Padauk.swift in Sources */,
 				6F53A347C58B35C88444200A /* PlantMascot.swift in Sources */,
 				4E4C3959BC58DD4B26EB57CD /* PlantPicker.swift in Sources */,
 				934ECFDCDA77906D86C94EBF /* PlantPot.swift in Sources */,
@@ -607,6 +635,8 @@
 				1E13E2BEDE2AB1D73F9F0C49 /* PostureSession.swift in Sources */,
 				A53A1F4B60C602DDC34EC7D9 /* PostureState.swift in Sources */,
 				6D36027EA5669685B5C8BD46 /* ReminderScheduler.swift in Sources */,
+				E0A95CA823AAAF34DCBDE180 /* Rose.swift in Sources */,
+				306CA8714F123456D1192B5A /* Rumduol.swift in Sources */,
 				93753189FDB0AC14E0D54AEB /* Sampaguita.swift in Sources */,
 				34E6ED75CD9031D1E91FE9E6 /* SessionManager.swift in Sources */,
 				C3B8B1366FEA33F915819BE3 /* SessionState.swift in Sources */,

@@ -47,7 +47,7 @@ struct SynthesisApp: App {
         .environment(appModel)
         .modelContainer(container)
 
-        MenuBarExtra("Synthesis", systemImage: appModel.menuBarState.symbolName) {
+        MenuBarExtra {
             Text(appModel.menuBarStatusLine)
                 .font(.headline)
             Button("Open App") { openWindow(id: "main") }
@@ -57,6 +57,11 @@ struct SynthesisApp: App {
             }
             Divider()
             Button("Quit") { NSApplication.shared.terminate(nil) }
+        } label: {
+            // NSImage-backed label: SwiftUI templates custom label views
+            // (stripping color), so the state dot must come in via an
+            // isTemplate=false NSImage. See MenuBarGlyph.
+            Image(nsImage: MenuBarGlyph.image(for: appModel.menuBarState))
         }
         .environment(appModel)
         .modelContainer(container)

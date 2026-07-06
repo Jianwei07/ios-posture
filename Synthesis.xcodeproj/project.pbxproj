@@ -56,6 +56,7 @@
 		79FB3DFB13EE5E4C41007C03 /* MotionFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0974D445CBC729D74A799425 /* MotionFilterTests.swift */; };
 		82F0A73B3E6344D03A11F8D9 /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD374C070DDFE84E6D124F77 /* CardStyle.swift */; };
 		83CEBAF15B3E0E991E4EE3C9 /* SimulatedMotionSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612354F2ADC3F0BCEBB31E80 /* SimulatedMotionSource.swift */; };
+		86F2329D22752B521D75D3D2 /* MenuBarGlyph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B86B3CDD36F74B6217168B /* MenuBarGlyph.swift */; };
 		885A5348A74F1E1F6F88B59B /* PostureClassifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28C3204DC6B6631DE317362 /* PostureClassifierTests.swift */; };
 		8AB9951181973A726088271E /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */; };
 		8C034AE3F2659832204687A0 /* DisconnectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3059E70F032DE7AA10838 /* DisconnectedView.swift */; };
@@ -65,6 +66,7 @@
 		A00F72965F7BC406B6D9BDC7 /* SunlightScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */; };
 		A0350BE0DD78E6E5DC2A07D3 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2843195070E290EA13E24 /* UserSettings.swift */; };
 		A53A1F4B60C602DDC34EC7D9 /* PostureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26D1CF9110B5B14C2040D56 /* PostureState.swift */; };
+		A5D6A692FD477099CC7E214F /* MenuBarGlyph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B86B3CDD36F74B6217168B /* MenuBarGlyph.swift */; };
 		A94183FFE7D0E205BF08647B /* PostureReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C175572A062064D96E4747 /* PostureReading.swift */; };
 		A96A7A839F73BEC73BA050EF /* PostureClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DDE8EB8B33CDF0C8632CB7 /* PostureClassifier.swift */; };
 		B24BCD6752658463092BAA5E /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */; };
@@ -114,6 +116,7 @@
 		0E1288F1A5E07F1598670506 /* Sunflower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sunflower.swift; sourceTree = "<group>"; };
 		0FE69DA461C091185EFE251E /* CalibrateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrateView.swift; sourceTree = "<group>"; };
 		1FC02BB88CF1E7E5C7762B01 /* MenuBarState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarState.swift; sourceTree = "<group>"; };
+		37B86B3CDD36F74B6217168B /* MenuBarGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarGlyph.swift; sourceTree = "<group>"; };
 		4936AC11A4E0CDE792094471 /* PostureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureSession.swift; sourceTree = "<group>"; };
 		5DE114FE2B5ACFFF0589D292 /* WaterLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterLog.swift; sourceTree = "<group>"; };
 		612354F2ADC3F0BCEBB31E80 /* SimulatedMotionSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedMotionSource.swift; sourceTree = "<group>"; };
@@ -360,6 +363,7 @@
 			children = (
 				EB90D94EC04E4B75FF0C33D0 /* AppModel.swift */,
 				A3CAF54E676B437C3870AAF9 /* ContentView.swift */,
+				37B86B3CDD36F74B6217168B /* MenuBarGlyph.swift */,
 				1FC02BB88CF1E7E5C7762B01 /* MenuBarState.swift */,
 				74C1349A6E6426322435F153 /* SynthesisApp.swift */,
 			);
@@ -494,6 +498,7 @@
 				9AEA6FD2FC56D62D15A98C1A /* CardStyle.swift in Sources */,
 				377D85C9B5A7A5C731204902 /* ContentView.swift in Sources */,
 				8C034AE3F2659832204687A0 /* DisconnectedView.swift in Sources */,
+				86F2329D22752B521D75D3D2 /* MenuBarGlyph.swift in Sources */,
 				3970A8D1ED711E47BFCF1C1E /* MenuBarState.swift in Sources */,
 				BD4390435F856BF4094A55B8 /* Monstera.swift in Sources */,
 				1997F2A48CF21B0E8E3063C1 /* MotionFilter.swift in Sources */,
@@ -547,6 +552,7 @@
 				82F0A73B3E6344D03A11F8D9 /* CardStyle.swift in Sources */,
 				60E0CFC79E5488961AD61C3C /* ContentView.swift in Sources */,
 				079C0D2FDE34812FE63A56B3 /* DisconnectedView.swift in Sources */,
+				A5D6A692FD477099CC7E214F /* MenuBarGlyph.swift in Sources */,
 				0F462B6D10C854099230B23B /* MenuBarState.swift in Sources */,
 				2CE60710E86BAE018AE59ABF /* Monstera.swift in Sources */,
 				1C5ABBCAA7B3F780B11A2A11 /* MotionFilter.swift in Sources */,

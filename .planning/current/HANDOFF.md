@@ -1,6 +1,41 @@
 # Handoff
 
-## Current — 2026-07-02 macOS polish round
+## Current — 2026-07-06 Session 14: Menubar design board
+
+- Source: Claude Design project "Posture IOS", file `Posture - macOS Menubar.dc.html` (board marked "Locked for build").
+- Branch: `feat/macos-bar` (from main). Auto-mode confirmed: commit+push checkpoints per verified leaf; PR to main at end.
+- Checked session: `14` at `.planning/specs/14-menubar-board` (7 leaves).
+- Direction Check: CONFIRMED. Grill Gate: SKIPPED_NOT_NEEDED (board locked; non-blocking ambiguities in QUESTIONS.md: Focus toggle omitted, banner default kept `true`, walk card = interval countdown not steps).
+- Skills used: jayden-workflow, gsd-lite-plan/check/execute.
+
+Board → build mapping:
+1. Glyph: custom NSImage (`drawingHandler` re-resolves `labelColor` per appearance, `isTemplate=false`) + Sage state dot — replaces SF Symbol leaf glyphs.
+2. Popover: `.menuBarExtraStyle(.window)`, 318 pt — header / stateful hero / water+walk cards / soft-alerts segmented / footer.
+3. Soft alerts: L1 dot (leaf 01) · L2 `NSSound("Glass")` chime on sustained drift ≥ `nudgeAfterDriftMin` (2 min default) · L3 existing banner path. Quiet hours 22:00–08:00 gate chime+notifications.
+4. Settings ▸ Alerts pane.
+5–6. 10 national-flower plants (ASEAN+USA) + PlantPicker grid; Monstera kept cosmetic-only.
+7. Watered perk: bend→0 + droplet overlay ~2 s on water log.
+
+Verify per leaf: `xcodebuild build|test -project Synthesis.xcodeproj -scheme SynthesisMac -quiet`
+
+### Session 14 — COMPLETE (2026-07-06, all 7 leaves, each committed+pushed as its own checkpoint)
+- 01 glyph: `MenuBarGlyph` NSImage drawingHandler (labelColor resolves per appearance, isTemplate=false so the Sage dot keeps color; SwiftUI templates MenuBarExtra label views otherwise). Wilt bends the stem; dot punched clear of the bar via destinationOut halo.
+- 02 popover: `MenuBarPopoverView` 318 pt, `.menuBarExtraStyle(.window)`. Header/hero/water/walk/soft-alerts/footer. `UserSettings.softAlertsEnabled` created here; `ReminderScheduler.minutesUntilWalk`; `AppModel.nonAlignedSince` transition-edge stored.
+- 03 chime: L2 alert — `NSSound("Glass")` behind a `playChime` seam; sustained non-aligned ≥ `nudgeAfterDriftMin` (2 min), 5-min cooldown, re-armed by sitting up. Quiet hours (22:00–08:00, overnight wrap) gate chime + banner + water/walk. Banner now needs master switch too. FakeClock rebased to local noon (timezone-safe). 48/48 tests.
+- 04 Alerts pane in SettingsView (master / glyph-info / chime / banner / stepper / quiet-hours pickers, children dim when master off).
+- 05+06 roster: shared `FlowerParts` kit (pot, bend stem w/ point-on-curve, rotated-ellipse petal, tip-anchored droop context) + 10 species-true flowers; petals fixed colors, stem/leaf take state tint. PlantKind declaration order = picker order (Sunflower first, Monstera last "Cosmetic"). PlantPicker → 3-col grid, region captions, check badge. Verified by offscreen ImageRenderer sweeps (1 rose iteration: bands offset toward lip, was reading bullseye).
+- 07 watered perk: `AppModel.wateredUntil` (+`noteWaterLogged()`), `liveBend` → 0 while active, `WaterPerkOverlay` teal droplets ~2 s on NowView hero + popover hero. Notification-action water logs skip the perk (app likely backgrounded) — noted in leaf.
+- Note: `xcodebuild test` prints a misleading XCTest "Executed 0 tests" block — the suite runs under Swift Testing; look for "Test run with N tests" instead.
+- Remaining: on-device QA (dot in light/dark bar, chime through AirPods, popover live data, mascots' wilt feel). PR to main from `feat/macos-bar`.
+
+### Post-PR loop (2026-07-06, PR #5 CI)
+- CI "Check generated project is committed" failed: `SynthesisMac.xcscheme` had been hand-edited (BuildableName Synthesis.app, commit 9c9fcb5) but `xcodegen generate` re-emits SynthesisMac.app → dirty tree on CI. Fix at source: `productName: Synthesis` on the SynthesisMac target in project.yml, regenerate, commit. **Never hand-edit anything under Synthesis.xcodeproj — encode in project.yml.** xcodegen 2.45.4 local == brew latest; generation now idempotent.
+- Test gap sweep: session-14 logic had no coverage. +20 tests (48 → 68 in 15 suites): walk countdown (`minutesUntilWalk` full/countdown/ceil/0-clamp/reset-on-fire/reset-on-break), `AppModel.liveBend` (baseline-seeded forwardAngle drives it with zero motion samples: gate/proportional/clamps), watered perk (activate, ~2s expiry publishes nil, re-log extends past first expiry task), `MenuBarGlyph` (18×18, isTemplate false, distinct a11y labels, 4 states render distinct pixels), `UserSettings` alert defaults + reset() parity (migration contract).
+- Copilot review on PR #5: quota-limited, no findings.
+
+---
+
+## Previous — 2026-07-02 macOS polish round
 
 Direction Check: CONFIRMED
 Chosen direction: harden macOS pivot (bug fixes, mac test target), tier reminders soft/priority with smart water-skip + presence-aware walk, add live menu-bar posture glyph as the minimized-state alert, redesign Monstera + Cactus. iOS-launch architecture direction recorded (SynthesisCore SPM extraction, thin adapters, deferred to session 14).

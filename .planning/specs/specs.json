@@ -10,7 +10,13 @@
       "id": "13",
       "title": "macOS polish round",
       "path": ".planning/specs/13-macos-polish",
-      "completed": false
+      "completed": true
+    },
+    {
+      "id": "14",
+      "title": "Menubar design board",
+      "path": ".planning/specs/14-menubar-board",
+      "completed": true
     }
   ]
 }

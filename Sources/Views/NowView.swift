@@ -48,6 +48,10 @@ struct NowView: View {
                             color: isActive ? state.color : Theme.Palette.inkFaint)
                     .frame(height: 200)
                     .opacity(isActive ? 1 : 0.55)
+                    .overlay {
+                        if app.isWateredPerkActive { WaterPerkOverlay() }
+                    }
+                    .animation(Theme.Motion.fade, value: app.isWateredPerkActive)
                 stateBlock
                     .padding(.top, 18)
                 Spacer(minLength: 12)
@@ -184,6 +188,7 @@ struct NowView: View {
     private var uprightMinutes: Int { Int((app.session.activeSessionSeconds) / 60) }
 
     private func logWater() {
+        app.noteWaterLogged()
         modelContext.insert(WaterEntry())
         try? modelContext.save()
     }

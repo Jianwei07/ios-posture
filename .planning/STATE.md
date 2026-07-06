@@ -1,6 +1,14 @@
 # State
 
-## Current: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
+## Current: Menubar design board (spec session 14) — COMPLETE, all 7 leaves done on `feat/macos-bar`
+
+Glyph+state dot, 318pt window popover, chime+quiet hours, Settings▸Alerts pane, 10 national-flower mascots + grid picker, watered perk. Spec: `.planning/specs/14-menubar-board`. Source: Claude Design "Posture - macOS Menubar" board (locked).
+
+Post-PR loop (2026-07-06): CI red fixed — hand-edited SynthesisMac.xcscheme diverged from xcodegen output; `productName: Synthesis` in project.yml now generates it correctly (never hand-edit Synthesis.xcodeproj). +20 tests for session-14 logic → 68/68 in 15 suites (walk countdown, liveBend, watered perk, MenuBarGlyph, UserSettings alert defaults). PR #5 CI green.
+
+Next: on-device QA — glyph dot in light/dark bar, popover live data with real AirPods, chime audibility through AirPods, quiet-hours behavior overnight, new mascots' wilt feel with live bend.
+
+## Previous: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
 
 ## Status: Session 13 all leaves + bug sweep done on `feat/macos-pivot`; PR #2 open to main (https://github.com/Jianwei07/ios-posture/pull/2). Bug sweep fixed: motion-source threading (off-main @Observable/SwiftData writes), session start flap (4s spin-up grace), sunlight nextNudge display, SolarCalculator continuation race.
 

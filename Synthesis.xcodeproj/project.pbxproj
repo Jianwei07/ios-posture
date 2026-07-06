@@ -75,6 +75,7 @@
 		8FA4D9F2E468231A95620D17 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC556E9AF90B026FB2792C0 /* TrendsView.swift */; };
 		934ECFDCDA77906D86C94EBF /* PlantPot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC6B6E11BB209856218C5A8 /* PlantPot.swift */; };
 		93753189FDB0AC14E0D54AEB /* Sampaguita.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7174D6357461586A69EC51E5 /* Sampaguita.swift */; };
+		94061DEB412315B776BADBFD /* WaterPerkOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D4A61127877CF1752DC138 /* WaterPerkOverlay.swift */; };
 		94490309E35FD13D11263115 /* DokChampa.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79C2EE4AFBE6C9EEF602513 /* DokChampa.swift */; };
 		94A2D8B68AC69E6FC7D38E26 /* PostureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956441B48F69F52F11EFBD35 /* PostureEngine.swift */; };
 		969BC0911578329B6A24A48A /* VandaOrchid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0002BD60B2AE26A044F70AA0 /* VandaOrchid.swift */; };
@@ -98,6 +99,7 @@
 		C653D7E16C7F5A39C61E642F /* SolarCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB8A0252B3194AA8926440E /* SolarCalculator.swift */; };
 		D5822822A2C590041677E4DC /* Hibiscus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9731C9D8D49ED566942C392B /* Hibiscus.swift */; };
 		D775A5E889BC79FE6A9280B9 /* SimulatorOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D22EEE52F811688AEBBC7A /* SimulatorOverlay.swift */; };
+		D944040280252035620496DA /* WaterPerkOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D4A61127877CF1752DC138 /* WaterPerkOverlay.swift */; };
 		DAC6814A2CC9E95B4EB61FE8 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */; };
 		DEFD0E94C8FE8E7E7524A713 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D2843195070E290EA13E24 /* UserSettings.swift */; };
 		E0469B58D549F9F513C08ED0 /* StepReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25C75BA2813E3FA774DA720 /* StepReader.swift */; };
@@ -182,6 +184,7 @@
 		DC359FB08AB5D6B42D1D14EA /* MenuBarStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarStateTests.swift; sourceTree = "<group>"; };
 		DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunlightScheduler.swift; sourceTree = "<group>"; };
 		DF4EFC390FDBAE7AF14BFFFD /* SessionManagerStallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerStallTests.swift; sourceTree = "<group>"; };
+		E4D4A61127877CF1752DC138 /* WaterPerkOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterPerkOverlay.swift; sourceTree = "<group>"; };
 		E79C2EE4AFBE6C9EEF602513 /* DokChampa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokChampa.swift; sourceTree = "<group>"; };
 		E83B2D9423D94A902FE85400 /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
 		E94E12F48F77B252593EBCEC /* Padauk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Padauk.swift; sourceTree = "<group>"; };
@@ -332,6 +335,7 @@
 				FD374C070DDFE84E6D124F77 /* CardStyle.swift */,
 				76B0BE979AD5A2731FEA9A96 /* PlantPicker.swift */,
 				75E93BDDC49F4CAB11E49BAB /* Theme.swift */,
+				E4D4A61127877CF1752DC138 /* WaterPerkOverlay.swift */,
 				34EEFB6B4E2591ED87AD843D /* Plants */,
 			);
 			path = DesignSystem;
@@ -587,6 +591,7 @@
 				DEFD0E94C8FE8E7E7524A713 /* UserSettings.swift in Sources */,
 				50DE7F6E13F9D252923B5184 /* VandaOrchid.swift in Sources */,
 				F0B126BEB07BCBCCCDBBAF89 /* WaterLog.swift in Sources */,
+				94061DEB412315B776BADBFD /* WaterPerkOverlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,6 +658,7 @@
 				A0350BE0DD78E6E5DC2A07D3 /* UserSettings.swift in Sources */,
 				969BC0911578329B6A24A48A /* VandaOrchid.swift in Sources */,
 				64531A6A05F6EA7281A6C9A5 /* WaterLog.swift in Sources */,
+				D944040280252035620496DA /* WaterPerkOverlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

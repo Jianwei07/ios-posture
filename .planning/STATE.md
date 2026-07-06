@@ -1,8 +1,10 @@
 # State
 
-## Current: Menubar design board (spec session 14) — planned, executing on `feat/macos-bar`
+## Current: Menubar design board (spec session 14) — COMPLETE, all 7 leaves done on `feat/macos-bar`
 
-7 leaves: glyph+dot, 318pt popover, chime+quiet hours, Alerts settings pane, 10-flower roster ×2, watered perk. Spec: `.planning/specs/14-menubar-board`. Source: Claude Design "Posture - macOS Menubar" board (locked).
+Glyph+state dot, 318pt window popover, chime+quiet hours (48/48 tests), Settings▸Alerts pane, 10 national-flower mascots + grid picker, watered perk. Spec: `.planning/specs/14-menubar-board`. Source: Claude Design "Posture - macOS Menubar" board (locked).
+
+Next: on-device QA — glyph dot in light/dark bar, popover live data with real AirPods, chime audibility through AirPods, quiet-hours behavior overnight, new mascots' wilt feel with live bend.
 
 ## Previous: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
 

@@ -40,7 +40,7 @@
       "id": "07",
       "title": "Watered mood \u2014 perk-up on water log",
       "spec": ".planning/specs/14-menubar-board/07-watered-perk.md",
-      "completed": false
+      "completed": true
     }
   ]
 }

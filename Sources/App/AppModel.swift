@@ -129,8 +129,27 @@ final class AppModel {
 
     // Live bend for the Home plant mascot.
     var liveBend: Double {
+        guard !isWateredPerkActive else { return 0 }  // hydrate → it perks up
         guard engine.neutralPitch != nil else { return 0 }
         let span = (engine.classifier.threshold + engine.classifier.slouchGap) + 4
         return max(0, min(1, engine.forwardAngle / span))
+    }
+
+    // Watered mood (board mood 4): logging water straightens the plant and
+    // flashes droplets for ~2 s wherever the mascot is shown.
+    private(set) var wateredUntil: Date?
+
+    var isWateredPerkActive: Bool {
+        if let until = wateredUntil { return until > .now }
+        return false
+    }
+
+    func noteWaterLogged() {
+        wateredUntil = .now.addingTimeInterval(2)
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .seconds(2.1))
+            guard let self, let until = self.wateredUntil, until <= .now else { return }
+            self.wateredUntil = nil  // publish the expiry so overlays dismiss
+        }
     }
 }

@@ -129,6 +129,10 @@ struct MenuBarPopoverView: View {
                         bend: app.liveBend,
                         color: stateColor)
                 .frame(width: 58, height: 76)
+                .overlay {
+                    if app.isWateredPerkActive { WaterPerkOverlay() }
+                }
+                .animation(Theme.Motion.fade, value: app.isWateredPerkActive)
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(stateWord)
@@ -185,6 +189,7 @@ struct MenuBarPopoverView: View {
                 }
             }
             Button {
+                app.noteWaterLogged()
                 modelContext.insert(WaterEntry())
             } label: {
                 Text("+ Glass")

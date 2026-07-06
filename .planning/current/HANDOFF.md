@@ -18,6 +18,16 @@ Board → build mapping:
 
 Verify per leaf: `xcodebuild build|test -project Synthesis.xcodeproj -scheme SynthesisMac -quiet`
 
+### Session 14 — COMPLETE (2026-07-06, all 7 leaves, each committed+pushed as its own checkpoint)
+- 01 glyph: `MenuBarGlyph` NSImage drawingHandler (labelColor resolves per appearance, isTemplate=false so the Sage dot keeps color; SwiftUI templates MenuBarExtra label views otherwise). Wilt bends the stem; dot punched clear of the bar via destinationOut halo.
+- 02 popover: `MenuBarPopoverView` 318 pt, `.menuBarExtraStyle(.window)`. Header/hero/water/walk/soft-alerts/footer. `UserSettings.softAlertsEnabled` created here; `ReminderScheduler.minutesUntilWalk`; `AppModel.nonAlignedSince` transition-edge stored.
+- 03 chime: L2 alert — `NSSound("Glass")` behind a `playChime` seam; sustained non-aligned ≥ `nudgeAfterDriftMin` (2 min), 5-min cooldown, re-armed by sitting up. Quiet hours (22:00–08:00, overnight wrap) gate chime + banner + water/walk. Banner now needs master switch too. FakeClock rebased to local noon (timezone-safe). 48/48 tests.
+- 04 Alerts pane in SettingsView (master / glyph-info / chime / banner / stepper / quiet-hours pickers, children dim when master off).
+- 05+06 roster: shared `FlowerParts` kit (pot, bend stem w/ point-on-curve, rotated-ellipse petal, tip-anchored droop context) + 10 species-true flowers; petals fixed colors, stem/leaf take state tint. PlantKind declaration order = picker order (Sunflower first, Monstera last "Cosmetic"). PlantPicker → 3-col grid, region captions, check badge. Verified by offscreen ImageRenderer sweeps (1 rose iteration: bands offset toward lip, was reading bullseye).
+- 07 watered perk: `AppModel.wateredUntil` (+`noteWaterLogged()`), `liveBend` → 0 while active, `WaterPerkOverlay` teal droplets ~2 s on NowView hero + popover hero. Notification-action water logs skip the perk (app likely backgrounded) — noted in leaf.
+- Note: `xcodebuild test` prints a misleading XCTest "Executed 0 tests" block — the suite runs under Swift Testing; look for "Test run with N tests" instead.
+- Remaining: on-device QA (dot in light/dark bar, chime through AirPods, popover live data, mascots' wilt feel). PR to main from `feat/macos-bar`.
+
 ---
 
 ## Previous — 2026-07-02 macOS polish round

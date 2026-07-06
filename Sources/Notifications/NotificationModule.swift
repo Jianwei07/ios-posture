@@ -1,6 +1,9 @@
 import UserNotifications
 import SwiftData
 import Foundation
+#if os(macOS)
+import AppKit
+#endif
 
 enum ReminderType {
     case posture, water, walk, sunlight
@@ -81,6 +84,15 @@ final class NotificationModule: NSObject, UNUserNotificationCenterDelegate {
 
     func cancelAll() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+
+    // Level-2 soft alert: a quiet chime through the default audio output
+    // (the AirPods, when worn). Deliberately not a notification — no banner,
+    // no notification-center entry, dismissed by simply sitting up.
+    func playChime() {
+        #if os(macOS)
+        NSSound(named: "Glass")?.play()
+        #endif
     }
 
     // Shared content builder — tiers priority (posture: sound + active) vs

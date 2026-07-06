@@ -39,6 +39,15 @@ final class UserSettings {
     // Soft alerts master switch (menu-bar popover Gentle/Off segmented).
     var softAlertsEnabled: Bool = true
 
+    // Level-2 soft alert: quiet chime after sustained forward lean.
+    var chimeOnSustainedDrift: Bool = true
+    var nudgeAfterDriftMin: Double = 2.0
+
+    // Quiet hours (minutes of day, local): notifications + chime hold off.
+    var quietHoursEnabled: Bool = true
+    var quietHoursStartMinutes: Int = 1320  // 22:00
+    var quietHoursEndMinutes: Int = 480     // 08:00
+
     // Secondary habit intervals (water / walk nudges).
     var baseWaterIntervalMin: Double = 30.0
     var baseWalkIntervalMin: Double = 45.0
@@ -55,6 +64,11 @@ final class UserSettings {
         escalateLongSlouches = true
         sunlightEnabled = true
         softAlertsEnabled = true
+        chimeOnSustainedDrift = true
+        nudgeAfterDriftMin = 2.0
+        quietHoursEnabled = true
+        quietHoursStartMinutes = 1320
+        quietHoursEndMinutes = 480
         baseWaterIntervalMin = 30.0
         baseWalkIntervalMin = 45.0
         dailyWaterTargetMl = 2000.0
@@ -76,6 +90,11 @@ final class UserSettings {
         escalateLongSlouches = true
         sunlightEnabled = true
         softAlertsEnabled = true
+        chimeOnSustainedDrift = true
+        nudgeAfterDriftMin = 2.0
+        quietHoursEnabled = true
+        quietHoursStartMinutes = 1320
+        quietHoursEndMinutes = 480
         baseWaterIntervalMin = 30.0
         baseWalkIntervalMin = 45.0
         dailyWaterTargetMl = 2000.0

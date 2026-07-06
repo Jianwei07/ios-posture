@@ -16,7 +16,7 @@
       "id": "03",
       "title": "Soft-alert engine \u2014 chime + quiet hours",
       "spec": ".planning/specs/14-menubar-board/03-soft-alerts.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "04",

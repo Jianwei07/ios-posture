@@ -3,21 +3,31 @@ import Observation
 
 // Reminder scheduler.
 // - Posture alert: event-driven (sustained poor posture), priority tier.
+// - Soft chime: quiet Level-2 alert after sustained drift-or-worse.
 // - Water: interval reminders, deferred if recently logged or target already met.
 // - Walk: fires at interval; reset by a presence break (AirPods out ≥5min).
+// Quiet hours hold everything (chime + all notifications) until morning.
 @Observable
 final class ReminderScheduler {
     private let settings: UserSettings
     private let fire: (ReminderType, String?) -> Void
     private let cancelAll: () -> Void
     private let now: () -> Date
+    private let playChime: () -> Void
 
     // Escalation timing: only after ~6 min sustained slouch, then cool down.
     private let alertSustainedSeconds: Double = 360
     private let alertCooldownMin: Double = 5
 
+    // Chime cooldown mirrors the banner's — a re-fire needs both a fresh
+    // sustained stretch AND the cooldown to elapse.
+    private let chimeCooldownMin: Double = 5
+
     private var poorPostureStartTime: Date?
     private var lastPostureAlertTime: Date?
+
+    private var driftStartTime: Date?
+    private var lastChimeTime: Date?
 
     private var lastWaterReminderAt: Double = 0
     private var lastWalkReminderAt: Double = 0
@@ -31,15 +41,18 @@ final class ReminderScheduler {
     init(settings: UserSettings,
          fire: @escaping (ReminderType, String?) -> Void = { NotificationModule.shared.fire($0, detail: $1) },
          cancelAll: @escaping () -> Void = { NotificationModule.shared.cancelAll() },
-         now: @escaping () -> Date = Date.init) {
+         now: @escaping () -> Date = Date.init,
+         playChime: @escaping () -> Void = { NotificationModule.shared.playChime() }) {
         self.settings = settings
         self.fire = fire
         self.cancelAll = cancelAll
         self.now = now
+        self.playChime = playChime
     }
 
     func tick(postureState: PostureState, sessionSeconds: Double) {
         checkPostureAlert(postureState)
+        checkChime(postureState)
         checkWater(sessionSeconds: sessionSeconds)
         checkWalk(sessionSeconds: sessionSeconds)
     }
@@ -58,6 +71,7 @@ final class ReminderScheduler {
 
     func reset() {
         poorPostureStartTime = nil
+        driftStartTime = nil
         lastWaterReminderAt = 0
         lastWalkReminderAt = 0
         cancelAll()
@@ -73,8 +87,9 @@ final class ReminderScheduler {
             poorPostureStartTime = nil
         }
 
-        // Loud banner only when the user opted in to escalation.
-        guard settings.escalateLongSlouches else { return }
+        // Loud banner only when soft alerts are on AND the user opted in to
+        // escalation (Level 3 of the alert ladder).
+        guard settings.softAlertsEnabled, settings.escalateLongSlouches else { return }
 
         guard let start = poorPostureStartTime,
               currentTime.timeIntervalSince(start) >= alertSustainedSeconds else { return }
@@ -82,9 +97,50 @@ final class ReminderScheduler {
         if let last = lastPostureAlertTime,
            currentTime.timeIntervalSince(last) < alertCooldownMin * 60 { return }
 
+        guard !isQuietNow() else { return }
+
         lastPostureAlertTime = currentTime
         poorPostureStartTime = nil
         fire(.posture, nil)
+    }
+
+    // Level-2 soft alert: one quiet chime after a sustained forward lean
+    // (drift or slouch), re-armed by sitting up. Dismissable by posture alone.
+    private func checkChime(_ state: PostureState) {
+        let currentTime = now()
+        guard state != .aligned else {
+            driftStartTime = nil
+            return
+        }
+        if driftStartTime == nil { driftStartTime = currentTime }
+
+        guard settings.softAlertsEnabled, settings.chimeOnSustainedDrift else { return }
+
+        guard let start = driftStartTime,
+              currentTime.timeIntervalSince(start) >= settings.nudgeAfterDriftMin * 60 else { return }
+
+        if let last = lastChimeTime,
+           currentTime.timeIntervalSince(last) < chimeCooldownMin * 60 { return }
+
+        guard !isQuietNow() else { return }
+
+        lastChimeTime = currentTime
+        driftStartTime = nil
+        playChime()
+    }
+
+    // Quiet hours: minutes-of-day window in local time, wrapping overnight
+    // (default 22:00 → 08:00). All chimes and notifications hold.
+    private func isQuietNow() -> Bool {
+        guard settings.quietHoursEnabled else { return false }
+        let comps = Calendar.current.dateComponents([.hour, .minute], from: now())
+        let minute = (comps.hour ?? 0) * 60 + (comps.minute ?? 0)
+        let start = settings.quietHoursStartMinutes
+        let end = settings.quietHoursEndMinutes
+        guard start != end else { return false }
+        return start < end
+            ? (minute >= start && minute < end)
+            : (minute >= start || minute < end)
     }
 
     private func checkWater(sessionSeconds: Double) {
@@ -101,6 +157,8 @@ final class ReminderScheduler {
             return
         }
 
+        guard !isQuietNow() else { return }
+
         var detail: String?
         if let progress = waterProgress?(), progress.targetMl > 0 {
             let today = String(format: "%.1fL", progress.todayMl / 1000)
@@ -115,6 +173,7 @@ final class ReminderScheduler {
     private func checkWalk(sessionSeconds: Double) {
         guard sessionSeconds - lastWalkReminderAt >= settings.baseWalkIntervalMin * 60 else { return }
         lastWalkReminderAt = sessionSeconds
+        guard !isQuietNow() else { return }
         fire(.walk, nil)
     }
 }

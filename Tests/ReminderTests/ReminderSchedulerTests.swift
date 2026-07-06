@@ -408,3 +408,44 @@ struct ReminderSchedulerQuietHoursTests {
         #expect(log.count(.walk) == 0)
     }
 }
+
+// Popover walk-card countdown — the only consumer of minutesUntilWalk.
+@Suite("ReminderScheduler — walk countdown")
+struct ReminderSchedulerWalkCountdownTests {
+    @Test func fullIntervalAtSessionStart() {
+        let scheduler = makeScheduler()  // default interval 45 min
+        #expect(scheduler.minutesUntilWalk(sessionSeconds: 0) == 45)
+    }
+
+    @Test func countsDownWithSessionTime() {
+        let scheduler = makeScheduler()
+        #expect(scheduler.minutesUntilWalk(sessionSeconds: 10 * 60) == 35)
+    }
+
+    @Test func partialMinutesRoundUp() {
+        // 30s in → 44.5 min remain → card shows 45, not 44.
+        let scheduler = makeScheduler()
+        #expect(scheduler.minutesUntilWalk(sessionSeconds: 30) == 45)
+    }
+
+    @Test func neverGoesNegative() {
+        // Overdue (no tick has fired yet) clamps at 0 rather than "-1 min".
+        let scheduler = makeScheduler()
+        #expect(scheduler.minutesUntilWalk(sessionSeconds: 50 * 60) == 0)
+    }
+
+    @Test func firingResetsCountdown() {
+        let log = FiredLog()
+        let scheduler = makeScheduler(log: log)
+        scheduler.tick(postureState: .aligned, sessionSeconds: 45 * 60)
+
+        #expect(log.count(.walk) == 1)
+        #expect(scheduler.minutesUntilWalk(sessionSeconds: 45 * 60) == 45)
+    }
+
+    @Test func breakTakenResetsCountdown() {
+        let scheduler = makeScheduler()
+        scheduler.noteBreakTaken(sessionSeconds: 20 * 60)
+        #expect(scheduler.minutesUntilWalk(sessionSeconds: 20 * 60) == 45)
+    }
+}

@@ -108,16 +108,23 @@ final class AppModel {
 
         let connected = engine.isHeadphoneMotionConnected
         if connected != isConnected { isConnected = connected }
+
+        // Popover hero stat ("−11° · 2 min"): how long the current
+        // forward-leaning stretch has lasted. Stored only on the transition
+        // edge so @Observable readers don't re-render every heartbeat.
+        if sessionState == .active && postureState != .aligned {
+            if nonAlignedSince == nil { nonAlignedSince = .now }
+        } else if nonAlignedSince != nil {
+            nonAlignedSince = nil
+        }
     }
 
-    // Short status line for the MenuBarExtra dropdown.
-    var menuBarStatusLine: String {
-        switch menuBarState {
-        case .idle:    return isConnected ? "Not tracking" : "AirPods not connected"
-        case .aligned: return "Aligned · \(Int(session.activeSessionSeconds / 60)) min upright"
-        case .drift:   return "Drifting — sit tall"
-        case .wilt:    return "Slouching a while now"
-        }
+    // Start of the current drift/slouch stretch (nil while aligned or idle).
+    private(set) var nonAlignedSince: Date?
+
+    var nonAlignedMinutes: Int {
+        guard let since = nonAlignedSince else { return 0 }
+        return Int(Date.now.timeIntervalSince(since) / 60)
     }
 
     // Live bend for the Home plant mascot.

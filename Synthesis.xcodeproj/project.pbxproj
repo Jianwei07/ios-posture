@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		010EE8D52173E974588740D1 /* ReminderSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04E39315C4FCF860A18724C /* ReminderSchedulerTests.swift */; };
+		05EE034A179FD6EC3CE36502 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83B2D9423D94A902FE85400 /* MenuBarPopoverView.swift */; };
 		06D36290CE50FCF249BFA5A9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CB4F6112A86304628E4F36 /* SessionManager.swift */; };
 		079C0D2FDE34812FE63A56B3 /* DisconnectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3059E70F032DE7AA10838 /* DisconnectedView.swift */; };
 		0BDF1C62183436922C956DDC /* SunlightScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */; };
@@ -32,6 +33,7 @@
 		3970A8D1ED711E47BFCF1C1E /* MenuBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC02BB88CF1E7E5C7762B01 /* MenuBarState.swift */; };
 		3D2490F86348028E39D5A54C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A6041CD6092FFA063455AA /* SettingsView.swift */; };
 		3FAEB413FAEFFCF235B9090F /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC556E9AF90B026FB2792C0 /* TrendsView.swift */; };
+		40ED41E7156952F913B186C7 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83B2D9423D94A902FE85400 /* MenuBarPopoverView.swift */; };
 		44FB4373C017E71C0032E8BD /* PostureClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DDE8EB8B33CDF0C8632CB7 /* PostureClassifier.swift */; };
 		45037AED78BFD38D50898025 /* StepReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25C75BA2813E3FA774DA720 /* StepReader.swift */; };
 		4E4C3959BC58DD4B26EB57CD /* PlantPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76B0BE979AD5A2731FEA9A96 /* PlantPicker.swift */; };
@@ -149,6 +151,7 @@
 		DC359FB08AB5D6B42D1D14EA /* MenuBarStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarStateTests.swift; sourceTree = "<group>"; };
 		DD91A15EA5820C397FE323E5 /* SunlightScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunlightScheduler.swift; sourceTree = "<group>"; };
 		DF4EFC390FDBAE7AF14BFFFD /* SessionManagerStallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerStallTests.swift; sourceTree = "<group>"; };
+		E83B2D9423D94A902FE85400 /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
 		EB90D94EC04E4B75FF0C33D0 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		ECA77A4EEDEE0DC4C3A0CBC7 /* PlantMascot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantMascot.swift; sourceTree = "<group>"; };
 		FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
@@ -203,6 +206,7 @@
 			children = (
 				0FE69DA461C091185EFE251E /* CalibrateView.swift */,
 				73B3059E70F032DE7AA10838 /* DisconnectedView.swift */,
+				E83B2D9423D94A902FE85400 /* MenuBarPopoverView.swift */,
 				8931605AAAE63A5861811287 /* NowView.swift */,
 				FC4E81BF13955CDE57CEE117 /* OnboardingFlow.swift */,
 				04A6041CD6092FFA063455AA /* SettingsView.swift */,
@@ -499,6 +503,7 @@
 				377D85C9B5A7A5C731204902 /* ContentView.swift in Sources */,
 				8C034AE3F2659832204687A0 /* DisconnectedView.swift in Sources */,
 				86F2329D22752B521D75D3D2 /* MenuBarGlyph.swift in Sources */,
+				40ED41E7156952F913B186C7 /* MenuBarPopoverView.swift in Sources */,
 				3970A8D1ED711E47BFCF1C1E /* MenuBarState.swift in Sources */,
 				BD4390435F856BF4094A55B8 /* Monstera.swift in Sources */,
 				1997F2A48CF21B0E8E3063C1 /* MotionFilter.swift in Sources */,
@@ -553,6 +558,7 @@
 				60E0CFC79E5488961AD61C3C /* ContentView.swift in Sources */,
 				079C0D2FDE34812FE63A56B3 /* DisconnectedView.swift in Sources */,
 				A5D6A692FD477099CC7E214F /* MenuBarGlyph.swift in Sources */,
+				05EE034A179FD6EC3CE36502 /* MenuBarPopoverView.swift in Sources */,
 				0F462B6D10C854099230B23B /* MenuBarState.swift in Sources */,
 				2CE60710E86BAE018AE59ABF /* Monstera.swift in Sources */,
 				1C5ABBCAA7B3F780B11A2A11 /* MotionFilter.swift in Sources */,

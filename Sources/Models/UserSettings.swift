@@ -36,6 +36,9 @@ final class UserSettings {
     var escalateLongSlouches: Bool = true
     var sunlightEnabled: Bool = true
 
+    // Soft alerts master switch (menu-bar popover Gentle/Off segmented).
+    var softAlertsEnabled: Bool = true
+
     // Secondary habit intervals (water / walk nudges).
     var baseWaterIntervalMin: Double = 30.0
     var baseWalkIntervalMin: Double = 45.0
@@ -51,6 +54,7 @@ final class UserSettings {
         sensitivityRaw = Sensitivity.balanced.rawValue
         escalateLongSlouches = true
         sunlightEnabled = true
+        softAlertsEnabled = true
         baseWaterIntervalMin = 30.0
         baseWalkIntervalMin = 45.0
         dailyWaterTargetMl = 2000.0
@@ -71,6 +75,7 @@ final class UserSettings {
         sensitivity = .balanced
         escalateLongSlouches = true
         sunlightEnabled = true
+        softAlertsEnabled = true
         baseWaterIntervalMin = 30.0
         baseWalkIntervalMin = 45.0
         dailyWaterTargetMl = 2000.0

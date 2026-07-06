@@ -10,7 +10,7 @@
       "id": "02",
       "title": "Menu-bar popover \u2014 318 pt Sage window",
       "spec": ".planning/specs/14-menubar-board/02-popover.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "03",

@@ -44,6 +44,12 @@ final class ReminderScheduler {
         checkWalk(sessionSeconds: sessionSeconds)
     }
 
+    // Menu-bar popover walk card: minutes until the next walk nudge.
+    func minutesUntilWalk(sessionSeconds: Double) -> Int {
+        let remaining = settings.baseWalkIntervalMin * 60 - (sessionSeconds - lastWalkReminderAt)
+        return max(0, Int((remaining / 60).rounded(.up)))
+    }
+
     // Called when the session resumes after an AirPods-out break of ≥5min —
     // treated as "the user got up and walked", resetting the walk interval.
     func noteBreakTaken(sessionSeconds: Double) {

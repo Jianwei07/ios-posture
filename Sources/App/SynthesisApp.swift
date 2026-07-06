@@ -6,10 +6,6 @@ import AppKit
 
 @main
 struct SynthesisApp: App {
-    #if os(macOS)
-    @Environment(\.openWindow) private var openWindow
-    #endif
-
     // One explicit container (rather than the `.modelContainer(for:)`
     // convenience) so NotificationModule can share the same store the UI
     // observes — the "Log 250 ml" notification action writes here.
@@ -48,21 +44,14 @@ struct SynthesisApp: App {
         .modelContainer(container)
 
         MenuBarExtra {
-            Text(appModel.menuBarStatusLine)
-                .font(.headline)
-            Button("Open App") { openWindow(id: "main") }
-            Button("Recalibrate") {
-                openWindow(id: "main")
-                NotificationCenter.default.post(name: .recalibrateRequested, object: nil)
-            }
-            Divider()
-            Button("Quit") { NSApplication.shared.terminate(nil) }
+            MenuBarPopoverView()
         } label: {
             // NSImage-backed label: SwiftUI templates custom label views
             // (stripping color), so the state dot must come in via an
             // isTemplate=false NSImage. See MenuBarGlyph.
             Image(nsImage: MenuBarGlyph.image(for: appModel.menuBarState))
         }
+        .menuBarExtraStyle(.window)
         .environment(appModel)
         .modelContainer(container)
         #else

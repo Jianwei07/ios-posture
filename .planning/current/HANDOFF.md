@@ -1,6 +1,26 @@
 # Handoff
 
-## Current — 2026-07-02 macOS polish round
+## Current — 2026-07-06 Session 14: Menubar design board
+
+- Source: Claude Design project "Posture IOS", file `Posture - macOS Menubar.dc.html` (board marked "Locked for build").
+- Branch: `feat/macos-bar` (from main). Auto-mode confirmed: commit+push checkpoints per verified leaf; PR to main at end.
+- Checked session: `14` at `.planning/specs/14-menubar-board` (7 leaves).
+- Direction Check: CONFIRMED. Grill Gate: SKIPPED_NOT_NEEDED (board locked; non-blocking ambiguities in QUESTIONS.md: Focus toggle omitted, banner default kept `true`, walk card = interval countdown not steps).
+- Skills used: jayden-workflow, gsd-lite-plan/check/execute.
+
+Board → build mapping:
+1. Glyph: custom NSImage (`drawingHandler` re-resolves `labelColor` per appearance, `isTemplate=false`) + Sage state dot — replaces SF Symbol leaf glyphs.
+2. Popover: `.menuBarExtraStyle(.window)`, 318 pt — header / stateful hero / water+walk cards / soft-alerts segmented / footer.
+3. Soft alerts: L1 dot (leaf 01) · L2 `NSSound("Glass")` chime on sustained drift ≥ `nudgeAfterDriftMin` (2 min default) · L3 existing banner path. Quiet hours 22:00–08:00 gate chime+notifications.
+4. Settings ▸ Alerts pane.
+5–6. 10 national-flower plants (ASEAN+USA) + PlantPicker grid; Monstera kept cosmetic-only.
+7. Watered perk: bend→0 + droplet overlay ~2 s on water log.
+
+Verify per leaf: `xcodebuild build|test -project Synthesis.xcodeproj -scheme SynthesisMac -quiet`
+
+---
+
+## Previous — 2026-07-02 macOS polish round
 
 Direction Check: CONFIRMED
 Chosen direction: harden macOS pivot (bug fixes, mac test target), tier reminders soft/priority with smart water-skip + presence-aware walk, add live menu-bar posture glyph as the minimized-state alert, redesign Monstera + Cactus. iOS-launch architecture direction recorded (SynthesisCore SPM extraction, thin adapters, deferred to session 14).

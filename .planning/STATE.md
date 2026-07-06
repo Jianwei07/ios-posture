@@ -1,6 +1,10 @@
 # State
 
-## Current: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
+## Current: Menubar design board (spec session 14) — planned, executing on `feat/macos-bar`
+
+7 leaves: glyph+dot, 318pt popover, chime+quiet hours, Alerts settings pane, 10-flower roster ×2, watered perk. Spec: `.planning/specs/14-menubar-board`. Source: Claude Design "Posture - macOS Menubar" board (locked).
+
+## Previous: macOS polish round (spec session 13) — COMPLETE, all 4 leaves done
 
 ## Status: Session 13 all leaves + bug sweep done on `feat/macos-pivot`; PR #2 open to main (https://github.com/Jianwei07/ios-posture/pull/2). Bug sweep fixed: motion-source threading (off-main @Observable/SwiftData writes), session start flap (4s spin-up grace), sunlight nextNudge display, SolarCalculator continuation race.
 

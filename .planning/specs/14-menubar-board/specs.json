@@ -1,0 +1,46 @@
+{
+  "todos": [
+    {
+      "id": "01",
+      "title": "Menu-bar glyph — monochrome plant + state dot",
+      "spec": ".planning/specs/14-menubar-board/01-menubar-glyph.md",
+      "completed": false
+    },
+    {
+      "id": "02",
+      "title": "Menu-bar popover — 318 pt Sage window",
+      "spec": ".planning/specs/14-menubar-board/02-popover.md",
+      "completed": false
+    },
+    {
+      "id": "03",
+      "title": "Soft-alert engine — chime + quiet hours",
+      "spec": ".planning/specs/14-menubar-board/03-soft-alerts.md",
+      "completed": false
+    },
+    {
+      "id": "04",
+      "title": "Settings ▸ Alerts pane",
+      "spec": ".planning/specs/14-menubar-board/04-settings-alerts-pane.md",
+      "completed": false
+    },
+    {
+      "id": "05",
+      "title": "Flower roster A — pot + 5 ASEAN plants",
+      "spec": ".planning/specs/14-menubar-board/05-roster-asean-a.md",
+      "completed": false
+    },
+    {
+      "id": "06",
+      "title": "Flower roster B — 5 plants + picker grid",
+      "spec": ".planning/specs/14-menubar-board/06-roster-b-picker.md",
+      "completed": false
+    },
+    {
+      "id": "07",
+      "title": "Watered mood — perk-up on water log",
+      "spec": ".planning/specs/14-menubar-board/07-watered-perk.md",
+      "completed": false
+    }
+  ]
+}

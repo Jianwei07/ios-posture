@@ -35,6 +35,10 @@ targets:
     type: application
     platform: macOS
     deploymentTarget: "14.0"
+    # Product is Synthesis.app (module name must stay "Synthesis" for
+    # @testable import); productName here makes XcodeGen emit the right
+    # BuildableName in the generated scheme — never hand-edit the .xcscheme.
+    productName: Synthesis
     sources:
       - path: Sources
     settings:

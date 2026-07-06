@@ -160,6 +160,7 @@
 		83A7257CD4CF570D0B24716E /* MotionFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionFilter.swift; sourceTree = "<group>"; };
 		8824413888A97E294A823A42 /* Lotus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lotus.swift; sourceTree = "<group>"; };
 		8931605AAAE63A5861811287 /* NowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowView.swift; sourceTree = "<group>"; };
+		8A7B144A178F4909C2DADE45 /* Synthesis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synthesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DE96556B7C778F797B1D0CA /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		93DDE8EB8B33CDF0C8632CB7 /* PostureClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostureClassifier.swift; sourceTree = "<group>"; };
 		94766EAADF687406DFE8EF10 /* Synthesis.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Synthesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,7 +177,6 @@
 		B69593EB47D66F038545CAF0 /* Monstera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monstera.swift; sourceTree = "<group>"; };
 		B75F4BCAE51B7CF7CA49A08B /* SynthesisMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SynthesisMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0639C6AADB8AE8C792F067F /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
-		C871C272669551031585FFFF /* SynthesisMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SynthesisMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB12B512D469835052AE3E60 /* SynthesisTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SynthesisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC194A7CA49AEFAF9544E5F7 /* Rose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rose.swift; sourceTree = "<group>"; };
 		CDC556E9AF90B026FB2792C0 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
@@ -221,7 +221,7 @@
 			isa = PBXGroup;
 			children = (
 				94766EAADF687406DFE8EF10 /* Synthesis.app */,
-				C871C272669551031585FFFF /* SynthesisMac.app */,
+				8A7B144A178F4909C2DADE45 /* Synthesis.app */,
 				B75F4BCAE51B7CF7CA49A08B /* SynthesisMacTests.xctest */,
 				CB12B512D469835052AE3E60 /* SynthesisTests.xctest */,
 			);
@@ -483,7 +483,7 @@
 			packageProductDependencies = (
 			);
 			productName = SynthesisMac;
-			productReference = C871C272669551031585FFFF /* SynthesisMac.app */;
+			productReference = 8A7B144A178F4909C2DADE45 /* Synthesis.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CC19B08EE28033358F3F70A9 /* SynthesisMacTests */ = {

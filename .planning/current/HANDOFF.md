@@ -28,6 +28,11 @@ Verify per leaf: `xcodebuild build|test -project Synthesis.xcodeproj -scheme Syn
 - Note: `xcodebuild test` prints a misleading XCTest "Executed 0 tests" block — the suite runs under Swift Testing; look for "Test run with N tests" instead.
 - Remaining: on-device QA (dot in light/dark bar, chime through AirPods, popover live data, mascots' wilt feel). PR to main from `feat/macos-bar`.
 
+### Post-PR loop (2026-07-06, PR #5 CI)
+- CI "Check generated project is committed" failed: `SynthesisMac.xcscheme` had been hand-edited (BuildableName Synthesis.app, commit 9c9fcb5) but `xcodegen generate` re-emits SynthesisMac.app → dirty tree on CI. Fix at source: `productName: Synthesis` on the SynthesisMac target in project.yml, regenerate, commit. **Never hand-edit anything under Synthesis.xcodeproj — encode in project.yml.** xcodegen 2.45.4 local == brew latest; generation now idempotent.
+- Test gap sweep: session-14 logic had no coverage. +20 tests (48 → 68 in 15 suites): walk countdown (`minutesUntilWalk` full/countdown/ceil/0-clamp/reset-on-fire/reset-on-break), `AppModel.liveBend` (baseline-seeded forwardAngle drives it with zero motion samples: gate/proportional/clamps), watered perk (activate, ~2s expiry publishes nil, re-log extends past first expiry task), `MenuBarGlyph` (18×18, isTemplate false, distinct a11y labels, 4 states render distinct pixels), `UserSettings` alert defaults + reset() parity (migration contract).
+- Copilot review on PR #5: quota-limited, no findings.
+
 ---
 
 ## Previous — 2026-07-02 macOS polish round

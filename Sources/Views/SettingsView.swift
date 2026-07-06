@@ -18,7 +18,8 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     airpodsRow
 
-                    escalateRow
+                    sectionLabel("Alerts")
+                    alertsCard
 
                     sectionLabel("Slouch sensitivity")
                     sensitivityCard
@@ -94,17 +95,105 @@ struct SettingsView: View {
         .card()
     }
 
-    private var escalateRow: some View {
-        Toggle(isOn: Binding(get: { settings.escalateLongSlouches },
-                             set: { settings.escalateLongSlouches = $0; save() })) {
-            VStack(alignment: .leading, spacing: 1) {
-                Text("Escalate long slouches").font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
-                Text("banner after 6 min").font(Theme.Font.caption(11)).foregroundStyle(Theme.Palette.inkFaint)
+    // Alerts pane (design board section 03): master switch, the three-level
+    // alert ladder, nudge timing, quiet hours.
+    private var alertsCard: some View {
+        let master = settings.softAlertsEnabled
+        return VStack(alignment: .leading, spacing: 12) {
+            Toggle(isOn: Binding(get: { settings.softAlertsEnabled },
+                                 set: { settings.softAlertsEnabled = $0; save() })) {
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("Soft alerts").font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
+                    Text("glyph · chime · banner").font(Theme.Font.caption(11)).foregroundStyle(Theme.Palette.inkFaint)
+                }
             }
+            .tint(Theme.Palette.aligned)
+
+            Divider()
+
+            Group {
+                // Level 1 is informational — the menu-bar dot never turns off.
+                HStack {
+                    alertRowTitle("Glyph dot", caption: "silent · always on")
+                    Spacer()
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 15))
+                        .foregroundStyle(Theme.Palette.aligned)
+                }
+
+                Toggle(isOn: Binding(get: { settings.chimeOnSustainedDrift },
+                                     set: { settings.chimeOnSustainedDrift = $0; save() })) {
+                    alertRowTitle("AirPods chime", caption: "on sustained drift")
+                }
+                .tint(Theme.Palette.aligned)
+
+                Toggle(isOn: Binding(get: { settings.escalateLongSlouches },
+                                     set: { settings.escalateLongSlouches = $0; save() })) {
+                    alertRowTitle("Notification banner", caption: "escalation · after 6 min")
+                }
+                .tint(Theme.Palette.aligned)
+
+                Stepper(value: Binding(get: { settings.nudgeAfterDriftMin },
+                                       set: { settings.nudgeAfterDriftMin = $0; save() }),
+                        in: 1...10, step: 1) {
+                    HStack {
+                        alertRowTitle("Nudge after sustained drift", caption: nil)
+                        Spacer()
+                        Text("\(Int(settings.nudgeAfterDriftMin)) min")
+                            .font(Theme.Font.number(14))
+                            .foregroundStyle(Theme.Palette.accent)
+                    }
+                }
+
+                Toggle(isOn: Binding(get: { settings.quietHoursEnabled },
+                                     set: { settings.quietHoursEnabled = $0; save() })) {
+                    alertRowTitle("Quiet hours", caption: quietHoursCaption)
+                }
+                .tint(Theme.Palette.aligned)
+
+                if settings.quietHoursEnabled {
+                    HStack(spacing: 12) {
+                        DatePicker("From", selection: Binding(
+                            get: { timeDate(fromMinutes: settings.quietHoursStartMinutes) },
+                            set: { settings.quietHoursStartMinutes = minutesOfDay(from: $0); save() }
+                        ), displayedComponents: .hourAndMinute)
+                        DatePicker("To", selection: Binding(
+                            get: { timeDate(fromMinutes: settings.quietHoursEndMinutes) },
+                            set: { settings.quietHoursEndMinutes = minutesOfDay(from: $0); save() }
+                        ), displayedComponents: .hourAndMinute)
+                    }
+                    .font(Theme.Font.caption(12))
+                    .datePickerStyle(.compact)
+                }
+            }
+            .disabled(!master)
+            .opacity(master ? 1 : 0.45)
         }
-        .tint(Theme.Palette.aligned)
         .padding(12)
         .card()
+    }
+
+    private func alertRowTitle(_ title: String, caption: String?) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(title).font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
+            if let caption {
+                Text(caption).font(Theme.Font.caption(11)).foregroundStyle(Theme.Palette.inkFaint)
+            }
+        }
+    }
+
+    private var quietHoursCaption: String {
+        let f = { (m: Int) in String(format: "%d:%02d", m / 60, m % 60) }
+        return "\(f(settings.quietHoursStartMinutes)) – \(f(settings.quietHoursEndMinutes))"
+    }
+
+    private func timeDate(fromMinutes m: Int) -> Date {
+        Calendar.current.date(bySettingHour: m / 60, minute: m % 60, second: 0, of: .now) ?? .now
+    }
+
+    private func minutesOfDay(from date: Date) -> Int {
+        let c = Calendar.current.dateComponents([.hour, .minute], from: date)
+        return (c.hour ?? 0) * 60 + (c.minute ?? 0)
     }
 
     private var sensitivityCard: some View {

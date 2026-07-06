@@ -22,7 +22,7 @@
       "id": "04",
       "title": "Settings \u25b8 Alerts pane",
       "spec": ".planning/specs/14-menubar-board/04-settings-alerts-pane.md",
-      "completed": false
+      "completed": true
     },
     {
       "id": "05",

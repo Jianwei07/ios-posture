@@ -6,12 +6,31 @@ import SwiftUI
 
 enum PlantKind: String, CaseIterable, Identifiable {
     case sunflower, monstera
+    case vandaOrchid, hibiscus, melatiJasmine, sampaguita, lotus
     var id: String { rawValue }
 
     var label: String {
         switch self {
-        case .sunflower: return "Sunflower"
-        case .monstera:  return "Monstera"
+        case .sunflower:     return "Sunflower"
+        case .monstera:      return "Monstera"
+        case .vandaOrchid:   return "Vanda orchid"
+        case .hibiscus:      return "Hibiscus"
+        case .melatiJasmine: return "Melati jasmine"
+        case .sampaguita:    return "Sampaguita"
+        case .lotus:         return "Lotus"
+        }
+    }
+
+    // Picker caption (design board: national-flower roster).
+    var region: String? {
+        switch self {
+        case .sunflower:     return nil  // "Your default" handled by picker
+        case .monstera:      return "Cosmetic"
+        case .vandaOrchid:   return "Singapore"
+        case .hibiscus:      return "Malaysia"
+        case .melatiJasmine: return "Indonesia"
+        case .sampaguita:    return "Philippines"
+        case .lotus:         return "Vietnam"
         }
     }
 }
@@ -39,8 +58,13 @@ struct PlantMascot: View {
     var body: some View {
         Group {
             switch kind {
-            case .sunflower: Sunflower(bend: bend, color: color)
-            case .monstera:  Monstera(bend: bend, color: color)
+            case .sunflower:     Sunflower(bend: bend, color: color)
+            case .monstera:      Monstera(bend: bend, color: color)
+            case .vandaOrchid:   VandaOrchid(bend: bend, color: color)
+            case .hibiscus:      Hibiscus(bend: bend, color: color)
+            case .melatiJasmine: MelatiJasmine(bend: bend, color: color)
+            case .sampaguita:    Sampaguita(bend: bend, color: color)
+            case .lotus:         Lotus(bend: bend, color: color)
             }
         }
         .animation(Theme.Motion.pose, value: bend)

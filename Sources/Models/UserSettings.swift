@@ -41,6 +41,10 @@ final class UserSettings {
 
     // Level-2 soft alert: quiet chime after sustained forward lean.
     var chimeOnSustainedDrift: Bool = true
+    var nudgeAfterDriftSeconds: Double = 3.0
+    var chimeVolume: Double = 0.5
+    // Legacy persisted field. Keep for store compatibility; new behavior uses
+    // nudgeAfterDriftSeconds.
     var nudgeAfterDriftMin: Double = 2.0
 
     // Quiet hours (minutes of day, local): notifications + chime hold off.
@@ -65,6 +69,8 @@ final class UserSettings {
         sunlightEnabled = true
         softAlertsEnabled = true
         chimeOnSustainedDrift = true
+        nudgeAfterDriftSeconds = 3.0
+        chimeVolume = 0.5
         nudgeAfterDriftMin = 2.0
         quietHoursEnabled = true
         quietHoursStartMinutes = 1320
@@ -91,6 +97,8 @@ final class UserSettings {
         sunlightEnabled = true
         softAlertsEnabled = true
         chimeOnSustainedDrift = true
+        nudgeAfterDriftSeconds = 3.0
+        chimeVolume = 0.5
         nudgeAfterDriftMin = 2.0
         quietHoursEnabled = true
         quietHoursStartMinutes = 1320

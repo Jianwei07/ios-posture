@@ -13,21 +13,17 @@ final class ReminderScheduler {
     private let fire: (ReminderType, String?) -> Void
     private let cancelAll: () -> Void
     private let now: () -> Date
-    private let playChime: () -> Void
+    private let playChime: (Double) -> Void
 
     // Escalation timing: only after ~6 min sustained slouch, then cool down.
     private let alertSustainedSeconds: Double = 360
     private let alertCooldownMin: Double = 5
 
-    // Chime cooldown mirrors the banner's — a re-fire needs both a fresh
-    // sustained stretch AND the cooldown to elapse.
-    private let chimeCooldownMin: Double = 5
-
     private var poorPostureStartTime: Date?
     private var lastPostureAlertTime: Date?
 
     private var driftStartTime: Date?
-    private var lastChimeTime: Date?
+    private var didChimeForCurrentDrift = false
 
     private var lastWaterReminderAt: Double = 0
     private var lastWalkReminderAt: Double = 0
@@ -42,7 +38,7 @@ final class ReminderScheduler {
          fire: @escaping (ReminderType, String?) -> Void = { NotificationModule.shared.fire($0, detail: $1) },
          cancelAll: @escaping () -> Void = { NotificationModule.shared.cancelAll() },
          now: @escaping () -> Date = Date.init,
-         playChime: @escaping () -> Void = { NotificationModule.shared.playChime() }) {
+         playChime: @escaping (Double) -> Void = { NotificationModule.shared.playChime(volume: $0) }) {
         self.settings = settings
         self.fire = fire
         self.cancelAll = cancelAll
@@ -72,6 +68,7 @@ final class ReminderScheduler {
     func reset() {
         poorPostureStartTime = nil
         driftStartTime = nil
+        didChimeForCurrentDrift = false
         lastWaterReminderAt = 0
         lastWalkReminderAt = 0
         cancelAll()
@@ -110,23 +107,21 @@ final class ReminderScheduler {
         let currentTime = now()
         guard state != .aligned else {
             driftStartTime = nil
+            didChimeForCurrentDrift = false
             return
         }
         if driftStartTime == nil { driftStartTime = currentTime }
 
         guard settings.softAlertsEnabled, settings.chimeOnSustainedDrift else { return }
+        guard !didChimeForCurrentDrift else { return }
 
         guard let start = driftStartTime,
-              currentTime.timeIntervalSince(start) >= settings.nudgeAfterDriftMin * 60 else { return }
-
-        if let last = lastChimeTime,
-           currentTime.timeIntervalSince(last) < chimeCooldownMin * 60 { return }
+              currentTime.timeIntervalSince(start) >= settings.nudgeAfterDriftSeconds else { return }
 
         guard !isQuietNow() else { return }
 
-        lastChimeTime = currentTime
-        driftStartTime = nil
-        playChime()
+        didChimeForCurrentDrift = true
+        playChime(settings.chimeVolume)
     }
 
     // Quiet hours: minutes-of-day window in local time, wrapping overnight

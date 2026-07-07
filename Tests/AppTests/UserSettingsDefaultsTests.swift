@@ -43,3 +43,42 @@ struct UserSettingsDefaultsTests {
         #expect(settings.quietHoursEndMinutes == 480)
     }
 }
+
+@Suite("AppPersistence")
+struct AppPersistenceTests {
+    @Test func storeURLIsAppSpecific() {
+        let appSupport = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+        let storeURL = AppPersistence.storeURL(
+            applicationSupportDirectory: appSupport,
+            bundleIdentifier: "com.jayden77.posture.mac"
+        )
+
+        #expect(storeURL.lastPathComponent == "Synthesis.store")
+        #expect(storeURL.deletingLastPathComponent().lastPathComponent == "com.jayden77.posture.mac")
+        #expect(storeURL != appSupport.appendingPathComponent("default.store"))
+    }
+
+    @MainActor
+    @Test func containerIgnoresGenericDefaultStore() throws {
+        let tempRoot = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: tempRoot, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempRoot) }
+
+        let genericDefaultStore = tempRoot.appendingPathComponent("default.store")
+        try Data("not a synthesis store".utf8).write(to: genericDefaultStore)
+
+        let container = try AppPersistence.makeContainer(
+            applicationSupportDirectory: tempRoot,
+            bundleIdentifier: "com.jayden77.posture.mac"
+        )
+        let settings = try AppPersistence.loadOrCreateSettings(in: container.mainContext)
+
+        #expect(!settings.hasOnboarded)
+        #expect(FileManager.default.fileExists(atPath: genericDefaultStore.path))
+        #expect(FileManager.default.fileExists(atPath: AppPersistence.storeURL(
+            applicationSupportDirectory: tempRoot,
+            bundleIdentifier: "com.jayden77.posture.mac"
+        ).path))
+    }
+}

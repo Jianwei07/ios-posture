@@ -24,8 +24,9 @@ private final class FiredLog {
 }
 
 private final class ChimeLog {
-    private(set) var count = 0
-    func record() { count += 1 }
+    private(set) var volumes: [Double] = []
+    var count: Int { volumes.count }
+    func record(volume: Double) { volumes.append(volume) }
 }
 
 private func makeScheduler(settings: UserSettings = UserSettings(),
@@ -36,7 +37,7 @@ private func makeScheduler(settings: UserSettings = UserSettings(),
                       fire: { log.record($0, $1) },
                       cancelAll: {},
                       now: clock.now,
-                      playChime: { chimes.record() })
+                      playChime: { chimes.record(volume: $0) })
 }
 
 @Suite("ReminderScheduler — water")
@@ -228,7 +229,7 @@ struct ReminderSchedulerChimeTests {
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .drift, sessionSeconds: 1)
-        clock.advance(121)  // > 2 min default
+        clock.advance(3)
         scheduler.tick(postureState: .drift, sessionSeconds: 2)
 
         #expect(chimes.count == 1)
@@ -241,7 +242,7 @@ struct ReminderSchedulerChimeTests {
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .drift, sessionSeconds: 1)
-        clock.advance(60)
+        clock.advance(2)
         scheduler.tick(postureState: .drift, sessionSeconds: 2)
 
         #expect(chimes.count == 0)
@@ -254,30 +255,54 @@ struct ReminderSchedulerChimeTests {
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .drift, sessionSeconds: 1)
-        clock.advance(90)
+        clock.advance(2)
         scheduler.tick(postureState: .aligned, sessionSeconds: 2)  // recovers
-        clock.advance(90)
+        clock.advance(2)
         scheduler.tick(postureState: .drift, sessionSeconds: 3)  // fresh stretch
 
         #expect(chimes.count == 0)
+
+        clock.advance(3)
+        scheduler.tick(postureState: .drift, sessionSeconds: 4)
+        #expect(chimes.count == 1)
     }
 
-    @Test func cooldownSuppressesRepeatChime() {
+    @Test func chimesOncePerBadPostureStretch() {
         let clock = FakeClock()
         let chimes = ChimeLog()
         let scheduler = makeScheduler(clock: clock, chimes: chimes)
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .drift, sessionSeconds: 1)
-        clock.advance(121)
+        clock.advance(3)
         scheduler.tick(postureState: .drift, sessionSeconds: 2)
         #expect(chimes.count == 1)
 
-        // Sustained again past the nudge threshold, but inside the 5-minute
-        // cooldown — must stay silent.
-        clock.advance(121)
+        // Still in the same non-aligned stretch, so no repeat chime.
+        clock.advance(1000)
         scheduler.tick(postureState: .drift, sessionSeconds: 3)
         #expect(chimes.count == 1)
+
+        scheduler.tick(postureState: .aligned, sessionSeconds: 4)
+        scheduler.tick(postureState: .slouch, sessionSeconds: 5)
+        clock.advance(3)
+        scheduler.tick(postureState: .slouch, sessionSeconds: 6)
+        #expect(chimes.count == 2)
+    }
+
+    @Test func passesConfiguredVolume() {
+        let clock = FakeClock()
+        let chimes = ChimeLog()
+        let settings = UserSettings()
+        settings.chimeVolume = 0.25
+        let scheduler = makeScheduler(settings: settings, clock: clock, chimes: chimes)
+        quietSeams(scheduler)
+
+        scheduler.tick(postureState: .drift, sessionSeconds: 1)
+        clock.advance(3)
+        scheduler.tick(postureState: .drift, sessionSeconds: 2)
+
+        #expect(chimes.volumes == [0.25])
     }
 
     @Test func masterToggleOffSilences() {
@@ -342,7 +367,7 @@ struct ReminderSchedulerQuietHoursTests {
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .slouch, sessionSeconds: 1)
-        clock.advance(400)  // past both chime (120s) and banner (360s) sustains
+        clock.advance(400)  // past both chime (3s) and banner (360s) sustains
         scheduler.tick(postureState: .slouch, sessionSeconds: 2)
 
         #expect(chimes.count == 0)
@@ -357,7 +382,7 @@ struct ReminderSchedulerQuietHoursTests {
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .drift, sessionSeconds: 1)
-        clock.advance(121)
+        clock.advance(3)
         scheduler.tick(postureState: .drift, sessionSeconds: 2)
 
         #expect(chimes.count == 0)
@@ -371,7 +396,7 @@ struct ReminderSchedulerQuietHoursTests {
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .drift, sessionSeconds: 1)
-        clock.advance(121)
+        clock.advance(3)
         scheduler.tick(postureState: .drift, sessionSeconds: 2)
 
         #expect(chimes.count == 1)
@@ -387,7 +412,7 @@ struct ReminderSchedulerQuietHoursTests {
         quietSeams(scheduler)
 
         scheduler.tick(postureState: .drift, sessionSeconds: 1)
-        clock.advance(121)
+        clock.advance(3)
         scheduler.tick(postureState: .drift, sessionSeconds: 2)
 
         #expect(chimes.count == 1)

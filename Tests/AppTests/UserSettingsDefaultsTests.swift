@@ -12,6 +12,8 @@ struct UserSettingsDefaultsTests {
 
         #expect(settings.softAlertsEnabled)
         #expect(settings.chimeOnSustainedDrift)
+        #expect(settings.nudgeAfterDriftSeconds == 3.0)
+        #expect(settings.chimeVolume == 0.5)
         #expect(settings.nudgeAfterDriftMin == 2.0)
         #expect(settings.quietHoursEnabled)
         #expect(settings.quietHoursStartMinutes == 1320)  // 22:00
@@ -22,6 +24,8 @@ struct UserSettingsDefaultsTests {
         let settings = UserSettings()
         settings.softAlertsEnabled = false
         settings.chimeOnSustainedDrift = false
+        settings.nudgeAfterDriftSeconds = 9
+        settings.chimeVolume = 0.9
         settings.nudgeAfterDriftMin = 9
         settings.quietHoursEnabled = false
         settings.quietHoursStartMinutes = 0
@@ -31,6 +35,8 @@ struct UserSettingsDefaultsTests {
 
         #expect(settings.softAlertsEnabled)
         #expect(settings.chimeOnSustainedDrift)
+        #expect(settings.nudgeAfterDriftSeconds == 3.0)
+        #expect(settings.chimeVolume == 0.5)
         #expect(settings.nudgeAfterDriftMin == 2.0)
         #expect(settings.quietHoursEnabled)
         #expect(settings.quietHoursStartMinutes == 1320)

@@ -1,9 +1,7 @@
 import UserNotifications
 import SwiftData
 import Foundation
-#if os(macOS)
-import AppKit
-#endif
+import AVFoundation
 
 enum ReminderType {
     case posture, water, walk, sunlight
@@ -40,6 +38,7 @@ final class NotificationModule: NSObject, UNUserNotificationCenterDelegate {
     static let waterLogActionId = "synthesis.water.log"
 
     private var container: ModelContainer?
+    private let chimePlayer = ChimePlayer()
 
     private override init() { super.init() }
 
@@ -89,10 +88,8 @@ final class NotificationModule: NSObject, UNUserNotificationCenterDelegate {
     // Level-2 soft alert: a quiet chime through the default audio output
     // (the AirPods, when worn). Deliberately not a notification — no banner,
     // no notification-center entry, dismissed by simply sitting up.
-    func playChime() {
-        #if os(macOS)
-        NSSound(named: "Glass")?.play()
-        #endif
+    func playChime(volume: Double = 0.5) {
+        chimePlayer.play(volume: volume)
     }
 
     // Shared content builder — tiers priority (posture: sound + active) vs
@@ -131,5 +128,81 @@ final class NotificationModule: NSObject, UNUserNotificationCenterDelegate {
             context.insert(WaterEntry())
             try? context.save()
         }
+    }
+}
+
+final class ChimePlayer {
+    private lazy var chimeData = Self.makeChimeData()
+    private var player: AVAudioPlayer?
+
+    func play(volume: Double) {
+        let clampedVolume = Float(min(1, max(0, volume)))
+        guard clampedVolume > 0 else { return }
+
+        #if os(iOS)
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+        try? session.setActive(true)
+        #endif
+
+        do {
+            if player == nil {
+                player = try AVAudioPlayer(data: chimeData)
+            }
+
+            guard let player else { return }
+            if player.isPlaying { player.stop() }
+            player.currentTime = 0
+            player.volume = clampedVolume
+            player.prepareToPlay()
+            player.play()
+        } catch {
+            player = nil
+        }
+    }
+
+    private static func makeChimeData() -> Data {
+        let sampleRate = 44_100
+        let duration = 0.32
+        let sampleCount = Int(Double(sampleRate) * duration)
+        var sampleData = Data()
+        sampleData.reserveCapacity(sampleCount * 2)
+
+        for index in 0..<sampleCount {
+            let time = Double(index) / Double(sampleRate)
+            let attack = min(1, time / 0.02)
+            let decay = exp(-5.5 * time / duration)
+            let envelope = attack * decay
+            let tone = sin(2 * Double.pi * 880 * time)
+                + 0.55 * sin(2 * Double.pi * 1320 * time)
+            let sample = Int16(max(-1, min(1, tone * 0.22 * envelope)) * Double(Int16.max))
+            appendLittleEndian(sample, to: &sampleData)
+        }
+
+        var data = Data()
+        appendASCII("RIFF", to: &data)
+        appendLittleEndian(UInt32(36 + sampleData.count), to: &data)
+        appendASCII("WAVE", to: &data)
+        appendASCII("fmt ", to: &data)
+        appendLittleEndian(UInt32(16), to: &data)
+        appendLittleEndian(UInt16(1), to: &data)
+        appendLittleEndian(UInt16(1), to: &data)
+        appendLittleEndian(UInt32(sampleRate), to: &data)
+        appendLittleEndian(UInt32(sampleRate * 2), to: &data)
+        appendLittleEndian(UInt16(2), to: &data)
+        appendLittleEndian(UInt16(16), to: &data)
+        appendASCII("data", to: &data)
+        appendLittleEndian(UInt32(sampleData.count), to: &data)
+        data.append(sampleData)
+        return data
+    }
+
+    private static func appendASCII(_ string: String, to data: inout Data) {
+        data.append(contentsOf: string.utf8)
+    }
+
+    private static func appendLittleEndian<T: FixedWidthInteger>(_ value: T, to data: inout Data) {
+        var value = value.littleEndian
+        withUnsafeBytes(of: &value) { data.append(contentsOf: $0) }
     }
 }

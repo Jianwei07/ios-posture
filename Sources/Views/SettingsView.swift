@@ -133,16 +133,31 @@ struct SettingsView: View {
                 }
                 .tint(Theme.Palette.aligned)
 
-                Stepper(value: Binding(get: { settings.nudgeAfterDriftMin },
-                                       set: { settings.nudgeAfterDriftMin = $0; save() }),
+                Stepper(value: Binding(get: { settings.nudgeAfterDriftSeconds },
+                                       set: { settings.nudgeAfterDriftSeconds = $0; save() }),
                         in: 1...10, step: 1) {
                     HStack {
                         alertRowTitle("Nudge after sustained drift", caption: nil)
                         Spacer()
-                        Text("\(Int(settings.nudgeAfterDriftMin)) min")
+                        Text("\(Int(settings.nudgeAfterDriftSeconds)) sec")
                             .font(Theme.Font.number(14))
                             .foregroundStyle(Theme.Palette.accent)
                     }
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        alertRowTitle("Chime volume", caption: "relative to current system/AirPods volume")
+                        Spacer()
+                        Text("\(Int((settings.chimeVolume * 100).rounded()))%")
+                            .font(Theme.Font.number(14))
+                            .foregroundStyle(Theme.Palette.accent)
+                    }
+                    Slider(value: Binding(
+                        get: { settings.chimeVolume },
+                        set: { settings.chimeVolume = min(1, max(0, $0)); save() }
+                    ), in: 0...1, step: 0.05)
+                    .tint(Theme.Palette.accent)
                 }
 
                 Toggle(isOn: Binding(get: { settings.quietHoursEnabled },

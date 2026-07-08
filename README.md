@@ -18,18 +18,27 @@ and daylight-aware sunlight nudges. Fully local, no account, no backend.
 
 ## Install (macOS)
 
-The macOS menu-bar app installs via Homebrew:
+Synthesis is open source and not notarized (no paid Apple Developer account
+yet), so the recommended install is building it yourself — a local build has
+no Gatekeeper prompt at all, since quarantine is only applied to files
+downloaded via a browser, not to a git clone.
 
 ```bash
-brew install --cask jianwei07/synthesis/synthesis
+git clone https://github.com/Jianwei07/ios-posture.git
+cd ios-posture
+./build.sh
 ```
 
-Or grab `Synthesis-<version>.zip` from the [latest release](https://github.com/Jianwei07/ios-posture/releases/latest) and drag `Synthesis.app` into Applications.
+Requires **Xcode 16** (not just the Command Line Tools) — `build.sh` runs
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) and `xcodebuild` for you,
+then opens the built app. Re-run `./build.sh` any time to rebuild after
+`git pull`.
 
-> **First launch:** builds are open source and not notarized (no paid Apple
-> Developer account), so macOS blocks the first launch. Allow it under
-> **System Settings → Privacy & Security → Open Anyway**, or install with
-> `brew install --cask --no-quarantine jianwei07/synthesis/synthesis`.
+**Don't want to build it?** Grab `Synthesis-<version>.zip` from the
+[latest release](https://github.com/Jianwei07/ios-posture/releases/latest)
+instead and drag `Synthesis.app` into Applications. That build is ad-hoc
+signed, so macOS *will* block the first launch — allow it under
+**System Settings → Privacy & Security → Open Anyway**.
 
 The iOS app is build-from-source only for now (see [Build](#build)).
 

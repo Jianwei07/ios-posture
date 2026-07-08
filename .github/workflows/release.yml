@@ -1,0 +1,81 @@
+# Release pipeline: push a tag `v<MARKETING_VERSION>` (e.g. v1.0.0) and this
+# builds the macOS app (ad-hoc signed — no Apple Developer account needed),
+# zips it, and publishes a GitHub Release with the sha256 needed for the
+# Homebrew cask bump (see RELEASING.md).
+name: Release
+
+on:
+  push:
+    tags: [ "v*" ]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_16.app
+
+    - name: Install XcodeGen
+      run: brew install xcodegen
+
+    - name: Generate project
+      run: xcodegen generate
+
+    - name: Verify tag matches MARKETING_VERSION
+      run: |
+        TAG_VERSION="${GITHUB_REF_NAME#v}"
+        PROJECT_VERSION="$(grep -m1 'MARKETING_VERSION:' project.yml | sed 's/[^0-9.]//g')"
+        echo "tag: $TAG_VERSION · project.yml: $PROJECT_VERSION"
+        if [ "$TAG_VERSION" != "$PROJECT_VERSION" ]; then
+          echo "Tag $GITHUB_REF_NAME does not match MARKETING_VERSION $PROJECT_VERSION in project.yml"
+          exit 1
+        fi
+
+    - name: Build (macOS, Release, ad-hoc signed)
+      run: |
+        xcodebuild -project Synthesis.xcodeproj -scheme SynthesisMac \
+          -configuration Release -derivedDataPath build \
+          CODE_SIGN_IDENTITY=- build
+
+    - name: Package
+      run: |
+        VERSION="${GITHUB_REF_NAME#v}"
+        APP="build/Build/Products/Release/Synthesis.app"
+        ZIP="Synthesis-$VERSION.zip"
+        codesign --verify --verbose=2 "$APP"
+        ditto -c -k --keepParent "$APP" "$ZIP"
+        shasum -a 256 "$ZIP" | tee sha256.txt
+
+    - name: Publish GitHub Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        VERSION="${GITHUB_REF_NAME#v}"
+        SHA="$(cut -d' ' -f1 sha256.txt)"
+        cat > notes.md <<EOF
+        ## Install
+
+        \`\`\`sh
+        brew install --cask jianwei07/synthesis/synthesis
+        \`\`\`
+
+        Or download \`Synthesis-$VERSION.zip\` below and drag \`Synthesis.app\` to Applications.
+
+        > **Note** — this build is open source and not notarized (no paid Apple
+        > Developer account). On first launch macOS will block it: allow it under
+        > **System Settings → Privacy & Security → Open Anyway**, or install with
+        > \`brew install --cask --no-quarantine jianwei07/synthesis/synthesis\`.
+
+        **sha256** (for the Homebrew cask): \`$SHA\`
+        EOF
+        gh release create "$GITHUB_REF_NAME" "Synthesis-$VERSION.zip" \
+          --title "Synthesis $VERSION" \
+          --notes-file notes.md \
+          --generate-notes

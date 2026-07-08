@@ -253,10 +253,12 @@ struct MenuBarPopoverView: View {
             Spacer()
 
             HStack(spacing: 0) {
-                segment("Gentle", isOn: settings?.softAlertsEnabled ?? true) {
+                segment("On", isOn: settings?.softAlertsEnabled ?? true,
+                        activeColor: Theme.Palette.aligned) {
                     settings?.softAlertsEnabled = true
                 }
-                segment("Off", isOn: !(settings?.softAlertsEnabled ?? true)) {
+                segment("Off", isOn: !(settings?.softAlertsEnabled ?? true),
+                        activeColor: Theme.Palette.slouch) {
                     settings?.softAlertsEnabled = false
                 }
             }
@@ -265,16 +267,18 @@ struct MenuBarPopoverView: View {
         }
     }
 
-    private func segment(_ label: String, isOn: Bool, action: @escaping () -> Void) -> some View {
+    private func segment(_ label: String, isOn: Bool, activeColor: Color,
+                         action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(label)
                 .font(.system(size: 11.5, weight: .semibold))
-                .foregroundStyle(isOn ? Theme.Palette.accent : Theme.Palette.inkFaint)
+                .foregroundStyle(isOn ? .white : Theme.Palette.inkFaint)
+                .frame(minWidth: 34)
                 .padding(.horizontal, 9)
                 .padding(.vertical, 4)
                 .background(
                     RoundedRectangle(cornerRadius: 7)
-                        .fill(isOn ? Theme.Palette.surface : .clear)
+                        .fill(isOn ? activeColor : .clear)
                         .shadow(color: .black.opacity(isOn ? 0.08 : 0), radius: 1, y: 1)
                 )
         }

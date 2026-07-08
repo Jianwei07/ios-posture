@@ -10,6 +10,10 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
+    # Single source of truth for app version. Release tags must match:
+    # tag v<MARKETING_VERSION> (see RELEASING.md).
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
 
 targets:
   Synthesis:

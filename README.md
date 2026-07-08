@@ -1,5 +1,9 @@
 # Synthesis
 
+[![CI](https://github.com/Jianwei07/ios-posture/actions/workflows/swift.yml/badge.svg)](https://github.com/Jianwei07/ios-posture/actions/workflows/swift.yml)
+[![Release](https://img.shields.io/github/v/release/Jianwei07/ios-posture)](https://github.com/Jianwei07/ios-posture/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 App for office workers to live well. Uses **AirPods Pro** motion sensors to detect bad head
 posture in real time and nudge you to fix it — plus interval water reminders, walk reminders,
 and daylight-aware sunlight nudges. Fully local, no account, no backend.
@@ -11,6 +15,23 @@ and daylight-aware sunlight nudges. Fully local, no account, no backend.
 
 **Phase 1 (in progress):** AirPods posture detection + session lifecycle, water reminder, session history.
 **Phase 2 (planned):** HealthKit logging, step-aware walk reminders, Apple Watch companion.
+
+## Install (macOS)
+
+The macOS menu-bar app installs via Homebrew:
+
+```bash
+brew install --cask jianwei07/synthesis/synthesis
+```
+
+Or grab `Synthesis-<version>.zip` from the [latest release](https://github.com/Jianwei07/ios-posture/releases/latest) and drag `Synthesis.app` into Applications.
+
+> **First launch:** builds are open source and not notarized (no paid Apple
+> Developer account), so macOS blocks the first launch. Allow it under
+> **System Settings → Privacy & Security → Open Anyway**, or install with
+> `brew install --cask --no-quarantine jianwei07/synthesis/synthesis`.
+
+The iOS app is build-from-source only for now (see [Build](#build)).
 
 ## How it works
 
@@ -24,7 +45,7 @@ and daylight-aware sunlight nudges. Fully local, no account, no backend.
 ## Requirements
 
 - **AirPods Pro 2nd gen** (older AirPods lack the motion sensor API)
-- iPhone on **iOS 17+**
+- Mac on **macOS 14+** (menu-bar app) or iPhone on **iOS 17+**
 - Xcode 16 (to build)
 - Posture features need a **real device** — the sensor API does not work in Simulator
 

@@ -1,5 +1,9 @@
 # Synthesis
 
+[![CI](https://github.com/Jianwei07/ios-posture/actions/workflows/swift.yml/badge.svg)](https://github.com/Jianwei07/ios-posture/actions/workflows/swift.yml)
+[![Release](https://img.shields.io/github/v/release/Jianwei07/ios-posture)](https://github.com/Jianwei07/ios-posture/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 App for office workers to live well. Uses **AirPods Pro** motion sensors to detect bad head
 posture in real time and nudge you to fix it — plus interval water reminders, walk reminders,
 and daylight-aware sunlight nudges. Fully local, no account, no backend.
@@ -11,6 +15,32 @@ and daylight-aware sunlight nudges. Fully local, no account, no backend.
 
 **Phase 1 (in progress):** AirPods posture detection + session lifecycle, water reminder, session history.
 **Phase 2 (planned):** HealthKit logging, step-aware walk reminders, Apple Watch companion.
+
+## Install (macOS)
+
+Synthesis is open source and not notarized (no paid Apple Developer account
+yet), so the recommended install is building it yourself — a local build has
+no Gatekeeper prompt at all, since quarantine is only applied to files
+downloaded via a browser, not to a git clone.
+
+```bash
+git clone https://github.com/Jianwei07/ios-posture.git
+cd ios-posture
+./build.sh
+```
+
+Requires **Xcode 16** (not just the Command Line Tools) — `build.sh` runs
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) and `xcodebuild` for you,
+then opens the built app. Re-run `./build.sh` any time to rebuild after
+`git pull`.
+
+**Don't want to build it?** Grab `Synthesis-<version>.zip` from the
+[latest release](https://github.com/Jianwei07/ios-posture/releases/latest)
+instead and drag `Synthesis.app` into Applications. That build is ad-hoc
+signed, so macOS *will* block the first launch — allow it under
+**System Settings → Privacy & Security → Open Anyway**.
+
+The iOS app is build-from-source only for now (see [Build](#build)).
 
 ## How it works
 
@@ -24,7 +54,7 @@ and daylight-aware sunlight nudges. Fully local, no account, no backend.
 ## Requirements
 
 - **AirPods Pro 2nd gen** (older AirPods lack the motion sensor API)
-- iPhone on **iOS 17+**
+- Mac on **macOS 14+** (menu-bar app) or iPhone on **iOS 17+**
 - Xcode 16 (to build)
 - Posture features need a **real device** — the sensor API does not work in Simulator
 

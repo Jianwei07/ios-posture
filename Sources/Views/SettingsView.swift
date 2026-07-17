@@ -54,6 +54,9 @@ struct SettingsView: View {
                         .padding(.top, 8)
                 }
                 .padding(20)
+                .frame(maxWidth: 560)
+                .frame(maxWidth: .infinity)
+                .toggleStyle(.switch)
             }
             .scrollContentBackground(.hidden)
             .background(Theme.Palette.bg.ignoresSafeArea())
@@ -104,7 +107,7 @@ struct SettingsView: View {
                                  set: { settings.softAlertsEnabled = $0; save() })) {
                 VStack(alignment: .leading, spacing: 1) {
                     Text("Soft alerts").font(Theme.Font.body(14).weight(.semibold)).foregroundStyle(Theme.Palette.ink)
-                    Text("glyph · chime · banner").font(Theme.Font.caption(11)).foregroundStyle(Theme.Palette.inkFaint)
+                    Text("menu bar dot · chime · banner").font(Theme.Font.caption(11)).foregroundStyle(Theme.Palette.inkFaint)
                 }
             }
             .tint(Theme.Palette.aligned)
@@ -114,7 +117,7 @@ struct SettingsView: View {
             Group {
                 // Level 1 is informational — the menu-bar dot never turns off.
                 HStack {
-                    alertRowTitle("Glyph dot", caption: "silent · always on")
+                    alertRowTitle("Menu bar dot", caption: "always on · follows your posture")
                     Spacer()
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 15))
@@ -129,7 +132,7 @@ struct SettingsView: View {
 
                 Toggle(isOn: Binding(get: { settings.escalateLongSlouches },
                                      set: { settings.escalateLongSlouches = $0; save() })) {
-                    alertRowTitle("Notification banner", caption: "escalation · after 6 min")
+                    alertRowTitle("Notification banner", caption: "if slouching continues past 6 min")
                 }
                 .tint(Theme.Palette.aligned)
 
@@ -137,7 +140,7 @@ struct SettingsView: View {
                                        set: { settings.nudgeAfterDriftSeconds = $0; save() }),
                         in: 1...10, step: 1) {
                     HStack {
-                        alertRowTitle("Nudge after sustained drift", caption: nil)
+                        alertRowTitle("Nudge after sustained drift", caption: "how long drift lasts before the chime")
                         Spacer()
                         Text("\(Int(settings.nudgeAfterDriftSeconds)) sec")
                             .font(Theme.Font.number(14))
@@ -147,7 +150,7 @@ struct SettingsView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        alertRowTitle("Chime volume", caption: "relative to current system/AirPods volume")
+                        alertRowTitle("Chime volume", caption: "relative to your AirPods volume")
                         Spacer()
                         Text("\(Int((settings.chimeVolume * 100).rounded()))%")
                             .font(Theme.Font.number(14))
@@ -162,22 +165,23 @@ struct SettingsView: View {
 
                 Toggle(isOn: Binding(get: { settings.quietHoursEnabled },
                                      set: { settings.quietHoursEnabled = $0; save() })) {
-                    alertRowTitle("Quiet hours", caption: quietHoursCaption)
+                    alertRowTitle("Quiet hours",
+                                  caption: settings.quietHoursEnabled ? "no chimes or banners" : quietHoursCaption)
                 }
                 .tint(Theme.Palette.aligned)
 
                 if settings.quietHoursEnabled {
-                    HStack(spacing: 12) {
-                        DatePicker("From", selection: Binding(
-                            get: { timeDate(fromMinutes: settings.quietHoursStartMinutes) },
-                            set: { settings.quietHoursStartMinutes = minutesOfDay(from: $0); save() }
-                        ), displayedComponents: .hourAndMinute)
-                        DatePicker("To", selection: Binding(
-                            get: { timeDate(fromMinutes: settings.quietHoursEndMinutes) },
-                            set: { settings.quietHoursEndMinutes = minutesOfDay(from: $0); save() }
-                        ), displayedComponents: .hourAndMinute)
+                    HStack(spacing: 16) {
+                        quietHoursPicker("From", minutes: Binding(
+                            get: { settings.quietHoursStartMinutes },
+                            set: { settings.quietHoursStartMinutes = $0; save() }
+                        ))
+                        quietHoursPicker("To", minutes: Binding(
+                            get: { settings.quietHoursEndMinutes },
+                            set: { settings.quietHoursEndMinutes = $0; save() }
+                        ))
+                        Spacer(minLength: 0)
                     }
-                    .font(Theme.Font.caption(12))
                     .datePickerStyle(.compact)
                 }
             }
@@ -198,8 +202,23 @@ struct SettingsView: View {
     }
 
     private var quietHoursCaption: String {
-        let f = { (m: Int) in String(format: "%d:%02d", m / 60, m % 60) }
+        let f = { (m: Int) in
+            self.timeDate(fromMinutes: m).formatted(.dateTime.hour().minute())
+        }
         return "\(f(settings.quietHoursStartMinutes)) – \(f(settings.quietHoursEndMinutes))"
+    }
+
+    private func quietHoursPicker(_ label: String, minutes: Binding<Int>) -> some View {
+        HStack(spacing: 6) {
+            Text(label)
+                .font(Theme.Font.caption(12))
+                .foregroundStyle(Theme.Palette.inkSoft)
+            DatePicker(label, selection: Binding(
+                get: { timeDate(fromMinutes: minutes.wrappedValue) },
+                set: { minutes.wrappedValue = minutesOfDay(from: $0) }
+            ), displayedComponents: .hourAndMinute)
+            .labelsHidden()
+        }
     }
 
     private func timeDate(fromMinutes m: Int) -> Date {
@@ -214,7 +233,7 @@ struct SettingsView: View {
     private var sensitivityCard: some View {
         VStack(spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
-                Text("triggers past").font(Theme.Font.caption()).foregroundStyle(Theme.Palette.inkFaint)
+                Text("Nudges when you lean past").font(Theme.Font.caption()).foregroundStyle(Theme.Palette.inkFaint)
                 Spacer()
                 Text("\(Int(settings.sensitivity.degrees))°")
                     .font(Theme.Font.number(16)).foregroundStyle(Theme.Palette.accent)
@@ -270,7 +289,7 @@ struct SettingsView: View {
                     .foregroundStyle(Theme.Palette.ink)
                 Spacer()
                 Text(String(format: "%.2fL", settings.dailyWaterTargetMl / 1000))
-                    .font(Theme.Font.number(15))
+                    .font(Theme.Font.number(14))
                     .foregroundStyle(Theme.Palette.accent)
             }
             Slider(value: Binding(
@@ -293,7 +312,7 @@ struct SettingsView: View {
                     .foregroundStyle(Theme.Palette.ink)
                 Spacer()
                 Text("\(settings.dailyStepTarget)")
-                    .font(Theme.Font.number(15))
+                    .font(Theme.Font.number(14))
                     .foregroundStyle(Theme.Palette.drift)
             }
             Slider(value: Binding(

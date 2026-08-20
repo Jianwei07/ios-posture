@@ -1,5 +1,7 @@
 # Synthesis
 
+<img width="800" height="560" alt="ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/bb477919-1981-49d2-8638-2f32a32885b0" />
+
 [![CI](https://github.com/Jianwei07/ios-posture/actions/workflows/swift.yml/badge.svg)](https://github.com/Jianwei07/ios-posture/actions/workflows/swift.yml)
 [![Release](https://img.shields.io/github/v/release/Jianwei07/ios-posture)](https://github.com/Jianwei07/ios-posture/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
